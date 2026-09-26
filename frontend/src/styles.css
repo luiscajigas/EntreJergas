@@ -1,0 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+
+html, body { min-width: 320px; min-height: 100%; margin: 0; background: #fbfcf8; }
+body { font-family: 'DM Sans', 'Segoe UI', sans-serif; }
+button:focus-visible, textarea:focus-visible { outline: 2px solid #6d966f; outline-offset: 2px; }
+::selection { background: #dcebdc; color: #20392a; }
