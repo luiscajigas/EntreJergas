@@ -1,5 +1,40 @@
-node_modules/
-frontend/dist/
-backend/data/
+# Compiled output
+/dist/
+/tmp/
+/out-tsc/
+/bazel-out/
+/.angular/cache/
+/coverage/
+/typings/
+__screenshots__/
+
+# Dependencies
+/node_modules/
+
+# Local data and environment
 .env*
+
+# Logs
+npm-debug.log
+yarn-error.log
 *.log
+
+# Editor state
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/mcp.json
+.history/*
+
+# System files
+.DS_Store
+Thumbs.db
