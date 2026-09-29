@@ -1,5 +1,5 @@
 {
-  "installCommand": "npm ci --include=optional",
+  "installCommand": "npm ci --workspaces=false --include=optional",
   "buildCommand": "npm run build",
   "outputDirectory": "dist/frontend/browser",
   "rewrites": [
