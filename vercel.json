@@ -5,7 +5,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://REEMPLAZAR-POR-TU-API.onrender.com/api/:path*"
+      "destination": "https://entrejergas-back.onrender.com/api/:path*"
     },
     {
       "source": "/(.*)",
