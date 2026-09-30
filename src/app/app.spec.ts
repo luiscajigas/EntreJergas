@@ -5,6 +5,7 @@ import { ApiService } from './api.service';
 
 describe('App', () => {
   beforeEach(async () => {
+    localStorage.removeItem('entrejergas.theme.v1');
     await TestBed.configureTestingModule({
       imports: [App],
       providers: [{
@@ -45,6 +46,7 @@ describe('App', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('.auth-panel')).toBeTruthy();
     expect(compiled.querySelector('input[name="email"]')).toBeTruthy();
+    expect(compiled.querySelector('.auth-theme-toggle')).toBeTruthy();
 
     const registerButton = Array.from(compiled.querySelectorAll<HTMLButtonElement>('.auth-switch button'))
       .find((button) => button.textContent?.includes('Regístrate'));
@@ -52,5 +54,22 @@ describe('App', () => {
     fixture.detectChanges();
 
     expect(compiled.querySelector('input[name="name"]')).toBeTruthy();
+  });
+
+  it('should toggle and persist the selected color theme', () => {
+    localStorage.setItem('entrejergas.theme.v1', 'light');
+    const fixture = TestBed.createComponent(App);
+    fixture.componentInstance.currentUser.set({ id: 1, email: 'ana@example.com', name: 'Ana' });
+    fixture.componentInstance.authLoading.set(false);
+    fixture.detectChanges();
+
+    const themeButton = fixture.nativeElement.querySelector('.theme-toggle') as HTMLButtonElement;
+    expect(fixture.nativeElement.getAttribute('data-theme')).toBe('light');
+    themeButton.click();
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.getAttribute('data-theme')).toBe('dark');
+    expect(themeButton.getAttribute('aria-label')).toBe('Activar modo claro');
+    expect(localStorage.getItem('entrejergas.theme.v1')).toBe('dark');
   });
 });

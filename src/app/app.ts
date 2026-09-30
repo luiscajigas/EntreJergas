@@ -40,14 +40,32 @@ type SpeechWindow = Window & {
 };
 
 type AppView = 'chat' | 'history' | 'dashboard';
+type ColorTheme = 'light' | 'dark';
+
+function readThemePreference(): ColorTheme {
+  try {
+    const storedTheme = localStorage.getItem('entrejergas.theme.v1');
+    if (storedTheme === 'light' || storedTheme === 'dark') return storedTheme;
+  } catch {
+    // El almacenamiento puede estar deshabilitado por el navegador.
+  }
+
+  return typeof window !== 'undefined'
+      && typeof window.matchMedia === 'function'
+      && window.matchMedia('(prefers-color-scheme: dark)').matches
+    ? 'dark'
+    : 'light';
+}
 
 @Component({
   imports: [CommonModule, FormsModule],
   selector: 'app-root',
   styleUrl: './app-shell.css',
   templateUrl: './app-shell.html',
+  host: { '[attr.data-theme]': 'theme()' },
 })
 export class App implements OnInit, OnDestroy {
+  readonly theme = signal<ColorTheme>(readThemePreference());
   readonly activeView = signal<AppView>('chat');
   readonly currentUser = signal<AuthUser | null>(null);
   readonly authLoading = signal(true);
@@ -94,6 +112,16 @@ export class App implements OnInit, OnDestroy {
   onDraftChange(value: string): void {
     this.draft.set(value);
     this.worker?.postMessage(value);
+  }
+
+  toggleTheme(): void {
+    const nextTheme = this.theme() === 'dark' ? 'light' : 'dark';
+    this.theme.set(nextTheme);
+    try {
+      localStorage.setItem('entrejergas.theme.v1', nextTheme);
+    } catch {
+      // El tema sigue funcionando aunque no se pueda guardar.
+    }
   }
 
   toggleAuthMode(): void {

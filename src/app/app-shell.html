@@ -8,6 +8,10 @@
     <div class="auth-brand">
       <span class="brand-mark" aria-hidden="true">E<span>J</span></span>
       <span class="brand-name">entre<span>jergas</span></span>
+      <button class="theme-toggle auth-theme-toggle" type="button" (click)="toggleTheme()" [attr.aria-pressed]="theme() === 'dark'" [attr.aria-label]="theme() === 'dark' ? 'Activar modo claro' : 'Activar modo oscuro'" [title]="theme() === 'dark' ? 'Activar modo claro' : 'Activar modo oscuro'">
+        <svg *ngIf="theme() === 'light'" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.5"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path></svg>
+        <svg *ngIf="theme() === 'dark'" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.6 8.6 0 1 0 20.2 15.2Z"></path></svg>
+      </button>
     </div>
     <span class="auth-kicker">UN LUGAR PARA LAS PALABRAS</span>
     <h1 id="auth-title">{{ authMode() === 'login' ? 'Qué bueno verte.' : 'Tu espacio empieza aquí.' }}</h1>
@@ -95,7 +99,13 @@
         <span class="topbar-divider">/</span>
         <span class="topbar-current">{{ activeView() === 'chat' ? 'Nueva conversación' : activeView() === 'history' ? 'Historial' : 'Resumen' }}</span>
       </div>
-      <div class="connection-state" [class.offline]="!apiOnline()"><span></span>{{ apiOnline() ? 'Conectado' : 'Sin conexión' }}</div>
+      <div class="topbar-actions">
+        <button class="theme-toggle" type="button" (click)="toggleTheme()" [attr.aria-pressed]="theme() === 'dark'" [attr.aria-label]="theme() === 'dark' ? 'Activar modo claro' : 'Activar modo oscuro'" [title]="theme() === 'dark' ? 'Activar modo claro' : 'Activar modo oscuro'">
+          <svg *ngIf="theme() === 'light'" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.5"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path></svg>
+          <svg *ngIf="theme() === 'dark'" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.6 8.6 0 1 0 20.2 15.2Z"></path></svg>
+        </button>
+        <div class="connection-state" [class.offline]="!apiOnline()"><span></span>{{ apiOnline() ? 'Conectado' : 'Sin conexión' }}</div>
+      </div>
     </header>
 
     <section class="chat-view" *ngIf="activeView() === 'chat'">
