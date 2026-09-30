@@ -4,3 +4,27 @@ html, body { min-width: 320px; min-height: 100%; margin: 0; background: #fbfcf8;
 body { font-family: 'DM Sans', 'Segoe UI', sans-serif; }
 button:focus-visible, textarea:focus-visible { outline: 2px solid #6d966f; outline-offset: 2px; }
 ::selection { background: #dcebdc; color: #20392a; }
+
+.auth-loading, .auth-gate { display: grid; min-height: 100vh; place-content: center; justify-items: center; gap: 13px; padding: 24px; background-color: #f5f7f1; background-image: linear-gradient(90deg, rgb(39 90 69 / 3%) 1px, transparent 1px), linear-gradient(rgb(39 90 69 / 3%) 1px, transparent 1px); background-size: 34px 34px; color: #77817a; font-size: 12px; }
+.auth-loading .brand-mark { margin-bottom: 4px; }
+.auth-panel { width: min(100%, 420px); padding: 33px 34px 27px; border: 1px solid #e2e8df; border-radius: 7px; background: #fff; box-shadow: 0 18px 50px rgb(39 65 45 / 7%); animation: auth-appear 350ms ease-out both; }
+.auth-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 35px; }
+.auth-kicker { color: #809080; font-size: 9px; font-weight: 700; }
+.auth-panel h1 { margin: 10px 0 7px; color: #27392d; font-family: Georgia, 'Times New Roman', serif; font-size: 32px; font-weight: 400; line-height: 1.15; letter-spacing: 0; }
+.auth-intro { margin: 0; color: #7e897f; font-size: 12px; line-height: 1.6; }
+.auth-form { display: grid; gap: 15px; margin-top: 25px; }
+.auth-form label { display: grid; gap: 7px; color: #58665a; font-size: 11px; font-weight: 600; }
+.auth-form input { width: 100%; height: 42px; padding: 0 11px; border: 1px solid #dce4da; border-radius: 4px; outline: 0; background: #fcfdfa; color: #29372d; font-size: 13px; }
+.auth-form input:focus { border-color: #7d9b80; box-shadow: 0 0 0 3px rgb(87 130 92 / 12%); }
+.auth-error { margin: -2px 0 0; color: #a64337; font-size: 11px; line-height: 1.5; }
+.auth-submit { min-height: 43px; margin-top: 3px; border: 1px solid var(--green); border-radius: 4px; background: var(--green); color: #fff; font-size: 12px; font-weight: 650; cursor: pointer; }
+.auth-submit:hover:not(:disabled) { background: var(--green-dark); }
+.auth-submit:disabled { opacity: .65; cursor: wait; }
+.auth-switch { margin: 20px 0 0; color: #77817a; text-align: center; font-size: 11px; }
+.auth-switch button { margin-left: 4px; padding: 2px; border: 0; background: transparent; color: var(--green); font-size: inherit; font-weight: 700; cursor: pointer; }
+
+@keyframes auth-appear { from { opacity: 0; transform: translateY(9px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (max-width: 390px) {
+	.auth-panel { padding: 27px 22px 22px; }
+}

@@ -34,11 +34,37 @@ export interface Dashboard {
   regions: Array<{ region: string; count: number }>;
 }
 
+export interface AuthUser {
+  id: number;
+  email: string;
+  name: string;
+}
+
+export interface AuthResponse {
+  user: AuthUser;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private readonly baseUrl = '/api';
 
   constructor(private readonly http: HttpClient) {}
+
+  register(name: string, email: string, password: string): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.baseUrl}/auth/register`, { name, email, password });
+  }
+
+  login(email: string, password: string): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.baseUrl}/auth/login`, { email, password });
+  }
+
+  currentUser(): Observable<AuthResponse> {
+    return this.http.get<AuthResponse>(`${this.baseUrl}/auth/me`);
+  }
+
+  logout(): Observable<void> {
+    return this.http.post<void>(`${this.baseUrl}/auth/logout`, {});
+  }
 
   health(): Observable<{ status: string; service: string }> {
     return this.http.get<{ status: string; service: string }>(`${this.baseUrl}/health`);

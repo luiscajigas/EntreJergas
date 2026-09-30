@@ -1,4 +1,45 @@
-<div class="app-frame" [class.sidebar-open]="sidebarOpen()">
+<main class="auth-loading" *ngIf="authLoading()" aria-live="polite">
+  <span class="brand-mark" aria-hidden="true">E<span>J</span></span>
+  <span>Preparando tu espacio…</span>
+</main>
+
+<main class="auth-gate" *ngIf="!authLoading() && !currentUser()">
+  <section class="auth-panel" aria-labelledby="auth-title">
+    <div class="auth-brand">
+      <span class="brand-mark" aria-hidden="true">E<span>J</span></span>
+      <span class="brand-name">entre<span>jergas</span></span>
+    </div>
+    <span class="auth-kicker">UN LUGAR PARA LAS PALABRAS</span>
+    <h1 id="auth-title">{{ authMode() === 'login' ? 'Qué bueno verte.' : 'Tu espacio empieza aquí.' }}</h1>
+    <p class="auth-intro">{{ authMode() === 'login' ? 'Entra para continuar explorando expresiones.' : 'Crea una cuenta para guardar tu recorrido.' }}</p>
+
+    <form class="auth-form" (ngSubmit)="submitAuth()">
+      <label *ngIf="authMode() === 'register'">
+        Nombre
+        <input type="text" name="name" [(ngModel)]="authName" autocomplete="name" minlength="2" maxlength="80" required>
+      </label>
+      <label>
+        Correo electrónico
+        <input type="email" name="email" [(ngModel)]="authEmail" autocomplete="email" maxlength="254" required>
+      </label>
+      <label>
+        Contraseña
+        <input type="password" name="password" [(ngModel)]="authPassword" [attr.autocomplete]="authMode() === 'register' ? 'new-password' : 'current-password'" [attr.minlength]="authMode() === 'register' ? 8 : null" maxlength="128" required>
+      </label>
+      <p class="auth-error" *ngIf="authError()" role="alert">{{ authError() }}</p>
+      <button class="auth-submit" type="submit" [disabled]="authSubmitting()">
+        {{ authSubmitting() ? 'Un momento…' : authMode() === 'login' ? 'Iniciar sesión' : 'Crear cuenta' }}
+      </button>
+    </form>
+
+    <p class="auth-switch">
+      {{ authMode() === 'login' ? '¿Todavía no tienes cuenta?' : '¿Ya tienes una cuenta?' }}
+      <button type="button" (click)="toggleAuthMode()">{{ authMode() === 'login' ? 'Regístrate' : 'Inicia sesión' }}</button>
+    </p>
+  </section>
+</main>
+
+<div class="app-frame" *ngIf="!authLoading() && currentUser()" [class.sidebar-open]="sidebarOpen()">
   <aside class="sidebar" aria-label="Navegación principal">
     <div class="brand-lockup">
       <span class="brand-mark" aria-hidden="true">E<span>J</span></span>
@@ -40,7 +81,7 @@
         <span class="beta-spark" aria-hidden="true">✳</span>
         <div><strong>Diccionario vivo</strong><p>Las palabras también cuentan de dónde venimos.</p></div>
       </div>
-      <div class="profile-row"><span class="profile-avatar">E</span><span><strong>Explorador</strong><small>Versión beta</small></span><span class="profile-menu">···</span></div>
+      <div class="profile-row"><span class="profile-avatar">{{ currentUser()?.name?.charAt(0)?.toUpperCase() }}</span><span class="profile-details"><strong>{{ currentUser()?.name }}</strong><small>{{ currentUser()?.email }}</small></span><button class="logout-button" type="button" (click)="logout()" title="Cerrar sesión">Salir</button></div>
     </div>
   </aside>
 

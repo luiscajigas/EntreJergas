@@ -28,6 +28,7 @@ Abre `http://localhost:4200`. Angular sirve la interfaz y reenvía `/api` a Expr
 
 ## Vistas y flujo
 
+- Crea una cuenta con nombre, correo y contraseña, o inicia sesión. La sesión se conserva en una cookie `HttpOnly`; el historial solo muestra consultas de la cuenta activa.
 - Escribe una expresión, selecciónala entre las sugerencias mientras aparece en el editor o envíala con Enter/botón.
 - El dictado usa Web Speech API del navegador; no se sube audio al servidor. Algunos navegadores no implementan esta API.
 - El Worker recibe las ediciones, espera 280 ms y busca candidatos en un vocabulario pequeño fuera del hilo principal. No hace llamadas de red ni sustituye la búsqueda autoritativa de la API.
@@ -38,14 +39,20 @@ Abre `http://localhost:4200`. Angular sirve la interfaz y reenvía `/api` a Expr
 
 Todas las rutas se sirven bajo `/api`. Las respuestas usan JSON.
 
-| Método y ruta    | Solicitud                     | Respuesta                                                                                                                                                                                                    |
-| ---------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `GET /health`    | Sin cuerpo                    | `{ "status": "ok", "service": "entrejergas-api" }`                                                                                                                                                           |
-| `POST /lookup`   | `{ "expression": "parcero" }` | `{ "found": true, "entry": { "id", "expression", "meaning", "region", "context", "equivalent", "example", "pronunciation", "audioUrl", "source" } }` o `{ "found": false, "entry": null, "message": "..." }` |
-| `GET /history`   | Sin cuerpo                    | `{ "items": [{ "id", "expression", "found", "createdAt" }] }` (máximo 30)                                                                                                                                    |
-| `GET /dashboard` | Sin cuerpo                    | `{ "expressions": 16, "searches": 0, "regions": [{ "region", "count" }] }`                                                                                                                                   |
+| Método y ruta         | Solicitud                         | Respuesta                                                                                                                                                                                                    |
+| --------------------- | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `GET /health`         | Sin cuerpo                        | `{ "status": "ok", "service": "entrejergas-api" }`                                                                                                                                                           |
+| `POST /auth/register` | `{ "name", "email", "password" }` | `{ "user": { "id", "email", "name" } }` y cookie de sesión                                                                                                                                                   |
+| `POST /auth/login`    | `{ "email", "password" }`         | `{ "user": { "id", "email", "name" } }` y cookie de sesión                                                                                                                                                   |
+| `GET /auth/me`        | Cookie de sesión                  | `{ "user": { "id", "email", "name" } }`                                                                                                                                                                      |
+| `POST /auth/logout`   | Cookie de sesión                  | HTTP 204; revoca la sesión                                                                                                                                                                                   |
+| `POST /lookup`        | `{ "expression": "parcero" }`     | `{ "found": true, "entry": { "id", "expression", "meaning", "region", "context", "equivalent", "example", "pronunciation", "audioUrl", "source" } }` o `{ "found": false, "entry": null, "message": "..." }` |
+| `GET /history`        | Sin cuerpo                        | `{ "items": [{ "id", "expression", "found", "createdAt" }] }` (máximo 30)                                                                                                                                    |
+| `GET /dashboard`      | Sin cuerpo                        | `{ "expressions": 16, "searches": 0, "regions": [{ "region", "count" }] }`                                                                                                                                   |
 
-`POST /lookup` devuelve HTTP 400 si falta la expresión o tiene más de 100 caracteres. Tanto las coincidencias como las búsquedas sin coincidencia se guardan en historial. Se ignoran tildes y mayúsculas al comparar expresiones.
+Excepto `GET /health`, las rutas requieren iniciar sesión. La contraseña debe tener entre 8 y 128 caracteres. `POST /lookup` devuelve HTTP 400 si falta la expresión o tiene más de 100 caracteres. Tanto las coincidencias como las búsquedas sin coincidencia se guardan asociadas a la cuenta activa. Se ignoran tildes y mayúsculas al comparar expresiones.
+
+La API crea las tablas `users` (cuentas y hashes de contraseña) y `user_sessions` (hashes de sesiones con vencimiento). `search_history.user_id` vincula cada consulta a su propietario; el arranque agrega esa columna a instalaciones existentes.
 
 ## Arquitectura y rendimiento
 
@@ -71,4 +78,4 @@ npm test -- --watch=false
 npm --prefix ../EntreJergas-Back/backend test
 ```
 
-Con PostgreSQL local disponible y la API encendida, verifica `GET http://localhost:3000/api/health` y envía `POST /api/lookup` con `{"expression":"parcero"}`. Debe regresar `found: true` con `source: "database"`; una expresión no sembrada regresa `found: false` sin usar IA.
+Con PostgreSQL local disponible y la API encendida, crea una cuenta desde la interfaz y luego prueba `GET http://localhost:3000/api/health`. Las consultas requieren la cookie de sesión; una expresión conocida regresa `found: true` con `source: "database"`, y una expresión no sembrada regresa `found: false` sin usar IA.

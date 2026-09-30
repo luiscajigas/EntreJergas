@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
-import { ApiService, Dashboard, ExpressionEntry, HistoryItem } from './api.service';
+import { ApiService, AuthUser, Dashboard, ExpressionEntry, HistoryItem } from './api.service';
 
 interface ChatMessage {
   id: number;
@@ -49,6 +49,11 @@ type AppView = 'chat' | 'history' | 'dashboard';
 })
 export class App implements OnInit, OnDestroy {
   readonly activeView = signal<AppView>('chat');
+  readonly currentUser = signal<AuthUser | null>(null);
+  readonly authLoading = signal(true);
+  readonly authMode = signal<'login' | 'register'>('login');
+  readonly authSubmitting = signal(false);
+  readonly authError = signal('');
   readonly sidebarOpen = signal(false);
   readonly draft = signal('');
   readonly messages = signal<ChatMessage[]>([]);
@@ -59,6 +64,10 @@ export class App implements OnInit, OnDestroy {
   readonly listening = signal(false);
   readonly apiOnline = signal(false);
   readonly speechSupported = 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
+
+  authName = '';
+  authEmail = '';
+  authPassword = '';
 
   private worker?: Worker;
   private recognition?: SpeechRecognitionLike;
@@ -74,7 +83,7 @@ export class App implements OnInit, OnDestroy {
       };
       this.worker.onerror = () => this.candidates.set([]);
     }
-    void this.refreshPanels();
+    void this.restoreSession();
   }
 
   ngOnDestroy(): void {
@@ -85,6 +94,50 @@ export class App implements OnInit, OnDestroy {
   onDraftChange(value: string): void {
     this.draft.set(value);
     this.worker?.postMessage(value);
+  }
+
+  toggleAuthMode(): void {
+    this.authMode.update((mode) => mode === 'login' ? 'register' : 'login');
+    this.authError.set('');
+  }
+
+  async submitAuth(): Promise<void> {
+    if (this.authSubmitting()) return;
+
+    this.authSubmitting.set(true);
+    this.authError.set('');
+    try {
+      const result = this.authMode() === 'register'
+        ? await firstValueFrom(this.api.register(this.authName, this.authEmail, this.authPassword))
+        : await firstValueFrom(this.api.login(this.authEmail, this.authPassword));
+      this.currentUser.set(result.user);
+      this.authPassword = '';
+      await this.refreshPanels();
+    } catch (error) {
+      const status = (error as { status?: number }).status;
+      const message = (error as { error?: { error?: string } }).error?.error;
+      this.authError.set(message || (status === 401
+        ? 'Correo o contraseña incorrectos.'
+        : 'No fue posible iniciar sesión. Revisa tu conexión e inténtalo de nuevo.'));
+    } finally {
+      this.authSubmitting.set(false);
+    }
+  }
+
+  async logout(): Promise<void> {
+    try {
+      await firstValueFrom(this.api.logout());
+    } catch {
+      // La interfaz se cierra aunque el servidor no esté disponible.
+    }
+    this.currentUser.set(null);
+    this.history.set([]);
+    this.dashboard.set(null);
+    this.messages.set([]);
+    this.draft.set('');
+    this.candidates.set([]);
+    this.worker?.postMessage('');
+    this.activeView.set('chat');
   }
 
   useCandidate(candidate: WorkerCandidate): void {
@@ -185,6 +238,18 @@ export class App implements OnInit, OnDestroy {
       this.apiOnline.set(true);
     } catch {
       this.apiOnline.set(false);
+    }
+  }
+
+  private async restoreSession(): Promise<void> {
+    try {
+      const result = await firstValueFrom(this.api.currentUser());
+      this.currentUser.set(result.user);
+      await this.refreshPanels();
+    } catch {
+      this.currentUser.set(null);
+    } finally {
+      this.authLoading.set(false);
     }
   }
 
