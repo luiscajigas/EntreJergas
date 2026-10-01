@@ -72,4 +72,22 @@ describe('App', () => {
     expect(themeButton.getAttribute('aria-label')).toBe('Activar modo claro');
     expect(localStorage.getItem('entrejergas.theme.v1')).toBe('dark');
   });
+
+  it('should toggle and persist the app language', () => {
+    localStorage.setItem('entrejergas.language.v1', 'es');
+    const fixture = TestBed.createComponent(App);
+    fixture.componentInstance.currentUser.set({ id: 1, email: 'ana@example.com', name: 'Ana' });
+    fixture.componentInstance.authLoading.set(false);
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.language()).toBe('es');
+    expect(fixture.componentInstance.t('auth.title.login')).toBe('Qué bueno verte.');
+
+    fixture.componentInstance.toggleLanguage();
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.language()).toBe('en');
+    expect(fixture.componentInstance.t('auth.title.login')).toBe('Nice to see you again.');
+    expect(localStorage.getItem('entrejergas.language.v1')).toBe('en');
+  });
 });
