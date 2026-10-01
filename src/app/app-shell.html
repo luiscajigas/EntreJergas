@@ -1,6 +1,6 @@
 <main class="auth-loading" *ngIf="authLoading()" aria-live="polite">
   <span class="brand-mark" aria-hidden="true">E<span>J</span></span>
-  <span>Preparando tu espacio…</span>
+  <span>{{ t('auth.loading') }}</span>
 </main>
 
 <main class="auth-gate" *ngIf="!authLoading() && !currentUser()">
@@ -8,37 +8,40 @@
     <div class="auth-brand">
       <span class="brand-mark" aria-hidden="true">E<span>J</span></span>
       <span class="brand-name">entre<span>jergas</span></span>
-      <button class="theme-toggle auth-theme-toggle" type="button" (click)="toggleTheme()" [attr.aria-pressed]="theme() === 'dark'" [attr.aria-label]="theme() === 'dark' ? 'Activar modo claro' : 'Activar modo oscuro'" [title]="theme() === 'dark' ? 'Activar modo claro' : 'Activar modo oscuro'">
-        <svg *ngIf="theme() === 'light'" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.5"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path></svg>
-        <svg *ngIf="theme() === 'dark'" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.6 8.6 0 1 0 20.2 15.2Z"></path></svg>
-      </button>
+      <div class="auth-controls">
+        <button class="lang-toggle" type="button" (click)="toggleLanguage()" [attr.aria-label]="t('language.toggle.aria')" [title]="t('language.toggle.aria')">{{ language() === 'es' ? 'ES' : 'EN' }}</button>
+        <button class="theme-toggle auth-theme-toggle" type="button" (click)="toggleTheme()" [attr.aria-pressed]="theme() === 'dark'" [attr.aria-label]="theme() === 'dark' ? t('theme.toggle.light') : t('theme.toggle.dark')" [title]="theme() === 'dark' ? t('theme.toggle.light') : t('theme.toggle.dark')">
+          <svg *ngIf="theme() === 'light'" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.5"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path></svg>
+          <svg *ngIf="theme() === 'dark'" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.6 8.6 0 1 0 20.2 15.2Z"></path></svg>
+        </button>
+      </div>
     </div>
-    <span class="auth-kicker">UN LUGAR PARA LAS PALABRAS</span>
-    <h1 id="auth-title">{{ authMode() === 'login' ? 'Qué bueno verte.' : 'Tu espacio empieza aquí.' }}</h1>
-    <p class="auth-intro">{{ authMode() === 'login' ? 'Entra para continuar explorando expresiones.' : 'Crea una cuenta para guardar tu recorrido.' }}</p>
+    <span class="auth-kicker">{{ t('auth.kicker') }}</span>
+    <h1 id="auth-title">{{ authMode() === 'login' ? t('auth.title.login') : t('auth.title.register') }}</h1>
+    <p class="auth-intro">{{ authMode() === 'login' ? t('auth.intro.login') : t('auth.intro.register') }}</p>
 
     <form class="auth-form" (ngSubmit)="submitAuth()">
       <label *ngIf="authMode() === 'register'">
-        Nombre
+        {{ t('auth.name') }}
         <input type="text" name="name" [(ngModel)]="authName" autocomplete="name" minlength="2" maxlength="80" required>
       </label>
       <label>
-        Correo electrónico
+        {{ t('auth.email') }}
         <input type="email" name="email" [(ngModel)]="authEmail" autocomplete="email" maxlength="254" required>
       </label>
       <label>
-        Contraseña
+        {{ t('auth.password') }}
         <input type="password" name="password" [(ngModel)]="authPassword" [attr.autocomplete]="authMode() === 'register' ? 'new-password' : 'current-password'" [attr.minlength]="authMode() === 'register' ? 8 : null" maxlength="128" required>
       </label>
       <p class="auth-error" *ngIf="authError()" role="alert">{{ authError() }}</p>
       <button class="auth-submit" type="submit" [disabled]="authSubmitting()">
-        {{ authSubmitting() ? 'Un momento…' : authMode() === 'login' ? 'Iniciar sesión' : 'Crear cuenta' }}
+        {{ authSubmitting() ? t('auth.submit.pending') : authMode() === 'login' ? t('auth.submit.login') : t('auth.submit.register') }}
       </button>
     </form>
 
     <p class="auth-switch">
-      {{ authMode() === 'login' ? '¿Todavía no tienes cuenta?' : '¿Ya tienes una cuenta?' }}
-      <button type="button" (click)="toggleAuthMode()">{{ authMode() === 'login' ? 'Regístrate' : 'Inicia sesión' }}</button>
+      {{ authMode() === 'login' ? t('auth.switch.login') : t('auth.switch.register') }}
+      <button type="button" (click)="toggleAuthMode()">{{ authMode() === 'login' ? t('auth.switch.action.login') : t('auth.switch.action.register') }}</button>
     </p>
   </section>
 </main>
@@ -53,25 +56,25 @@
 
     <button class="new-chat-button" type="button" (click)="startNewChat()">
       <span class="plus-icon" aria-hidden="true">+</span>
-      <span>Nueva consulta</span>
+      <span>{{ t('nav.newChat') }}</span>
       <span class="shortcut">Ctrl K</span>
     </button>
 
     <nav class="primary-nav" aria-label="Secciones">
       <button type="button" [class.selected]="activeView() === 'chat'" (click)="openView('chat')">
-        <span class="nav-icon chat-icon" aria-hidden="true"></span>Explorar expresiones
+        <span class="nav-icon chat-icon" aria-hidden="true"></span>{{ t('nav.explore') }}
       </button>
       <button type="button" [class.selected]="activeView() === 'history'" (click)="openView('history')">
-        <span class="nav-icon history-icon" aria-hidden="true"></span>Historial
+        <span class="nav-icon history-icon" aria-hidden="true"></span>{{ t('nav.history') }}
         <span class="nav-count" *ngIf="history().length">{{ history().length }}</span>
       </button>
       <button type="button" [class.selected]="activeView() === 'dashboard'" (click)="openView('dashboard')">
-        <span class="nav-icon dashboard-icon" aria-hidden="true"></span>Diccionario
+        <span class="nav-icon dashboard-icon" aria-hidden="true"></span>{{ t('nav.dictionary') }}
       </button>
     </nav>
 
     <div class="sidebar-rule"></div>
-    <div class="sidebar-caption">CONSULTAS RECIENTES</div>
+    <div class="sidebar-caption">{{ t('nav.recent') }}</div>
     <div class="recent-list" *ngIf="history().length; else noRecent">
       <button class="recent-item" type="button" *ngFor="let item of history().slice(0, 7)" (click)="openHistoryItem(item)">
         <span class="recent-dot" [class.not-found]="!item.found"></span>
@@ -83,9 +86,9 @@
     <div class="sidebar-bottom">
       <div class="beta-card">
         <span class="beta-spark" aria-hidden="true">✳</span>
-        <div><strong>Diccionario vivo</strong><p>Las palabras también cuentan de dónde venimos.</p></div>
+        <div><strong>{{ t('nav.betaTitle') }}</strong><p>{{ t('nav.betaText') }}</p></div>
       </div>
-      <div class="profile-row"><span class="profile-avatar">{{ currentUser()?.name?.charAt(0)?.toUpperCase() }}</span><span class="profile-details"><strong>{{ currentUser()?.name }}</strong><small>{{ currentUser()?.email }}</small></span><button class="logout-button" type="button" (click)="logout()" title="Cerrar sesión">Salir</button></div>
+      <div class="profile-row"><span class="profile-avatar">{{ currentUser()?.name?.charAt(0)?.toUpperCase() }}</span><span class="profile-details"><strong>{{ currentUser()?.name }}</strong><small>{{ currentUser()?.email }}</small></span><button class="logout-button" type="button" (click)="logout()" [title]="t('nav.logout')">{{ t('nav.logout') }}</button></div>
     </div>
   </aside>
 
@@ -95,25 +98,26 @@
     <header class="topbar">
       <button class="icon-button menu-toggle" type="button" aria-label="Abrir menú" (click)="sidebarOpen.set(true)"><span class="hamburger"></span></button>
       <div class="topbar-title">
-        <span class="topbar-section">{{ activeView() === 'chat' ? 'Laboratorio de palabras' : activeView() === 'history' ? 'Tu recorrido' : 'El diccionario' }}</span>
+        <span class="topbar-section">{{ activeView() === 'chat' ? t('topbar.chat') : activeView() === 'history' ? t('topbar.history') : t('topbar.dictionary') }}</span>
         <span class="topbar-divider">/</span>
-        <span class="topbar-current">{{ activeView() === 'chat' ? 'Nueva conversación' : activeView() === 'history' ? 'Historial' : 'Resumen' }}</span>
+        <span class="topbar-current">{{ activeView() === 'chat' ? t('topbar.newConversation') : activeView() === 'history' ? t('nav.history') : t('topbar.summary') }}</span>
       </div>
       <div class="topbar-actions">
-        <button class="theme-toggle" type="button" (click)="toggleTheme()" [attr.aria-pressed]="theme() === 'dark'" [attr.aria-label]="theme() === 'dark' ? 'Activar modo claro' : 'Activar modo oscuro'" [title]="theme() === 'dark' ? 'Activar modo claro' : 'Activar modo oscuro'">
+        <button class="lang-toggle" type="button" (click)="toggleLanguage()" [attr.aria-label]="t('language.toggle.aria')" [title]="t('language.toggle.aria')">{{ language() === 'es' ? 'ES' : 'EN' }}</button>
+        <button class="theme-toggle" type="button" (click)="toggleTheme()" [attr.aria-pressed]="theme() === 'dark'" [attr.aria-label]="theme() === 'dark' ? t('theme.toggle.light') : t('theme.toggle.dark')" [title]="theme() === 'dark' ? t('theme.toggle.light') : t('theme.toggle.dark')">
           <svg *ngIf="theme() === 'light'" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.5"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path></svg>
           <svg *ngIf="theme() === 'dark'" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.6 8.6 0 1 0 20.2 15.2Z"></path></svg>
         </button>
-        <div class="connection-state" [class.offline]="!apiOnline()"><span></span>{{ apiOnline() ? 'Conectado' : 'Sin conexión' }}</div>
+        <div class="connection-state" [class.offline]="!apiOnline()"><span></span>{{ apiOnline() ? t('status.connected') : t('status.offline') }}</div>
       </div>
     </header>
 
     <section class="chat-view" *ngIf="activeView() === 'chat'">
       <div class="conversation-scroll" #conversation>
         <div class="welcome" *ngIf="messages().length === 0">
-          <div class="welcome-kicker"><span class="kicker-line"></span>PALABRAS CON ACENTO PROPIO<span class="kicker-line"></span></div>
-          <h1>¿Qué significa<br>eso que <em>dijeron?</em></h1>
-          <p class="welcome-copy">Cada región tiene su manera de nombrar el mundo.<br>Escribe una expresión y descubramos su historia.</p>
+          <div class="welcome-kicker"><span class="kicker-line"></span>{{ t('welcome.kicker') }}<span class="kicker-line"></span></div>
+          <h1>{{ t('welcome.title').split('\n')[0] }}<br>{{ t('welcome.title').split('\n')[1] }}</h1>
+          <p class="welcome-copy">{{ t('welcome.copy').split('\n')[0] }}<br>{{ t('welcome.copy').split('\n')[1] }}</p>
           <div class="suggestion-grid" aria-label="Prueba con una expresión">
             <button type="button" (click)="onDraftChange('parcero')"><span class="suggestion-mark mark-green">01</span><span><strong>parcero</strong><small>¿Cómo se usa?</small></span><span class="suggestion-arrow">↗</span></button>
             <button type="button" (click)="onDraftChange('qué chimba')"><span class="suggestion-mark mark-coral">02</span><span><strong>qué chimba</strong><small>¿De dónde viene?</small></span><span class="suggestion-arrow">↗</span></button>

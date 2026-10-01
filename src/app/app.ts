@@ -41,6 +41,45 @@ type SpeechWindow = Window & {
 
 type AppView = 'chat' | 'history' | 'dashboard';
 type ColorTheme = 'light' | 'dark';
+type AppLanguage = 'es' | 'en';
+type TranslationKey =
+  | 'auth.loading'
+  | 'auth.kicker'
+  | 'auth.title.login'
+  | 'auth.title.register'
+  | 'auth.intro.login'
+  | 'auth.intro.register'
+  | 'auth.name'
+  | 'auth.email'
+  | 'auth.password'
+  | 'auth.submit.login'
+  | 'auth.submit.register'
+  | 'auth.submit.pending'
+  | 'auth.switch.login'
+  | 'auth.switch.register'
+  | 'auth.switch.action.login'
+  | 'auth.switch.action.register'
+  | 'nav.newChat'
+  | 'nav.explore'
+  | 'nav.history'
+  | 'nav.dictionary'
+  | 'nav.recent'
+  | 'nav.betaTitle'
+  | 'nav.betaText'
+  | 'nav.logout'
+  | 'topbar.chat'
+  | 'topbar.history'
+  | 'topbar.dictionary'
+  | 'topbar.newConversation'
+  | 'topbar.summary'
+  | 'status.connected'
+  | 'status.offline'
+  | 'welcome.kicker'
+  | 'welcome.title'
+  | 'welcome.copy'
+  | 'language.toggle.aria'
+  | 'theme.toggle.light'
+  | 'theme.toggle.dark';
 
 function readThemePreference(): ColorTheme {
   try {
@@ -57,6 +96,17 @@ function readThemePreference(): ColorTheme {
     : 'light';
 }
 
+function readLanguagePreference(): AppLanguage {
+  try {
+    const storedLanguage = localStorage.getItem('entrejergas.language.v1');
+    if (storedLanguage === 'es' || storedLanguage === 'en') return storedLanguage;
+  } catch {
+    // El idioma sigue funcionando aunque no se pueda guardar.
+  }
+
+  return 'es';
+}
+
 @Component({
   imports: [CommonModule, FormsModule],
   selector: 'app-root',
@@ -66,6 +116,7 @@ function readThemePreference(): ColorTheme {
 })
 export class App implements OnInit, OnDestroy {
   readonly theme = signal<ColorTheme>(readThemePreference());
+  readonly language = signal<AppLanguage>(readLanguagePreference());
   readonly activeView = signal<AppView>('chat');
   readonly currentUser = signal<AuthUser | null>(null);
   readonly authLoading = signal(true);
@@ -86,6 +137,87 @@ export class App implements OnInit, OnDestroy {
   authName = '';
   authEmail = '';
   authPassword = '';
+
+  private readonly translations: Record<AppLanguage, Record<TranslationKey, string>> = {
+    es: {
+      'auth.loading': 'Preparando tu espacio…',
+      'auth.kicker': 'UN LUGAR PARA LAS PALABRAS',
+      'auth.title.login': 'Qué bueno verte.',
+      'auth.title.register': 'Tu espacio empieza aquí.',
+      'auth.intro.login': 'Entra para continuar explorando expresiones.',
+      'auth.intro.register': 'Crea una cuenta para guardar tu recorrido.',
+      'auth.name': 'Nombre',
+      'auth.email': 'Correo electrónico',
+      'auth.password': 'Contraseña',
+      'auth.submit.login': 'Iniciar sesión',
+      'auth.submit.register': 'Crear cuenta',
+      'auth.submit.pending': 'Un momento…',
+      'auth.switch.login': '¿Todavía no tienes cuenta?',
+      'auth.switch.register': '¿Ya tienes una cuenta?',
+      'auth.switch.action.login': 'Regístrate',
+      'auth.switch.action.register': 'Inicia sesión',
+      'nav.newChat': 'Nueva consulta',
+      'nav.explore': 'Explorar expresiones',
+      'nav.history': 'Historial',
+      'nav.dictionary': 'Diccionario',
+      'nav.recent': 'CONSULTAS RECIENTES',
+      'nav.betaTitle': 'Diccionario vivo',
+      'nav.betaText': 'Las palabras también cuentan de dónde venimos.',
+      'nav.logout': 'Salir',
+      'topbar.chat': 'Laboratorio de palabras',
+      'topbar.history': 'Tu recorrido',
+      'topbar.dictionary': 'El diccionario',
+      'topbar.newConversation': 'Nueva conversación',
+      'topbar.summary': 'Resumen',
+      'status.connected': 'Conectado',
+      'status.offline': 'Sin conexión',
+      'welcome.kicker': 'PALABRAS CON ACENTO PROPIO',
+      'welcome.title': '¿Qué significa\neso que dijeron?',
+      'welcome.copy': 'Cada región tiene su manera de nombrar el mundo.\nEscribe una expresión y descubramos su historia.',
+      'language.toggle.aria': 'Cambiar idioma',
+      'theme.toggle.light': 'Activar modo claro',
+      'theme.toggle.dark': 'Activar modo oscuro'
+    },
+    en: {
+      'auth.loading': 'Preparing your space…',
+      'auth.kicker': 'A PLACE FOR WORDS',
+      'auth.title.login': 'Nice to see you again.',
+      'auth.title.register': 'Your space starts here.',
+      'auth.intro.login': 'Sign in to keep exploring expressions.',
+      'auth.intro.register': 'Create an account to keep your journey.',
+      'auth.name': 'Name',
+      'auth.email': 'Email',
+      'auth.password': 'Password',
+      'auth.submit.login': 'Sign in',
+      'auth.submit.register': 'Create account',
+      'auth.submit.pending': 'One moment…',
+      'auth.switch.login': 'Don’t have an account yet?',
+      'auth.switch.register': 'Already have an account?',
+      'auth.switch.action.login': 'Create one',
+      'auth.switch.action.register': 'Sign in',
+      'nav.newChat': 'New search',
+      'nav.explore': 'Explore expressions',
+      'nav.history': 'History',
+      'nav.dictionary': 'Dictionary',
+      'nav.recent': 'RECENT SEARCHES',
+      'nav.betaTitle': 'Living dictionary',
+      'nav.betaText': 'Words also tell us where we come from.',
+      'nav.logout': 'Log out',
+      'topbar.chat': 'Word lab',
+      'topbar.history': 'Your journey',
+      'topbar.dictionary': 'The dictionary',
+      'topbar.newConversation': 'New conversation',
+      'topbar.summary': 'Summary',
+      'status.connected': 'Connected',
+      'status.offline': 'Offline',
+      'welcome.kicker': 'WORDS WITH THEIR OWN ACCENT',
+      'welcome.title': 'What does it mean\nwhen they say that?',
+      'welcome.copy': 'Every region has its own way of naming the world.\nWrite an expression and let’s discover its story.',
+      'language.toggle.aria': 'Change language',
+      'theme.toggle.light': 'Activate light mode',
+      'theme.toggle.dark': 'Activate dark mode'
+    }
+  };
 
   private worker?: Worker;
   private recognition?: SpeechRecognitionLike;
@@ -112,6 +244,20 @@ export class App implements OnInit, OnDestroy {
   onDraftChange(value: string): void {
     this.draft.set(value);
     this.worker?.postMessage(value);
+  }
+
+  t(key: TranslationKey): string {
+    return this.translations[this.language()][key] ?? this.translations.es[key];
+  }
+
+  toggleLanguage(): void {
+    const nextLanguage = this.language() === 'es' ? 'en' : 'es';
+    this.language.set(nextLanguage);
+    try {
+      localStorage.setItem('entrejergas.language.v1', nextLanguage);
+    } catch {
+      // El idioma sigue funcionando aunque no se pueda guardar.
+    }
   }
 
   toggleTheme(): void {
