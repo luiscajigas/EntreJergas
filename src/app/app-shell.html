@@ -118,73 +118,73 @@
           <div class="welcome-kicker"><span class="kicker-line"></span>{{ t('welcome.kicker') }}<span class="kicker-line"></span></div>
           <h1>{{ t('welcome.title').split('\n')[0] }}<br>{{ t('welcome.title').split('\n')[1] }}</h1>
           <p class="welcome-copy">{{ t('welcome.copy').split('\n')[0] }}<br>{{ t('welcome.copy').split('\n')[1] }}</p>
-          <div class="suggestion-grid" aria-label="Prueba con una expresión">
-            <button type="button" (click)="onDraftChange('parcero')"><span class="suggestion-mark mark-green">01</span><span><strong>parcero</strong><small>¿Cómo se usa?</small></span><span class="suggestion-arrow">↗</span></button>
-            <button type="button" (click)="onDraftChange('qué chimba')"><span class="suggestion-mark mark-coral">02</span><span><strong>qué chimba</strong><small>¿De dónde viene?</small></span><span class="suggestion-arrow">↗</span></button>
-            <button type="button" (click)="onDraftChange('chichai')"><span class="suggestion-mark mark-blue">03</span><span><strong>chichai</strong><small>¿Te suena?</small></span><span class="suggestion-arrow">↗</span></button>
-            <button type="button" (click)="onDraftChange('dar papaya')"><span class="suggestion-mark mark-yellow">04</span><span><strong>dar papaya</strong><small>Una frase colombiana</small></span><span class="suggestion-arrow">↗</span></button>
+          <div class="suggestion-grid" [attr.aria-label]="t('search.try')">
+            <button type="button" (click)="onDraftChange('parcero')"><span class="suggestion-mark mark-green">01</span><span><strong>parcero</strong><small>{{ t('suggestion.parcero.use') }}</small></span><span class="suggestion-arrow">↗</span></button>
+            <button type="button" (click)="onDraftChange('qué chimba')"><span class="suggestion-mark mark-coral">02</span><span><strong>qué chimba</strong><small>{{ t('suggestion.chimba.use') }}</small></span><span class="suggestion-arrow">↗</span></button>
+            <button type="button" (click)="onDraftChange('chichai')"><span class="suggestion-mark mark-blue">03</span><span><strong>chichai</strong><small>{{ t('suggestion.chichai.use') }}</small></span><span class="suggestion-arrow">↗</span></button>
+            <button type="button" (click)="onDraftChange('dar papaya')"><span class="suggestion-mark mark-yellow">04</span><span><strong>dar papaya</strong><small>{{ t('suggestion.papaya.use') }}</small></span><span class="suggestion-arrow">↗</span></button>
           </div>
-          <div class="beta-note"><span class="note-star">✳</span><span>Beta en construcción <i></i> Sin inteligencia artificial por ahora</span></div>
+          <div class="beta-note"><span class="note-star">✳</span><span>{{ t('beta.note') }}</span></div>
         </div>
 
         <div class="message-list" *ngIf="messages().length > 0">
           <article class="message-row" *ngFor="let message of messages()" [class.user-row]="message.role === 'user'">
             <div class="message-avatar" [class.assistant-avatar]="message.role === 'assistant'">{{ message.role === 'user' ? 'TÚ' : 'EJ' }}</div>
-            <div class="message-body" *ngIf="message.role === 'user'"><span class="message-label">TU CONSULTA</span><p class="user-quote">{{ message.text }}</p></div>
+            <div class="message-body" *ngIf="message.role === 'user'"><span class="message-label">{{ t('message.user') }}</span><p class="user-quote">{{ message.text }}</p></div>
             <div class="message-body result-body" *ngIf="message.role === 'assistant' && message.entry as entry">
-              <div class="result-eyebrow"><span class="result-dot"></span>{{ message.offline ? 'GUARDADO EN ESTE DISPOSITIVO' : 'ENCONTRADO EN EL DICCIONARIO' }}</div>
+              <div class="result-eyebrow"><span class="result-dot"></span>{{ message.offline ? t('message.result.saved') : t('message.result.found') }}</div>
               <h2>{{ entry.expression }}</h2>
               <p class="meaning">{{ entry.meaning }}</p>
               <div class="result-meta"><span class="region-tag"><span aria-hidden="true">⌖</span>{{ entry.region }}</span><span class="usage-tag">{{ entry.context }}</span></div>
               <div class="result-divider"></div>
               <div class="detail-columns">
-                <div><span class="detail-label">EN OTRAS PALABRAS</span><p>{{ entry.equivalent }}</p></div>
-                <div><span class="detail-label">EN UNA FRASE</span><p class="example-text">“{{ entry.example }}”</p></div>
+                <div><span class="detail-label">{{ t('detail.equivalent') }}</span><p>{{ entry.equivalent }}</p></div>
+                <div><span class="detail-label">{{ t('detail.phrase') }}</span><p class="example-text">“{{ entry.example }}”</p></div>
               </div>
-              <div class="pronunciation-row" *ngIf="entry.pronunciation"><span class="detail-label">PRONUNCIACIÓN</span><span class="phonetic">{{ entry.pronunciation }}</span><button class="audio-button" *ngIf="entry.audioUrl" type="button" aria-label="Reproducir pronunciación">▶</button></div>
+              <div class="pronunciation-row" *ngIf="entry.pronunciation"><span class="detail-label">{{ t('detail.pronunciation') }}</span><span class="phonetic">{{ entry.pronunciation }}</span><button class="audio-button" *ngIf="entry.audioUrl" type="button" [attr.aria-label]="t('audio.play')">▶</button></div>
             </div>
             <div class="message-body missing-body" *ngIf="message.role === 'assistant' && message.missing">
-              <div class="missing-icon">?</div><div><strong>Aún no está en el diccionario</strong><p>{{ message.text }}</p><span class="missing-footnote">Las nuevas expresiones se podrán sumar en una próxima versión.</span></div>
+              <div class="missing-icon">?</div><div><strong>{{ t('notfound.title') }}</strong><p>{{ message.text }}</p><span class="missing-footnote">{{ t('notfound.subtitle') }}</span></div>
             </div>
           </article>
-          <div class="thinking-row" *ngIf="loading()"><span class="thinking-mark">EJ</span><span class="thinking-dots"><i></i><i></i><i></i></span><small>Consultando el diccionario</small></div>
+          <div class="thinking-row" *ngIf="loading()"><span class="thinking-mark">EJ</span><span class="thinking-dots"><i></i><i></i><i></i></span><small>{{ t('thinking.searching') }}</small></div>
         </div>
       </div>
 
       <div class="composer-dock">
         <div class="candidate-row" *ngIf="candidates().length && draft()">
-          <span class="candidate-caption">¿Te refieres a?</span>
+          <span class="candidate-caption">{{ t('candidate.caption') }}</span>
           <button class="candidate-chip" *ngFor="let candidate of candidates()" type="button" (click)="useCandidate(candidate)">{{ candidate.expression }}<small>{{ candidate.region }}</small></button>
         </div>
         <form class="composer" (ngSubmit)="submit()">
-          <textarea aria-label="Escribe una expresión regional" rows="1" [ngModel]="draft()" (ngModelChange)="onDraftChange($event)" name="expression" placeholder="Escribe una palabra o frase…" maxlength="100" (keydown.enter)="$event.preventDefault(); submit()"></textarea>
-          <div class="composer-footer"><span class="input-hint"><span class="hint-dot"></span> Detectamos regionalismos mientras escribes</span><div class="composer-actions">
-            <button class="mic-button" [class.is-listening]="listening()" type="button" [disabled]="!speechSupported" (click)="toggleDictation()" [attr.aria-label]="speechSupported ? (listening() ? 'Detener dictado' : 'Dictar expresión') : 'Dictado no compatible con este navegador'" [title]="speechSupported ? (listening() ? 'Detener dictado' : 'Dictar expresión') : 'Dictado no compatible con este navegador'"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="2.8" width="6" height="12" rx="3"></rect><path d="M5.5 11.5v.8a6.5 6.5 0 0 0 13 0v-.8M12 19v3m-4 0h8"></path></svg></button>
-            <button class="send-button" type="submit" [disabled]="!draft().trim() || loading()" aria-label="Consultar expresión" title="Consultar expresión"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5m-7 7 7-7 7 7"></path></svg></button>
+          <textarea aria-label="{{ t('composer.placeholder') }}" rows="1" [ngModel]="draft()" (ngModelChange)="onDraftChange($event)" name="expression" [placeholder]="t('composer.placeholder')" maxlength="100" (keydown.enter)="$event.preventDefault(); submit()"></textarea>
+          <div class="composer-footer"><span class="input-hint"><span class="hint-dot"></span> {{ t('composer.hint') }}</span><div class="composer-actions">
+            <button class="mic-button" [class.is-listening]="listening()" type="button" [disabled]="!speechSupported" (click)="toggleDictation()" [attr.aria-label]="speechSupported ? (listening() ? t('composer.mic.stop') : t('composer.mic.start')) : t('composer.mic.unsupported')" [title]="speechSupported ? (listening() ? t('composer.mic.stop') : t('composer.mic.start')) : t('composer.mic.unsupported')"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="2.8" width="6" height="12" rx="3"></rect><path d="M5.5 11.5v.8a6.5 6.5 0 0 0 13 0v-.8M12 19v3m-4 0h8"></path></svg></button>
+            <button class="send-button" type="submit" [disabled]="!draft().trim() || loading()" [attr.aria-label]="t('composer.send')" [title]="t('composer.send')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5m-7 7 7-7 7 7"></path></svg></button>
           </div></div>
         </form>
-        <p class="composer-disclaimer">Las definiciones de esta beta provienen de un diccionario local. Verifica siempre el contexto regional.</p>
+        <p class="composer-disclaimer">{{ t('composer.disclaimer') }}</p>
       </div>
     </section>
 
     <section class="page-view" *ngIf="activeView() === 'history'">
-      <div class="page-heading"><span class="page-kicker">TU RECORRIDO</span><h1>Palabras que ya exploraste</h1><p>Vuelve a una consulta y mírala con otros ojos.</p></div>
+      <div class="page-heading"><span class="page-kicker">{{ t('history.kicker') }}</span><h1>{{ t('history.heading') }}</h1><p>{{ t('history.subheading') }}</p></div>
       <div class="history-panel" *ngIf="history().length; else emptyHistory">
-        <div class="table-head"><span>EXPRESIÓN</span><span>RESULTADO</span><span>FECHA</span><span></span></div>
-        <button class="history-row" type="button" *ngFor="let item of history()" (click)="openHistoryItem(item)"><span class="history-expression"><span class="history-symbol">↗</span>{{ item.expression }}</span><span class="history-status" [class.not-found]="!item.found"><i></i>{{ item.found ? 'En diccionario' : 'Sin coincidencia' }}</span><span class="history-date">{{ item.createdAt | date:'d MMM, HH:mm' }}</span><span class="row-arrow">→</span></button>
+        <div class="table-head"><span>{{ t('history.table.expression') }}</span><span>{{ t('history.table.result') }}</span><span>{{ t('history.table.date') }}</span><span></span></div>
+        <button class="history-row" type="button" *ngFor="let item of history()" (click)="openHistoryItem(item)"><span class="history-expression"><span class="history-symbol">↗</span>{{ item.expression }}</span><span class="history-status" [class.not-found]="!item.found"><i></i>{{ item.found ? t('history.found') : t('history.notFound') }}</span><span class="history-date">{{ item.createdAt | date:'d MMM, HH:mm' }}</span><span class="row-arrow">→</span></button>
       </div>
-      <ng-template #emptyHistory><div class="empty-state"><span class="empty-mark">↗</span><strong>Aquí empieza tu recorrido</strong><p>Cuando consultes una expresión, aparecerá en esta lista.</p><button type="button" (click)="startNewChat()">Hacer una consulta</button></div></ng-template>
+      <ng-template #emptyHistory><div class="empty-state"><span class="empty-mark">↗</span><strong>{{ t('history.empty.title') }}</strong><p>{{ t('history.empty.text') }}</p><button type="button" (click)="startNewChat()">{{ t('history.empty.button') }}</button></div></ng-template>
     </section>
 
     <section class="page-view" *ngIf="activeView() === 'dashboard'">
-      <div class="page-heading"><span class="page-kicker">EL MAPA DE LAS PALABRAS</span><h1>Un diccionario que crece</h1><p>Un vistazo a las expresiones y regiones que ya viven aquí.</p></div>
-      <div class="stats-strip" *ngIf="dashboard() as stats; else loadingStats"><div class="stat-block"><span>EXPRESIONES</span><strong>{{ stats.expressions }}</strong><small>en el diccionario</small></div><div class="stat-block stat-accent"><span>CONSULTAS</span><strong>{{ stats.searches }}</strong><small>hechas hasta ahora</small></div><div class="stat-block"><span>REGIONES</span><strong>{{ stats.regions.length }}</strong><small>representadas</small></div></div>
-      <ng-template #loadingStats><div class="stats-offline">Las métricas aparecen cuando el servidor está conectado.</div></ng-template>
-      <div class="region-heading"><span>REGIONES REPRESENTADAS</span><span>EXPRESIONES</span></div>
+      <div class="page-heading"><span class="page-kicker">{{ t('dashboard.kicker') }}</span><h1>{{ t('dashboard.heading') }}</h1><p>{{ t('dashboard.subheading') }}</p></div>
+      <div class="stats-strip" *ngIf="dashboard() as stats; else loadingStats"><div class="stat-block"><span>{{ t('dashboard.expressions') }}</span><strong>{{ stats.expressions }}</strong><small>{{ t('dashboard.expressions.label') }}</small></div><div class="stat-block stat-accent"><span>{{ t('dashboard.searches') }}</span><strong>{{ stats.searches }}</strong><small>{{ t('dashboard.searches.label') }}</small></div><div class="stat-block"><span>{{ t('dashboard.regions') }}</span><strong>{{ stats.regions.length }}</strong><small>{{ t('dashboard.regions.label') }}</small></div></div>
+      <ng-template #loadingStats><div class="stats-offline">{{ t('dashboard.loading') }}</div></ng-template>
+      <div class="region-heading"><span>{{ t('dashboard.region.title') }}</span><span>{{ t('dashboard.region.expression') }}</span></div>
       <div class="region-list" *ngIf="dashboard() as stats"><div class="region-row" *ngFor="let region of stats.regions; let i = index"><span class="region-index">{{ (i + 1).toString().padStart(2, '0') }}</span><strong>{{ region.region }}</strong><span class="region-bar"><i [style.width.%]="stats.expressions ? region.count / stats.expressions * 100 : 0"></i></span><span class="region-count">{{ region.count }}</span></div></div>
-      <div class="dictionary-note"><span>✳</span><p><strong>Las palabras cambian según quién las dice.</strong><br>El contexto y la región hacen parte de cada definición.</p></div>
+      <div class="dictionary-note"><span>✳</span><p><strong>{{ t('dictionary.note.title') }}</strong><br>{{ t('dictionary.note.body') }}</p></div>
     </section>
 
-    <footer class="global-footer"><span>ENTREJERGAS <i>·</i> BETA ACADÉMICA</span><span>Hecho para escuchar mejor</span></footer>
+    <footer class="global-footer"><span>ENTREJERGAS <i>·</i> BETA ACADÉMICA</span><span>{{ t('footer.tagline') }}</span></footer>
   </main>
 </div>

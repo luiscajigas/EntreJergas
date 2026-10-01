@@ -77,6 +77,60 @@ type TranslationKey =
   | 'welcome.kicker'
   | 'welcome.title'
   | 'welcome.copy'
+  | 'search.try'
+  | 'suggestion.parcero.use'
+  | 'suggestion.chimba.use'
+  | 'suggestion.chichai.use'
+  | 'suggestion.papaya.use'
+  | 'suggestion.parcero.origin'
+  | 'suggestion.chimba.origin'
+  | 'suggestion.chichai.origin'
+  | 'suggestion.papaya.origin'
+  | 'beta.note'
+  | 'message.user'
+  | 'message.result.saved'
+  | 'message.result.found'
+  | 'detail.equivalent'
+  | 'detail.phrase'
+  | 'detail.pronunciation'
+  | 'audio.play'
+  | 'notfound.title'
+  | 'notfound.subtitle'
+  | 'thinking.searching'
+  | 'candidate.caption'
+  | 'composer.placeholder'
+  | 'composer.hint'
+  | 'composer.mic.start'
+  | 'composer.mic.stop'
+  | 'composer.mic.unsupported'
+  | 'composer.send'
+  | 'composer.disclaimer'
+  | 'history.kicker'
+  | 'history.heading'
+  | 'history.subheading'
+  | 'history.table.expression'
+  | 'history.table.result'
+  | 'history.table.date'
+  | 'history.found'
+  | 'history.notFound'
+  | 'history.empty.title'
+  | 'history.empty.text'
+  | 'history.empty.button'
+  | 'dashboard.kicker'
+  | 'dashboard.heading'
+  | 'dashboard.subheading'
+  | 'dashboard.expressions'
+  | 'dashboard.expressions.label'
+  | 'dashboard.searches'
+  | 'dashboard.searches.label'
+  | 'dashboard.regions'
+  | 'dashboard.regions.label'
+  | 'dashboard.loading'
+  | 'dashboard.region.title'
+  | 'dashboard.region.expression'
+  | 'dictionary.note.title'
+  | 'dictionary.note.body'
+  | 'footer.tagline'
   | 'language.toggle.aria'
   | 'theme.toggle.light'
   | 'theme.toggle.dark';
@@ -174,6 +228,60 @@ export class App implements OnInit, OnDestroy {
       'welcome.kicker': 'PALABRAS CON ACENTO PROPIO',
       'welcome.title': '¿Qué significa\neso que dijeron?',
       'welcome.copy': 'Cada región tiene su manera de nombrar el mundo.\nEscribe una expresión y descubramos su historia.',
+      'search.try': 'Prueba con una expresión',
+      'suggestion.parcero.use': '¿Cómo se usa?',
+      'suggestion.chimba.use': '¿De dónde viene?',
+      'suggestion.chichai.use': '¿Te suena?',
+      'suggestion.papaya.use': 'Una frase colombiana',
+      'suggestion.parcero.origin': '¿Cómo se usa?',
+      'suggestion.chimba.origin': '¿De dónde viene?',
+      'suggestion.chichai.origin': '¿Te suena?',
+      'suggestion.papaya.origin': 'Una frase colombiana',
+      'beta.note': 'Beta en construcción • Sin inteligencia artificial por ahora',
+      'message.user': 'TU CONSULTA',
+      'message.result.saved': 'GUARDADO EN ESTE DISPOSITIVO',
+      'message.result.found': 'ENCONTRADO EN EL DICCIONARIO',
+      'detail.equivalent': 'EN OTRAS PALABRAS',
+      'detail.phrase': 'EN UNA FRASE',
+      'detail.pronunciation': 'PRONUNCIACIÓN',
+      'audio.play': 'Reproducir pronunciación',
+      'notfound.title': 'Aún no está en el diccionario',
+      'notfound.subtitle': 'Las nuevas expresiones se podrán sumar en una próxima versión.',
+      'thinking.searching': 'Consultando el diccionario',
+      'candidate.caption': '¿Te refieres a?',
+      'composer.placeholder': 'Escribe una palabra o frase…',
+      'composer.hint': 'Detectamos regionalismos mientras escribes',
+      'composer.mic.start': 'Dictar expresión',
+      'composer.mic.stop': 'Detener dictado',
+      'composer.mic.unsupported': 'Dictado no compatible con este navegador',
+      'composer.send': 'Consultar expresión',
+      'composer.disclaimer': 'Las definiciones de esta beta provienen de un diccionario local. Verifica siempre el contexto regional.',
+      'history.kicker': 'TU RECORRIDO',
+      'history.heading': 'Palabras que ya exploraste',
+      'history.subheading': 'Vuelve a una consulta y mírala con otros ojos.',
+      'history.table.expression': 'EXPRESIÓN',
+      'history.table.result': 'RESULTADO',
+      'history.table.date': 'FECHA',
+      'history.found': 'En diccionario',
+      'history.notFound': 'Sin coincidencia',
+      'history.empty.title': 'Aquí empieza tu recorrido',
+      'history.empty.text': 'Cuando consultes una expresión, aparecerá en esta lista.',
+      'history.empty.button': 'Hacer una consulta',
+      'dashboard.kicker': 'EL MAPA DE LAS PALABRAS',
+      'dashboard.heading': 'Un diccionario que crece',
+      'dashboard.subheading': 'Un vistazo a las expresiones y regiones que ya viven aquí.',
+      'dashboard.expressions': 'EXPRESIONES',
+      'dashboard.expressions.label': 'en el diccionario',
+      'dashboard.searches': 'CONSULTAS',
+      'dashboard.searches.label': 'hechas hasta ahora',
+      'dashboard.regions': 'REGIONES',
+      'dashboard.regions.label': 'representadas',
+      'dashboard.loading': 'Las métricas aparecen cuando el servidor está conectado.',
+      'dashboard.region.title': 'REGIONES REPRESENTADAS',
+      'dashboard.region.expression': 'EXPRESIONES',
+      'dictionary.note.title': 'Las palabras cambian según quién las dice.',
+      'dictionary.note.body': 'El contexto y la región hacen parte de cada definición.',
+      'footer.tagline': 'Hecho para escuchar mejor',
       'language.toggle.aria': 'Cambiar idioma',
       'theme.toggle.light': 'Activar modo claro',
       'theme.toggle.dark': 'Activar modo oscuro'
@@ -213,6 +321,60 @@ export class App implements OnInit, OnDestroy {
       'welcome.kicker': 'WORDS WITH THEIR OWN ACCENT',
       'welcome.title': 'What does it mean\nwhen they say that?',
       'welcome.copy': 'Every region has its own way of naming the world.\nWrite an expression and let’s discover its story.',
+      'search.try': 'Try an expression',
+      'suggestion.parcero.use': 'How is it used?',
+      'suggestion.chimba.use': 'Where does it come from?',
+      'suggestion.chichai.use': 'Does it sound familiar?',
+      'suggestion.papaya.use': 'A Colombian phrase',
+      'suggestion.parcero.origin': 'How is it used?',
+      'suggestion.chimba.origin': 'Where does it come from?',
+      'suggestion.chichai.origin': 'Does it sound familiar?',
+      'suggestion.papaya.origin': 'A Colombian phrase',
+      'beta.note': 'Beta in progress • No AI yet',
+      'message.user': 'YOUR QUERY',
+      'message.result.saved': 'SAVED ON THIS DEVICE',
+      'message.result.found': 'FOUND IN THE DICTIONARY',
+      'detail.equivalent': 'IN OTHER WORDS',
+      'detail.phrase': 'IN A PHRASE',
+      'detail.pronunciation': 'PRONUNCIATION',
+      'audio.play': 'Play pronunciation',
+      'notfound.title': 'Not in the dictionary yet',
+      'notfound.subtitle': 'New expressions can be added in a future version.',
+      'thinking.searching': 'Checking the dictionary',
+      'candidate.caption': 'Did you mean?',
+      'composer.placeholder': 'Write a word or phrase…',
+      'composer.hint': 'We detect regionalisms while you type',
+      'composer.mic.start': 'Dictate expression',
+      'composer.mic.stop': 'Stop dictation',
+      'composer.mic.unsupported': 'Dictation not supported in this browser',
+      'composer.send': 'Look up expression',
+      'composer.disclaimer': 'Definitions in this beta come from a local dictionary. Always verify the regional context.',
+      'history.kicker': 'YOUR JOURNEY',
+      'history.heading': 'Words you already explored',
+      'history.subheading': 'Return to a search and revisit it with fresh eyes.',
+      'history.table.expression': 'EXPRESSION',
+      'history.table.result': 'RESULT',
+      'history.table.date': 'DATE',
+      'history.found': 'In dictionary',
+      'history.notFound': 'No match',
+      'history.empty.title': 'This is where your journey begins',
+      'history.empty.text': 'When you look up an expression, it will appear in this list.',
+      'history.empty.button': 'Make a search',
+      'dashboard.kicker': 'THE MAP OF WORDS',
+      'dashboard.heading': 'A dictionary that grows',
+      'dashboard.subheading': 'A quick look at the expressions and regions already here.',
+      'dashboard.expressions': 'EXPRESSIONS',
+      'dashboard.expressions.label': 'in the dictionary',
+      'dashboard.searches': 'SEARCHES',
+      'dashboard.searches.label': 'made so far',
+      'dashboard.regions': 'REGIONS',
+      'dashboard.regions.label': 'represented',
+      'dashboard.loading': 'Metrics appear when the server is connected.',
+      'dashboard.region.title': 'REGIONS REPRESENTED',
+      'dashboard.region.expression': 'EXPRESSIONS',
+      'dictionary.note.title': 'Words change depending on who says them.',
+      'dictionary.note.body': 'Context and region are part of every definition.',
+      'footer.tagline': 'Made to listen better',
       'language.toggle.aria': 'Change language',
       'theme.toggle.light': 'Activate light mode',
       'theme.toggle.dark': 'Activate dark mode'
