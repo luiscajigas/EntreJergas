@@ -114,6 +114,8 @@ app-root[data-theme='dark'] .new-chat-button,
 app-root[data-theme='dark'] .logout-button,
 app-root[data-theme='dark'] .suggestion-grid button,
 app-root[data-theme='dark'] .stats-strip,
+app-root[data-theme='dark'] .history-panel,
+app-root[data-theme='dark'] .region-panel,
 app-root[data-theme='dark'] .empty-state button,
 app-root[data-theme='dark'] .composer,
 app-root[data-theme='dark'] .candidate-chip,
@@ -127,6 +129,17 @@ app-root[data-theme='dark'] .primary-nav button { color: #c5c8cb; }
 app-root[data-theme='dark'] .primary-nav button:hover,
 app-root[data-theme='dark'] .primary-nav button.selected,
 app-root[data-theme='dark'] .chat-icon::after { background: #303438; color: var(--dark-text); }
+app-root[data-theme='dark'] .stat-accent { background: #26292d; }
+app-root[data-theme='dark'] .stat-topline > span:first-child,
+app-root[data-theme='dark'] .stat-index,
+app-root[data-theme='dark'] .region-table-heading { color: var(--dark-muted); }
+app-root[data-theme='dark'] .region-panel-heading,
+app-root[data-theme='dark'] .region-row { border-color: var(--dark-border); }
+app-root[data-theme='dark'] .region-panel-heading h2 { color: var(--dark-text); }
+app-root[data-theme='dark'] .region-total { border-color: var(--dark-border); background: #292d31; color: var(--dark-body); }
+app-root[data-theme='dark'] .dictionary-note { border-color: var(--dark-border); background: #1b2024; }
+app-root[data-theme='dark'] .dictionary-note p { color: var(--dark-body); }
+app-root[data-theme='dark'] .dictionary-note strong { color: var(--dark-text); }
 app-root[data-theme='dark'] .nav-count,
 app-root[data-theme='dark'] .profile-avatar,
 app-root[data-theme='dark'] .message-avatar,
@@ -215,12 +228,41 @@ app-root[data-theme='dark'] .composer textarea::placeholder { color: #a4a9ad; }
 app-root[data-theme='dark'] .send-button:disabled { border-color: #45494d; background: #303438; color: #aaafb3; }
 app-root[data-theme='dark'] .stat-block strong,
 app-root[data-theme='dark'] .stat-accent strong { color: var(--dark-text); }
+app-root[data-theme='dark'] .history-row { border-color: var(--dark-border); }
+app-root[data-theme='dark'] .history-panel { border-color: var(--dark-border); }
+app-root[data-theme='dark'] .region-panel { border-color: var(--dark-border); }
 app-root[data-theme='dark'] .region-bar { background: #303438; }
 app-root[data-theme='dark'] .region-bar i { background: #aeb3b7; }
 app-root[data-theme='dark'] .connection-state { color: #d2d5d7; }
 app-root[data-theme='dark'] .connection-state > span { background: #c6c9cc; box-shadow: 0 0 0 3px #303438; }
 app-root[data-theme='dark'] .connection-state.offline { color: #d2b77c; }
 app-root[data-theme='dark'] .connection-state.offline > span { background: #c19d55; box-shadow: 0 0 0 3px #403824; }
+
+@media (max-width: 980px) {
+	.dashboard-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+	.page-view { padding-right: 30px; padding-left: 30px; }
+}
+
+@media (max-width: 700px) {
+	.topbar { padding-right: 18px; padding-left: 18px; }
+	.chat-view { width: 100%; padding-right: 22px; padding-left: 22px; }
+	.page-view { width: 100%; padding: 38px 20px 36px; }
+	.dashboard-metrics { grid-template-columns: 1fr; }
+	.dashboard-metrics .stat-block:first-child { border-radius: 8px 8px 0 0; }
+	.dashboard-metrics .stat-block:last-child { border-radius: 0 0 8px 8px; }
+	.dashboard-metrics .stat-block { min-height: 105px; border-right: 0; border-bottom: 1px solid #e8ebed; }
+	.dashboard-metrics .stat-block:last-child { border-bottom: 0; }
+	.region-panel-heading { padding: 16px; }
+	.region-list { padding-right: 14px; padding-left: 14px; }
+	.region-row { grid-template-columns: 26px minmax(100px, 1fr) minmax(50px, .7fr) 32px; gap: 8px; }
+}
+
+@media (max-width: 390px) {
+	.chat-view { padding-right: 15px; padding-left: 15px; }
+	.page-view { padding-right: 15px; padding-left: 15px; }
+	.region-panel-heading h2 { font-size: 17px; }
+	.region-total { font-size: 9px; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   app-root[data-theme='dark'] *, app-root[data-theme='dark'] *::before, app-root[data-theme='dark'] *::after { transition-duration: .01ms !important; }

@@ -198,12 +198,38 @@
     </section>
 
     <section class="page-view" *ngIf="activeView() === 'dashboard'">
-      <div class="page-heading"><span class="page-kicker">{{ t('dashboard.kicker') }}</span><h1>{{ t('dashboard.heading') }}</h1><p>{{ t('dashboard.subheading') }}</p></div>
-      <div class="stats-strip" *ngIf="dashboard() as stats; else loadingStats"><div class="stat-block"><span>{{ t('dashboard.expressions') }}</span><strong>{{ stats.expressions }}</strong><small>{{ t('dashboard.expressions.label') }}</small></div><div class="stat-block stat-accent"><span>{{ t('dashboard.searches') }}</span><strong>{{ stats.searches }}</strong><small>{{ t('dashboard.searches.label') }}</small></div><div class="stat-block"><span>{{ t('dashboard.regions') }}</span><strong>{{ stats.regions.length }}</strong><small>{{ t('dashboard.regions.label') }}</small></div></div>
+      <div class="page-heading dashboard-heading"><span class="page-kicker">{{ t('dashboard.kicker') }}</span><h1>{{ t('dashboard.heading') }}</h1><p>{{ t('dashboard.subheading') }}</p></div>
+      <div class="stats-strip dashboard-metrics" *ngIf="dashboard() as stats; else loadingStats">
+        <article class="stat-block">
+          <div class="stat-topline"><span>{{ t('dashboard.expressions') }}</span><span class="stat-index">01</span></div>
+          <strong>{{ stats.expressions }}</strong><small>{{ t('dashboard.expressions.label') }}</small>
+        </article>
+        <article class="stat-block stat-accent">
+          <div class="stat-topline"><span>{{ t('dashboard.searches') }}</span><span class="stat-index">02</span></div>
+          <strong>{{ stats.searches }}</strong><small>{{ t('dashboard.searches.label') }}</small>
+        </article>
+        <article class="stat-block">
+          <div class="stat-topline"><span>{{ t('dashboard.regions') }}</span><span class="stat-index">03</span></div>
+          <strong>{{ stats.regions.length }}</strong><small>{{ t('dashboard.regions.label') }}</small>
+        </article>
+      </div>
       <ng-template #loadingStats><div class="stats-offline">{{ t('dashboard.loading') }}</div></ng-template>
-      <div class="region-heading"><span>{{ t('dashboard.region.title') }}</span><span>{{ t('dashboard.region.expression') }}</span></div>
-      <div class="region-list" *ngIf="dashboard() as stats"><div class="region-row" *ngFor="let region of stats.regions; let i = index"><span class="region-index">{{ (i + 1).toString().padStart(2, '0') }}</span><strong>{{ region.region }}</strong><span class="region-bar"><i [style.width.%]="stats.expressions ? region.count / stats.expressions * 100 : 0"></i></span><span class="region-count">{{ region.count }}</span></div></div>
-      <div class="dictionary-note"><span>✳</span><p><strong>{{ t('dictionary.note.title') }}</strong><br>{{ t('dictionary.note.body') }}</p></div>
+      <section class="region-panel" aria-labelledby="region-panel-title" *ngIf="dashboard() as stats">
+        <div class="region-panel-heading">
+          <div><span class="page-kicker">{{ t('dashboard.region.title') }}</span><h2 id="region-panel-title">{{ t('dashboard.region.panelTitle') }}</h2></div>
+          <span class="region-total">{{ stats.regions.length }} {{ t('dashboard.regions').toLowerCase() }}</span>
+        </div>
+        <div class="region-table-heading"><span>{{ t('dashboard.region.name') }}</span><span>{{ t('dashboard.region.expression') }}</span></div>
+        <div class="region-list">
+          <div class="region-row" *ngFor="let region of stats.regions; let i = index">
+            <span class="region-index">{{ (i + 1).toString().padStart(2, '0') }}</span>
+            <strong>{{ region.region }}</strong>
+            <span class="region-bar"><i [style.width.%]="stats.expressions ? region.count / stats.expressions * 100 : 0"></i></span>
+            <span class="region-count">{{ region.count }}</span>
+          </div>
+        </div>
+      </section>
+      <div class="dictionary-note"><span class="dictionary-note-mark" aria-hidden="true">✳</span><p><strong>{{ t('dictionary.note.title') }}</strong><br>{{ t('dictionary.note.body') }}</p></div>
     </section>
 
     <footer class="global-footer"><span>ENTREJERGAS <i>·</i> BETA ACADÉMICA</span><span>{{ t('footer.tagline') }}</span></footer>

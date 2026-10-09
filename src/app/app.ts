@@ -136,6 +136,8 @@ type TranslationKey =
   | 'dashboard.regions.label'
   | 'dashboard.loading'
   | 'dashboard.region.title'
+  | 'dashboard.region.name'
+  | 'dashboard.region.panelTitle'
   | 'dashboard.region.expression'
   | 'dictionary.note.title'
   | 'dictionary.note.body'
@@ -296,6 +298,8 @@ export class App implements OnInit, OnDestroy {
       'dashboard.regions.label': 'representadas',
       'dashboard.loading': 'Las métricas aparecen cuando el servidor está conectado.',
       'dashboard.region.title': 'REGIONES REPRESENTADAS',
+      'dashboard.region.name': 'REGIÓN',
+      'dashboard.region.panelTitle': 'Expresiones por región',
       'dashboard.region.expression': 'EXPRESIONES',
       'dictionary.note.title': 'Las palabras cambian según quién las dice.',
       'dictionary.note.body': 'El contexto y la región hacen parte de cada definición.',
@@ -398,6 +402,8 @@ export class App implements OnInit, OnDestroy {
       'dashboard.regions.label': 'represented',
       'dashboard.loading': 'Metrics appear when the server is connected.',
       'dashboard.region.title': 'REGIONS REPRESENTED',
+      'dashboard.region.name': 'REGION',
+      'dashboard.region.panelTitle': 'Expressions by region',
       'dashboard.region.expression': 'EXPRESSIONS',
       'dictionary.note.title': 'Words change depending on who says them.',
       'dictionary.note.body': 'Context and region are part of every definition.',
