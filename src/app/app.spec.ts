@@ -34,6 +34,7 @@ describe('App', () => {
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('.brand-name')?.textContent).toContain('entrejergas');
+    expect(compiled.querySelector('.brand-mark .brand-logo')?.getAttribute('src')).toBe('/logo.jpg');
     expect(compiled.querySelector('textarea')?.getAttribute('aria-label')).toContain('expresión regional');
     expect(compiled.querySelector('.profile-details')?.textContent).toContain('ana@example.com');
   });

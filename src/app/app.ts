@@ -98,6 +98,7 @@ type TranslationKey =
   | 'notfound.subtitle'
   | 'thinking.searching'
   | 'candidate.caption'
+  | 'composer.aria'
   | 'composer.placeholder'
   | 'composer.hint'
   | 'composer.mic.start'
@@ -249,6 +250,7 @@ export class App implements OnInit, OnDestroy {
       'notfound.subtitle': 'Las nuevas expresiones se podrán sumar en una próxima versión.',
       'thinking.searching': 'Consultando el diccionario',
       'candidate.caption': '¿Te refieres a?',
+      'composer.aria': 'Escribe una expresión regional',
       'composer.placeholder': 'Escribe una palabra o frase…',
       'composer.hint': 'Detectamos regionalismos mientras escribes',
       'composer.mic.start': 'Dictar expresión',
@@ -342,6 +344,7 @@ export class App implements OnInit, OnDestroy {
       'notfound.subtitle': 'New expressions can be added in a future version.',
       'thinking.searching': 'Checking the dictionary',
       'candidate.caption': 'Did you mean?',
+      'composer.aria': 'Write a regional expression',
       'composer.placeholder': 'Write a word or phrase…',
       'composer.hint': 'We detect regionalisms while you type',
       'composer.mic.start': 'Dictate expression',
@@ -406,6 +409,10 @@ export class App implements OnInit, OnDestroy {
   onDraftChange(value: string): void {
     this.draft.set(value);
     this.worker?.postMessage(value);
+  }
+
+  onBrandLogoError(event: Event): void {
+    (event.target as HTMLImageElement).hidden = true;
   }
 
   t(key: TranslationKey): string {

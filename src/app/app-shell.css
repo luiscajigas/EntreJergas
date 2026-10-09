@@ -35,8 +35,6 @@ button { color: inherit; }
 .app-frame { min-height: 100vh; background: var(--paper); }
 .sidebar { position: fixed; z-index: 5; inset: 0 auto 0 0; display: flex; width: 258px; flex-direction: column; padding: 25px 16px 15px; border-right: 1px solid var(--line); background: #f1f2f4; }
 .brand-lockup { display: flex; align-items: center; gap: 10px; padding: 1px 7px 25px; }
-.brand-mark { display: grid; width: 32px; height: 32px; place-items: center; border-radius: 9px 9px 9px 3px; background: var(--green); color: white; font-family: Georgia, serif; font-size: 17px; letter-spacing: 0; }
-.brand-mark span { color: #f4c27b; }
 .brand-name { color: #26352c; font-family: Georgia, 'Times New Roman', serif; font-size: 19px; letter-spacing: 0; }
 .brand-name span { color: var(--green); font-style: italic; }
 .icon-button { display: grid; width: 34px; height: 34px; place-items: center; border: 0; border-radius: 6px; background: transparent; cursor: pointer; }
@@ -188,7 +186,7 @@ button { color: inherit; }
 .message-list { width: 100%; max-width: 655px; align-self: center; padding: 31px 0 30px; }
 .message-row { display: grid; grid-template-columns: 31px minmax(0, 1fr); gap: 12px; margin-bottom: 31px; animation: settle-in 250ms ease-out both; }
 .message-avatar { display: grid; width: 27px; height: 27px; place-items: center; border: 1px solid #dfe5dc; border-radius: 50%; background: #f1f4ee; color: #737f74; font-size: 8px; font-weight: 700; }
-.assistant-avatar { border: 0; border-radius: 8px 8px 8px 2px; background: var(--green); color: #fff; font-family: Georgia, serif; font-size: 9px; }
+.assistant-avatar { position: relative; overflow: hidden; border: 0; border-radius: 8px 8px 8px 2px; background: var(--green); color: #fff; font-family: Georgia, serif; font-size: 9px; }
 .message-label { display: block; margin: 2px 0 7px; color: #99a198; font-size: 9px; font-weight: 700; }
 .user-quote { margin: 0; color: #28352b; font-family: Georgia, serif; font-size: 20px; }
 .result-eyebrow { display: flex; align-items: center; gap: 7px; margin: 1px 0 9px; color: #6d8c70; }
@@ -213,7 +211,7 @@ button { color: inherit; }
 .missing-body p { margin: 5px 0; color: #766d59; font-size: 11px; line-height: 1.55; }
 .missing-footnote { color: #a19884; font-size: 10px; }
 .thinking-row { display: flex; align-items: center; gap: 9px; margin-left: 2px; color: #8a948a; font-size: 10px; }
-.thinking-mark { display: grid; width: 24px; height: 24px; place-items: center; border-radius: 7px 7px 7px 2px; background: var(--green); color: white; font-family: Georgia, serif; font-size: 8px; }
+.thinking-mark { position: relative; display: grid; width: 24px; height: 24px; overflow: hidden; place-items: center; border-radius: 7px 7px 7px 2px; background: var(--green); color: white; font-family: Georgia, serif; font-size: 8px; }
 .thinking-dots { display: flex; gap: 3px; }
 .thinking-dots i { width: 4px; height: 4px; border-radius: 50%; background: #8aab8e; animation: pulse 900ms infinite alternate; }
 .thinking-dots i:nth-child(2) { animation-delay: 180ms; }

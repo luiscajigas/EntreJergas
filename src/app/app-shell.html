@@ -1,12 +1,12 @@
 <main class="auth-loading" *ngIf="authLoading()" aria-live="polite">
-  <span class="brand-mark" aria-hidden="true">E<span>J</span></span>
+  <span class="brand-mark" aria-hidden="true"><img class="brand-logo" src="/logo.jpg" alt="" (error)="onBrandLogoError($event)"><span class="brand-letters">E<span>J</span></span></span>
   <span>{{ t('auth.loading') }}</span>
 </main>
 
 <main class="auth-gate" *ngIf="!authLoading() && !currentUser()">
   <section class="auth-panel" aria-labelledby="auth-title">
     <div class="auth-brand">
-      <span class="brand-mark" aria-hidden="true">E<span>J</span></span>
+      <span class="brand-mark" aria-hidden="true"><img class="brand-logo" src="/logo.jpg" alt="" (error)="onBrandLogoError($event)"><span class="brand-letters">E<span>J</span></span></span>
       <span class="brand-name">entre<span>jergas</span></span>
       <div class="auth-controls">
         <button class="lang-toggle" type="button" (click)="toggleLanguage()" [attr.aria-label]="t('language.toggle.aria')" [title]="t('language.toggle.aria')">{{ language() === 'es' ? 'ES' : 'EN' }}</button>
@@ -49,7 +49,7 @@
 <div class="app-frame" *ngIf="!authLoading() && currentUser()" [class.sidebar-open]="sidebarOpen()">
   <aside class="sidebar" aria-label="Navegación principal">
     <div class="brand-lockup">
-      <span class="brand-mark" aria-hidden="true">E<span>J</span></span>
+      <span class="brand-mark" aria-hidden="true"><img class="brand-logo" src="/logo.jpg" alt="" (error)="onBrandLogoError($event)"><span class="brand-letters">E<span>J</span></span></span>
       <span class="brand-name">entre<span>jergas</span></span>
       <button class="icon-button mobile-close" type="button" aria-label="Cerrar menú" (click)="sidebarOpen.set(false)">×</button>
     </div>
@@ -129,7 +129,10 @@
 
         <div class="message-list" *ngIf="messages().length > 0">
           <article class="message-row" *ngFor="let message of messages()" [class.user-row]="message.role === 'user'">
-            <div class="message-avatar" [class.assistant-avatar]="message.role === 'assistant'">{{ message.role === 'user' ? 'TÚ' : 'EJ' }}</div>
+            <div class="message-avatar" [class.assistant-avatar]="message.role === 'assistant'">
+              <ng-container *ngIf="message.role === 'user'; else assistantAvatar">TÚ</ng-container>
+              <ng-template #assistantAvatar><img class="brand-logo" src="/logo.jpg" alt="" (error)="onBrandLogoError($event)"><span class="assistant-fallback">EJ</span></ng-template>
+            </div>
             <div class="message-body" *ngIf="message.role === 'user'"><span class="message-label">{{ t('message.user') }}</span><p class="user-quote">{{ message.text }}</p></div>
             <div class="message-body result-body" *ngIf="message.role === 'assistant' && message.entry as entry">
               <div class="result-eyebrow"><span class="result-dot"></span>{{ message.offline ? t('message.result.saved') : t('message.result.found') }}</div>
@@ -147,7 +150,7 @@
               <div class="missing-icon">?</div><div><strong>{{ t('notfound.title') }}</strong><p>{{ message.text }}</p><span class="missing-footnote">{{ t('notfound.subtitle') }}</span></div>
             </div>
           </article>
-          <div class="thinking-row" *ngIf="loading()"><span class="thinking-mark">EJ</span><span class="thinking-dots"><i></i><i></i><i></i></span><small>{{ t('thinking.searching') }}</small></div>
+          <div class="thinking-row" *ngIf="loading()"><span class="thinking-mark"><img class="brand-logo" src="/logo.jpg" alt="" (error)="onBrandLogoError($event)"><span class="assistant-fallback">EJ</span></span><span class="thinking-dots"><i></i><i></i><i></i></span><small>{{ t('thinking.searching') }}</small></div>
         </div>
       </div>
 
@@ -157,7 +160,7 @@
           <button class="candidate-chip" *ngFor="let candidate of candidates()" type="button" (click)="useCandidate(candidate)">{{ candidate.expression }}<small>{{ candidate.region }}</small></button>
         </div>
         <form class="composer" (ngSubmit)="submit()">
-          <textarea aria-label="{{ t('composer.placeholder') }}" rows="1" [ngModel]="draft()" (ngModelChange)="onDraftChange($event)" name="expression" [placeholder]="t('composer.placeholder')" maxlength="100" (keydown.enter)="$event.preventDefault(); submit()"></textarea>
+          <textarea [attr.aria-label]="t('composer.aria')" rows="1" [ngModel]="draft()" (ngModelChange)="onDraftChange($event)" name="expression" [placeholder]="t('composer.placeholder')" maxlength="100" (keydown.enter)="$event.preventDefault(); submit()"></textarea>
           <div class="composer-footer"><span class="input-hint"><span class="hint-dot"></span> {{ t('composer.hint') }}</span><div class="composer-actions">
             <button class="mic-button" [class.is-listening]="listening()" type="button" [disabled]="!speechSupported" (click)="toggleDictation()" [attr.aria-label]="speechSupported ? (listening() ? t('composer.mic.stop') : t('composer.mic.start')) : t('composer.mic.unsupported')" [title]="speechSupported ? (listening() ? t('composer.mic.stop') : t('composer.mic.start')) : t('composer.mic.unsupported')"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="2.8" width="6" height="12" rx="3"></rect><path d="M5.5 11.5v.8a6.5 6.5 0 0 0 13 0v-.8M12 19v3m-4 0h8"></path></svg></button>
             <button class="send-button" type="submit" [disabled]="!draft().trim() || loading()" [attr.aria-label]="t('composer.send')" [title]="t('composer.send')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5m-7 7 7-7 7 7"></path></svg></button>
