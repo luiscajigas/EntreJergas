@@ -49,6 +49,14 @@ type TranslationKey =
   | 'auth.title.register'
   | 'auth.intro.login'
   | 'auth.intro.register'
+  | 'auth.hero.kicker'
+  | 'auth.hero.title'
+  | 'auth.hero.copy'
+  | 'auth.hero.benefits.aria'
+  | 'auth.benefit.expressions'
+  | 'auth.benefit.context'
+  | 'auth.benefit.history'
+  | 'auth.card.kicker'
   | 'auth.name'
   | 'auth.email'
   | 'auth.password'
@@ -201,6 +209,14 @@ export class App implements OnInit, OnDestroy {
       'auth.title.register': 'Tu espacio empieza aquí.',
       'auth.intro.login': 'Entra para continuar explorando expresiones.',
       'auth.intro.register': 'Crea una cuenta para guardar tu recorrido.',
+      'auth.hero.kicker': 'UN ESPACIO PARA EXPLORAR',
+      'auth.hero.title': 'Tu forma de hablar\ntambién cuenta una historia.',
+      'auth.hero.copy': 'Descubre expresiones regionales, conoce su origen y guarda las palabras que te acompañan.',
+      'auth.hero.benefits.aria': 'Lo que encontrarás en EntreJergas',
+      'auth.benefit.expressions': 'Expresiones de distintas regiones',
+      'auth.benefit.context': 'Significados con su contexto',
+      'auth.benefit.history': 'Un recorrido que queda contigo',
+      'auth.card.kicker': 'TU RECORRIDO EMPIEZA AQUÍ',
       'auth.name': 'Nombre',
       'auth.email': 'Correo electrónico',
       'auth.password': 'Contraseña',
@@ -295,6 +311,14 @@ export class App implements OnInit, OnDestroy {
       'auth.title.register': 'Your space starts here.',
       'auth.intro.login': 'Sign in to keep exploring expressions.',
       'auth.intro.register': 'Create an account to keep your journey.',
+      'auth.hero.kicker': 'A PLACE TO EXPLORE',
+      'auth.hero.title': 'The way you speak\ntells a story.',
+      'auth.hero.copy': 'Discover regional expressions, learn where they come from, and keep the words that stay with you.',
+      'auth.hero.benefits.aria': 'What you will find on EntreJergas',
+      'auth.benefit.expressions': 'Expressions from different regions',
+      'auth.benefit.context': 'Meanings with their context',
+      'auth.benefit.history': 'A journey you can return to',
+      'auth.card.kicker': 'YOUR JOURNEY STARTS HERE',
       'auth.name': 'Name',
       'auth.email': 'Email',
       'auth.password': 'Password',

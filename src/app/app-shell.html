@@ -4,10 +4,12 @@
 </main>
 
 <main class="auth-gate" *ngIf="!authLoading() && !currentUser()">
-  <section class="auth-panel" aria-labelledby="auth-title">
-    <div class="auth-brand">
-      <span class="brand-mark" aria-hidden="true"><img class="brand-logo" src="/logo.jpg" alt="" (error)="onBrandLogoError($event)"><span class="brand-letters">E<span>J</span></span></span>
-      <span class="brand-name">entre<span>jergas</span></span>
+  <div class="auth-shell">
+    <header class="auth-header">
+      <div class="auth-brand">
+        <span class="brand-mark" aria-hidden="true"><img class="brand-logo" src="/logo.jpg" alt="" (error)="onBrandLogoError($event)"><span class="brand-letters">E<span>J</span></span></span>
+        <span class="brand-name">entre<span>jergas</span></span>
+      </div>
       <div class="auth-controls">
         <button class="lang-toggle" type="button" (click)="toggleLanguage()" [attr.aria-label]="t('language.toggle.aria')" [title]="t('language.toggle.aria')">{{ language() === 'es' ? 'ES' : 'EN' }}</button>
         <button class="theme-toggle auth-theme-toggle" type="button" (click)="toggleTheme()" [attr.aria-pressed]="theme() === 'dark'" [attr.aria-label]="theme() === 'dark' ? t('theme.toggle.light') : t('theme.toggle.dark')" [title]="theme() === 'dark' ? t('theme.toggle.light') : t('theme.toggle.dark')">
@@ -15,35 +17,51 @@
           <svg *ngIf="theme() === 'dark'" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.6 8.6 0 1 0 20.2 15.2Z"></path></svg>
         </button>
       </div>
+    </header>
+
+    <div class="auth-layout">
+      <section class="auth-story" aria-labelledby="auth-story-title">
+        <span class="auth-story-kicker">{{ t('auth.hero.kicker') }}</span>
+        <h1 id="auth-story-title">{{ t('auth.hero.title').split('\n')[0] }}<br>{{ t('auth.hero.title').split('\n')[1] }}</h1>
+        <p class="auth-story-copy">{{ t('auth.hero.copy') }}</p>
+        <ul class="auth-benefits" [attr.aria-label]="t('auth.hero.benefits.aria')">
+          <li><span>01</span>{{ t('auth.benefit.expressions') }}</li>
+          <li><span>02</span>{{ t('auth.benefit.context') }}</li>
+          <li><span>03</span>{{ t('auth.benefit.history') }}</li>
+        </ul>
+      </section>
+
+      <section class="auth-panel" aria-labelledby="auth-title">
+        <span class="auth-card-kicker">{{ t('auth.card.kicker') }}</span>
+        <h2 id="auth-title">{{ authMode() === 'login' ? t('auth.title.login') : t('auth.title.register') }}</h2>
+        <p class="auth-intro">{{ authMode() === 'login' ? t('auth.intro.login') : t('auth.intro.register') }}</p>
+
+        <form class="auth-form" (ngSubmit)="submitAuth()">
+          <label *ngIf="authMode() === 'register'">
+            {{ t('auth.name') }}
+            <input type="text" name="name" [(ngModel)]="authName" autocomplete="name" minlength="2" maxlength="80" required>
+          </label>
+          <label>
+            {{ t('auth.email') }}
+            <input type="email" name="email" [(ngModel)]="authEmail" autocomplete="email" maxlength="254" required>
+          </label>
+          <label>
+            {{ t('auth.password') }}
+            <input type="password" name="password" [(ngModel)]="authPassword" [attr.autocomplete]="authMode() === 'register' ? 'new-password' : 'current-password'" [attr.minlength]="authMode() === 'register' ? 8 : null" maxlength="128" required>
+          </label>
+          <p class="auth-error" *ngIf="authError()" role="alert">{{ authError() }}</p>
+          <button class="auth-submit" type="submit" [disabled]="authSubmitting()">
+            {{ authSubmitting() ? t('auth.submit.pending') : authMode() === 'login' ? t('auth.submit.login') : t('auth.submit.register') }}
+          </button>
+        </form>
+
+        <p class="auth-switch">
+          {{ authMode() === 'login' ? t('auth.switch.login') : t('auth.switch.register') }}
+          <button type="button" (click)="toggleAuthMode()">{{ authMode() === 'login' ? t('auth.switch.action.login') : t('auth.switch.action.register') }}</button>
+        </p>
+      </section>
     </div>
-    <span class="auth-kicker">{{ t('auth.kicker') }}</span>
-    <h1 id="auth-title">{{ authMode() === 'login' ? t('auth.title.login') : t('auth.title.register') }}</h1>
-    <p class="auth-intro">{{ authMode() === 'login' ? t('auth.intro.login') : t('auth.intro.register') }}</p>
-
-    <form class="auth-form" (ngSubmit)="submitAuth()">
-      <label *ngIf="authMode() === 'register'">
-        {{ t('auth.name') }}
-        <input type="text" name="name" [(ngModel)]="authName" autocomplete="name" minlength="2" maxlength="80" required>
-      </label>
-      <label>
-        {{ t('auth.email') }}
-        <input type="email" name="email" [(ngModel)]="authEmail" autocomplete="email" maxlength="254" required>
-      </label>
-      <label>
-        {{ t('auth.password') }}
-        <input type="password" name="password" [(ngModel)]="authPassword" [attr.autocomplete]="authMode() === 'register' ? 'new-password' : 'current-password'" [attr.minlength]="authMode() === 'register' ? 8 : null" maxlength="128" required>
-      </label>
-      <p class="auth-error" *ngIf="authError()" role="alert">{{ authError() }}</p>
-      <button class="auth-submit" type="submit" [disabled]="authSubmitting()">
-        {{ authSubmitting() ? t('auth.submit.pending') : authMode() === 'login' ? t('auth.submit.login') : t('auth.submit.register') }}
-      </button>
-    </form>
-
-    <p class="auth-switch">
-      {{ authMode() === 'login' ? t('auth.switch.login') : t('auth.switch.register') }}
-      <button type="button" (click)="toggleAuthMode()">{{ authMode() === 'login' ? t('auth.switch.action.login') : t('auth.switch.action.register') }}</button>
-    </p>
-  </section>
+  </div>
 </main>
 
 <div class="app-frame" *ngIf="!authLoading() && currentUser()" [class.sidebar-open]="sidebarOpen()">

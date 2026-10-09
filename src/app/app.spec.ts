@@ -46,6 +46,7 @@ describe('App', () => {
 
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('.auth-panel')).toBeTruthy();
+    expect(compiled.querySelector('.auth-layout .auth-story h1')?.textContent).toContain('Tu forma de hablar');
     expect(compiled.querySelector('input[name="email"]')).toBeTruthy();
     expect(compiled.querySelector('.auth-theme-toggle')).toBeTruthy();
 
