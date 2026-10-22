@@ -98,6 +98,7 @@ type TranslationKey =
   | 'message.user'
   | 'message.result.saved'
   | 'message.result.found'
+  | 'message.result.ai'
   | 'detail.equivalent'
   | 'detail.phrase'
   | 'detail.pronunciation'
@@ -121,6 +122,7 @@ type TranslationKey =
   | 'history.table.result'
   | 'history.table.date'
   | 'history.found'
+  | 'history.ai'
   | 'history.notFound'
   | 'history.empty.title'
   | 'history.empty.text'
@@ -256,17 +258,18 @@ export class App implements OnInit, OnDestroy {
       'suggestion.chimba.origin': '¿De dónde viene?',
       'suggestion.chichai.origin': '¿Te suena?',
       'suggestion.papaya.origin': 'Una frase colombiana',
-      'beta.note': 'Beta en construcción • Sin inteligencia artificial por ahora',
+      'beta.note': 'Consulta el diccionario o explora una definición generada con IA.',
       'message.user': 'TU CONSULTA',
       'message.result.saved': 'GUARDADO EN ESTE DISPOSITIVO',
       'message.result.found': 'ENCONTRADO EN EL DICCIONARIO',
+      'message.result.ai': 'GENERADO CON IA · VERIFICA EL CONTEXTO',
       'detail.equivalent': 'EN OTRAS PALABRAS',
       'detail.phrase': 'EN UNA FRASE',
       'detail.pronunciation': 'PRONUNCIACIÓN',
       'audio.play': 'Reproducir pronunciación',
-      'notfound.title': 'Aún no está en el diccionario',
-      'notfound.subtitle': 'Las nuevas expresiones se podrán sumar en una próxima versión.',
-      'thinking.searching': 'Consultando el diccionario',
+      'notfound.title': 'No encontramos una definición fiable',
+      'notfound.subtitle': 'Prueba otra forma de escribirla o aporta más contexto.',
+      'thinking.searching': 'Consultando el diccionario y la IA',
       'candidate.caption': '¿Te refieres a?',
       'composer.aria': 'Escribe una expresión regional',
       'composer.placeholder': 'Escribe una palabra o frase…',
@@ -275,7 +278,7 @@ export class App implements OnInit, OnDestroy {
       'composer.mic.stop': 'Detener dictado',
       'composer.mic.unsupported': 'Dictado no compatible con este navegador',
       'composer.send': 'Consultar expresión',
-      'composer.disclaimer': 'Las definiciones de esta beta provienen de un diccionario local. Verifica siempre el contexto regional.',
+      'composer.disclaimer': 'Las respuestas generadas con IA pueden ser imprecisas. Comprueba siempre el contexto regional.',
       'history.kicker': 'TU RECORRIDO',
       'history.heading': 'Palabras que ya exploraste',
       'history.subheading': 'Vuelve a una consulta y mírala con otros ojos.',
@@ -283,6 +286,7 @@ export class App implements OnInit, OnDestroy {
       'history.table.result': 'RESULTADO',
       'history.table.date': 'FECHA',
       'history.found': 'En diccionario',
+      'history.ai': 'Generada con IA',
       'history.notFound': 'Sin coincidencia',
       'history.empty.title': 'Aquí empieza tu recorrido',
       'history.empty.text': 'Cuando consultes una expresión, aparecerá en esta lista.',
@@ -360,17 +364,18 @@ export class App implements OnInit, OnDestroy {
       'suggestion.chimba.origin': 'Where does it come from?',
       'suggestion.chichai.origin': 'Does it sound familiar?',
       'suggestion.papaya.origin': 'A Colombian phrase',
-      'beta.note': 'Beta in progress • No AI yet',
+      'beta.note': 'Search the dictionary or explore an AI-generated definition.',
       'message.user': 'YOUR QUERY',
       'message.result.saved': 'SAVED ON THIS DEVICE',
       'message.result.found': 'FOUND IN THE DICTIONARY',
+      'message.result.ai': 'AI-GENERATED · VERIFY THE CONTEXT',
       'detail.equivalent': 'IN OTHER WORDS',
       'detail.phrase': 'IN A PHRASE',
       'detail.pronunciation': 'PRONUNCIATION',
       'audio.play': 'Play pronunciation',
-      'notfound.title': 'Not in the dictionary yet',
-      'notfound.subtitle': 'New expressions can be added in a future version.',
-      'thinking.searching': 'Checking the dictionary',
+      'notfound.title': 'We could not find a reliable definition',
+      'notfound.subtitle': 'Try another spelling or provide more context.',
+      'thinking.searching': 'Checking the dictionary and AI',
       'candidate.caption': 'Did you mean?',
       'composer.aria': 'Write a regional expression',
       'composer.placeholder': 'Write a word or phrase…',
@@ -379,7 +384,7 @@ export class App implements OnInit, OnDestroy {
       'composer.mic.stop': 'Stop dictation',
       'composer.mic.unsupported': 'Dictation not supported in this browser',
       'composer.send': 'Look up expression',
-      'composer.disclaimer': 'Definitions in this beta come from a local dictionary. Always verify the regional context.',
+      'composer.disclaimer': 'AI-generated answers may be inaccurate. Always verify the regional context.',
       'history.kicker': 'YOUR JOURNEY',
       'history.heading': 'Words you already explored',
       'history.subheading': 'Return to a search and revisit it with fresh eyes.',
@@ -387,6 +392,7 @@ export class App implements OnInit, OnDestroy {
       'history.table.result': 'RESULT',
       'history.table.date': 'DATE',
       'history.found': 'In dictionary',
+      'history.ai': 'AI-generated',
       'history.notFound': 'No match',
       'history.empty.title': 'This is where your journey begins',
       'history.empty.text': 'When you look up an expression, it will appear in this list.',
@@ -536,7 +542,7 @@ export class App implements OnInit, OnDestroy {
     try {
       const result = await firstValueFrom(this.api.lookup(expression));
       this.apiOnline.set(true);
-      if (result.entry) this.saveCachedEntry(result.entry);
+      if (result.entry?.source === 'database') this.saveCachedEntry(result.entry);
       this.messages.update((items) => [...items, result.entry
         ? { id: ++this.messageId, role: 'assistant', entry: result.entry }
         : { id: ++this.messageId, role: 'assistant', text: result.message, missing: true }

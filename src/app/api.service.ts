@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface ExpressionEntry {
-  id: number;
+  id: number | null;
   expression: string;
   meaning: string;
   region: string;
@@ -12,7 +12,7 @@ export interface ExpressionEntry {
   example: string;
   pronunciation: string | null;
   audioUrl: string | null;
-  source: 'database';
+  source: 'database' | 'ai';
 }
 
 export interface LookupResponse {
@@ -25,6 +25,7 @@ export interface HistoryItem {
   id: number;
   expression: string;
   found: boolean;
+  source: 'database' | 'ai' | 'not_found';
   createdAt: string;
 }
 

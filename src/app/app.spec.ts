@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
+import { vi } from 'vitest';
 import { App } from './app';
 import { ApiService } from './api.service';
 
@@ -14,7 +15,8 @@ describe('App', () => {
           currentUser: () => of({ user: { id: 1, email: 'ana@example.com', name: 'Ana' } }),
           history: () => of({ items: [] }),
           dashboard: () => of({ expressions: 16, searches: 0, regions: [] }),
-          health: () => of({ status: 'ok', service: 'entrejergas-api' })
+          health: () => of({ status: 'ok', service: 'entrejergas-api' }),
+          lookup: () => of({ found: false, entry: null, message: 'No encontrada' })
         }
       }]
     })
@@ -91,5 +93,37 @@ describe('App', () => {
     expect(fixture.componentInstance.language()).toBe('en');
     expect(fixture.componentInstance.t('auth.title.login')).toBe('Nice to see you again.');
     expect(localStorage.getItem('entrejergas.language.v1')).toBe('en');
+  });
+
+  it('labels AI answers and does not cache them as dictionary entries', async () => {
+    localStorage.setItem('entrejergas.language.v1', 'es');
+    localStorage.removeItem('entrejergas.entries.v1');
+    const fixture = TestBed.createComponent(App);
+    const app = fixture.componentInstance;
+    const lookup = vi.spyOn(TestBed.inject(ApiService), 'lookup').mockReturnValue(of({
+      found: true,
+      entry: {
+        id: null,
+        expression: 'palabra nueva',
+        meaning: 'Significado generado.',
+        region: 'Por confirmar',
+        context: 'Uso regional por confirmar.',
+        equivalent: 'expresión similar',
+        example: 'Un ejemplo de uso.',
+        pronunciation: null,
+        audioUrl: null,
+        source: 'ai'
+      }
+    }));
+    app.currentUser.set({ id: 1, email: 'ana@example.com', name: 'Ana' });
+    app.authLoading.set(false);
+    app.onDraftChange('palabra nueva');
+
+    await app.submit();
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.result-eyebrow')?.textContent).toContain('GENERADO CON IA');
+    expect(localStorage.getItem('entrejergas.entries.v1')).toBeNull();
+    lookup.mockRestore();
   });
 });
