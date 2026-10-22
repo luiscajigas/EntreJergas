@@ -25,7 +25,7 @@ export interface HistoryItem {
   id: number;
   expression: string;
   found: boolean;
-  source: 'database' | 'ai' | 'not_found';
+  source: 'database' | 'ai' | 'ai_saved' | 'not_found';
   createdAt: string;
 }
 

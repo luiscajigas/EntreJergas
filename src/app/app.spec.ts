@@ -124,6 +124,28 @@ describe('App', () => {
 
     expect(fixture.nativeElement.querySelector('.result-eyebrow')?.textContent).toContain('GENERADO CON IA');
     expect(localStorage.getItem('entrejergas.entries.v1')).toBeNull();
+
+    lookup.mockReturnValue(of({
+      found: true,
+      entry: {
+        id: 24,
+        expression: 'otra expresión',
+        meaning: 'Significado generado.',
+        region: 'Por confirmar',
+        context: 'Uso regional por confirmar.',
+        equivalent: 'expresión similar',
+        example: 'Un ejemplo de uso.',
+        pronunciation: null,
+        audioUrl: null,
+        source: 'ai'
+      }
+    }));
+    app.onDraftChange('“otra expresión”');
+    await app.submit();
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelectorAll('.result-eyebrow')[1]?.textContent)
+      .toContain('AGREGADO AL DICCIONARIO');
     lookup.mockRestore();
   });
 });

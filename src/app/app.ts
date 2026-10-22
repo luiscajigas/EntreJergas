@@ -99,6 +99,7 @@ type TranslationKey =
   | 'message.result.saved'
   | 'message.result.found'
   | 'message.result.ai'
+  | 'message.result.aiSaved'
   | 'detail.equivalent'
   | 'detail.phrase'
   | 'detail.pronunciation'
@@ -123,6 +124,7 @@ type TranslationKey =
   | 'history.table.date'
   | 'history.found'
   | 'history.ai'
+  | 'history.aiSaved'
   | 'history.notFound'
   | 'history.empty.title'
   | 'history.empty.text'
@@ -258,11 +260,12 @@ export class App implements OnInit, OnDestroy {
       'suggestion.chimba.origin': '¿De dónde viene?',
       'suggestion.chichai.origin': '¿Te suena?',
       'suggestion.papaya.origin': 'Una frase colombiana',
-      'beta.note': 'Consulta el diccionario o explora una definición generada con IA.',
+      'beta.note': 'Las expresiones desconocidas solo se agregan si las escribes entre comillas.',
       'message.user': 'TU CONSULTA',
       'message.result.saved': 'GUARDADO EN ESTE DISPOSITIVO',
       'message.result.found': 'ENCONTRADO EN EL DICCIONARIO',
       'message.result.ai': 'GENERADO CON IA · VERIFICA EL CONTEXTO',
+      'message.result.aiSaved': 'GENERADO CON IA · AGREGADO AL DICCIONARIO',
       'detail.equivalent': 'EN OTRAS PALABRAS',
       'detail.phrase': 'EN UNA FRASE',
       'detail.pronunciation': 'PRONUNCIACIÓN',
@@ -273,7 +276,7 @@ export class App implements OnInit, OnDestroy {
       'candidate.caption': '¿Te refieres a?',
       'composer.aria': 'Escribe una expresión regional',
       'composer.placeholder': 'Escribe una palabra o frase…',
-      'composer.hint': 'Detectamos regionalismos mientras escribes',
+      'composer.hint': 'Para guardar una expresión nueva, escríbela completa entre comillas.',
       'composer.mic.start': 'Dictar expresión',
       'composer.mic.stop': 'Detener dictado',
       'composer.mic.unsupported': 'Dictado no compatible con este navegador',
@@ -287,6 +290,7 @@ export class App implements OnInit, OnDestroy {
       'history.table.date': 'FECHA',
       'history.found': 'En diccionario',
       'history.ai': 'Generada con IA',
+      'history.aiSaved': 'IA · En diccionario',
       'history.notFound': 'Sin coincidencia',
       'history.empty.title': 'Aquí empieza tu recorrido',
       'history.empty.text': 'Cuando consultes una expresión, aparecerá en esta lista.',
@@ -364,11 +368,12 @@ export class App implements OnInit, OnDestroy {
       'suggestion.chimba.origin': 'Where does it come from?',
       'suggestion.chichai.origin': 'Does it sound familiar?',
       'suggestion.papaya.origin': 'A Colombian phrase',
-      'beta.note': 'Search the dictionary or explore an AI-generated definition.',
+      'beta.note': 'Unknown expressions are only added when you put them in quotation marks.',
       'message.user': 'YOUR QUERY',
       'message.result.saved': 'SAVED ON THIS DEVICE',
       'message.result.found': 'FOUND IN THE DICTIONARY',
       'message.result.ai': 'AI-GENERATED · VERIFY THE CONTEXT',
+      'message.result.aiSaved': 'AI-GENERATED · ADDED TO THE DICTIONARY',
       'detail.equivalent': 'IN OTHER WORDS',
       'detail.phrase': 'IN A PHRASE',
       'detail.pronunciation': 'PRONUNCIATION',
@@ -379,7 +384,7 @@ export class App implements OnInit, OnDestroy {
       'candidate.caption': 'Did you mean?',
       'composer.aria': 'Write a regional expression',
       'composer.placeholder': 'Write a word or phrase…',
-      'composer.hint': 'We detect regionalisms while you type',
+      'composer.hint': 'To save a new expression, write the whole expression in quotation marks.',
       'composer.mic.start': 'Dictate expression',
       'composer.mic.stop': 'Stop dictation',
       'composer.mic.unsupported': 'Dictation not supported in this browser',
@@ -393,6 +398,7 @@ export class App implements OnInit, OnDestroy {
       'history.table.date': 'DATE',
       'history.found': 'In dictionary',
       'history.ai': 'AI-generated',
+      'history.aiSaved': 'AI · In dictionary',
       'history.notFound': 'No match',
       'history.empty.title': 'This is where your journey begins',
       'history.empty.text': 'When you look up an expression, it will appear in this list.',

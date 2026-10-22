@@ -153,7 +153,7 @@
             </div>
             <div class="message-body" *ngIf="message.role === 'user'"><span class="message-label">{{ t('message.user') }}</span><p class="user-quote">{{ message.text }}</p></div>
             <div class="message-body result-body" *ngIf="message.role === 'assistant' && message.entry as entry">
-              <div class="result-eyebrow"><span class="result-dot"></span>{{ message.offline ? t('message.result.saved') : (entry.source === 'ai' ? t('message.result.ai') : t('message.result.found')) }}</div>
+              <div class="result-eyebrow"><span class="result-dot"></span>{{ message.offline ? t('message.result.saved') : (entry.source === 'ai' ? (entry.id !== null ? t('message.result.aiSaved') : t('message.result.ai')) : t('message.result.found')) }}</div>
               <h2>{{ entry.expression }}</h2>
               <p class="meaning">{{ entry.meaning }}</p>
               <div class="result-meta"><span class="region-tag"><span aria-hidden="true">⌖</span>{{ entry.region }}</span><span class="usage-tag">{{ entry.context }}</span></div>
@@ -192,7 +192,7 @@
       <div class="page-heading"><span class="page-kicker">{{ t('history.kicker') }}</span><h1>{{ t('history.heading') }}</h1><p>{{ t('history.subheading') }}</p></div>
       <div class="history-panel" *ngIf="history().length; else emptyHistory">
         <div class="table-head"><span>{{ t('history.table.expression') }}</span><span>{{ t('history.table.result') }}</span><span>{{ t('history.table.date') }}</span><span></span></div>
-        <button class="history-row" type="button" *ngFor="let item of history()" (click)="openHistoryItem(item)"><span class="history-expression"><span class="history-symbol">↗</span>{{ item.expression }}</span><span class="history-status" [class.not-found]="!item.found"><i></i>{{ item.source === 'ai' ? t('history.ai') : (item.found ? t('history.found') : t('history.notFound')) }}</span><span class="history-date">{{ item.createdAt | date:'d MMM, HH:mm' }}</span><span class="row-arrow">→</span></button>
+        <button class="history-row" type="button" *ngFor="let item of history()" (click)="openHistoryItem(item)"><span class="history-expression"><span class="history-symbol">↗</span>{{ item.expression }}</span><span class="history-status" [class.not-found]="!item.found"><i></i>{{ item.source === 'ai_saved' ? t('history.aiSaved') : (item.source === 'ai' ? t('history.ai') : (item.found ? t('history.found') : t('history.notFound'))) }}</span><span class="history-date">{{ item.createdAt | date:'d MMM, HH:mm' }}</span><span class="row-arrow">→</span></button>
       </div>
       <ng-template #emptyHistory><div class="empty-state"><span class="empty-mark">↗</span><strong>{{ t('history.empty.title') }}</strong><p>{{ t('history.empty.text') }}</p><button type="button" (click)="startNewChat()">{{ t('history.empty.button') }}</button></div></ng-template>
     </section>
