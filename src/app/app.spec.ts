@@ -146,6 +146,20 @@ describe('App', () => {
 
     expect(fixture.nativeElement.querySelectorAll('.result-eyebrow')[1]?.textContent)
       .toContain('AGREGADO AL DICCIONARIO');
+
+    lookup.mockReturnValue(of({
+      found: false,
+      entry: null,
+      message: 'Gemini no pudo responder (error 503). La expresión no se agregó; inténtalo de nuevo más tarde.'
+    }));
+    app.onDraftChange('"cachon"');
+    await app.submit();
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.missing-body p')?.textContent)
+      .toContain('error 503');
+    expect(fixture.nativeElement.querySelector('.missing-body p')?.textContent)
+      .toContain('no se agregó');
     lookup.mockRestore();
   });
 });
