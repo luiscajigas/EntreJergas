@@ -15,6 +15,8 @@ export interface ExpressionEntry {
   source: 'database' | 'ai';
 }
 
+export type EntryTranslation = Pick<ExpressionEntry, 'meaning' | 'region' | 'context' | 'equivalent' | 'example'>;
+
 export interface LookupResponse {
   found: boolean;
   entry: ExpressionEntry | null;
@@ -73,6 +75,12 @@ export class ApiService {
 
   lookup(expression: string): Observable<LookupResponse> {
     return this.http.post<LookupResponse>(`${this.baseUrl}/lookup`, { expression });
+  }
+
+  translate(entry: ExpressionEntry): Observable<{ translation: EntryTranslation }> {
+    const { id, expression, meaning, region, context, equivalent, example } = entry;
+    const body = id !== null ? { id } : { expression, meaning, region, context, equivalent, example };
+    return this.http.post<{ translation: EntryTranslation }>(`${this.baseUrl}/translate`, body);
   }
 
   history(): Observable<{ items: HistoryItem[] }> {
