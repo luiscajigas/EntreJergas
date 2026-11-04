@@ -1,5 +1,9 @@
-import { Injectable, signal } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
+import { Injectable, effect, signal } from '@angular/core';
 import { AppLanguage, TranslationKey, translations } from './i18n';
+
+registerLocaleData(localeEs);
 
 const storageKey = 'entrejergas.language.v1';
 
@@ -16,6 +20,12 @@ function readLanguagePreference(): AppLanguage {
 @Injectable({ providedIn: 'root' })
 export class I18nService {
   readonly language = signal<AppLanguage>(readLanguagePreference());
+
+  constructor() {
+    effect(() => {
+      document.documentElement.lang = this.language();
+    });
+  }
 
   t(key: TranslationKey): string {
     return translations[this.language()][key];

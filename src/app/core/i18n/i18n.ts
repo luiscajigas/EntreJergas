@@ -87,6 +87,17 @@ const es = {
   'auth.error.network': "No fue posible iniciar sesión. Revisa tu conexión e inténtalo de nuevo.",
   'entry.translating': "Traduciendo…",
   'entry.translateFailed': "No se pudo traducir esta definición. Se muestra en español.",
+  'lookup.reason.not_found': "Todavía no tenemos esta expresión en el diccionario.",
+  'lookup.reason.not_configured': "La IA no está configurada en el servidor. La expresión no se agregó.",
+  'lookup.reason.invalid_response': "La IA respondió con un formato que no pudimos validar. La expresión no se agregó; inténtalo de nuevo.",
+  'lookup.reason.quota_exceeded': "La IA alcanzó su límite de uso. Inténtalo más tarde; la expresión no se agregó.",
+  'lookup.reason.provider_unavailable': "La IA no pudo responder. La expresión no se agregó; inténtalo de nuevo más tarde.",
+  'lookup.reason.rate_limited': "Hiciste muchas búsquedas nuevas seguidas. Espera un minuto; la expresión no se agregó.",
+  'lookup.rejected': "El servidor no aceptó esta búsqueda. Revisa el texto e inténtalo de nuevo.",
+  'auth.error.exists': "Ya existe una cuenta con ese correo.",
+  'auth.error.invalid': "Revisa los datos: el nombre debe tener entre 2 y 80 caracteres, el correo debe ser válido y la contraseña debe tener al menos 8.",
+  'auth.error.rateLimited': "Demasiados intentos fallidos. Espera unos minutos e inténtalo de nuevo.",
+  'auth.error.expired': "Tu sesión venció. Inicia sesión de nuevo.",
 };
 
 export type TranslationKey = keyof typeof es;
@@ -178,6 +189,17 @@ const en: Record<TranslationKey, string> = {
   'auth.error.network': "We could not sign you in. Check your connection and try again.",
   'entry.translating': "Translating…",
   'entry.translateFailed': "We could not translate this definition, so it is shown in Spanish.",
+  'lookup.reason.not_found': "We do not have this expression in the dictionary yet.",
+  'lookup.reason.not_configured': "AI is not set up on the server. The expression was not added.",
+  'lookup.reason.invalid_response': "The AI replied in a format we could not validate. The expression was not added; please try again.",
+  'lookup.reason.quota_exceeded': "The AI reached its usage limit. Try again later; the expression was not added.",
+  'lookup.reason.provider_unavailable': "The AI could not reply. The expression was not added; please try again later.",
+  'lookup.reason.rate_limited': "You made many new searches in a row. Wait a minute; the expression was not added.",
+  'lookup.rejected': "The server did not accept this search. Check the text and try again.",
+  'auth.error.exists': "An account with that email already exists.",
+  'auth.error.invalid': "Check your details: the name must have 2 to 80 characters, the email must be valid and the password must have at least 8.",
+  'auth.error.rateLimited': "Too many failed attempts. Wait a few minutes and try again.",
+  'auth.error.expired': "Your session expired. Please sign in again.",
 };
 
 export const translations: Record<AppLanguage, Record<TranslationKey, string>> = { es, en };
