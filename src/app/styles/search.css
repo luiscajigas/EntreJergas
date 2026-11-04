@@ -71,3 +71,15 @@
 @media (max-width: 900px) {
   .search-body { grid-template-columns: minmax(0, 1fr); }
 }
+
+.missing-body { display: flex; gap: 14px; padding: clamp(20px, 3vw, 28px); border: 1px solid var(--line); border-radius: 20px; background: var(--red-soft); color: var(--ink); }
+.missing-body > app-icon { margin-top: 3px; color: var(--red); font-size: 22px; }
+.missing-body h2 { font-family: var(--font-text); font-size: 30px; font-weight: 800; line-height: 1.15; overflow-wrap: anywhere; }
+.missing-body strong { display: block; margin-top: 8px; font-size: 17px; }
+.missing-body p { margin-top: 4px; color: var(--ink-soft); font-size: 16px; line-height: 1.45; }
+.missing-footnote { display: block; margin-top: 8px; color: var(--ink-soft); font-size: 15px; }
+
+.pending-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px; padding: 24px; border: 1px dashed var(--ink-faint); border-radius: 20px; }
+.pending-row .hl { font-family: var(--font-text); font-size: 30px; font-weight: 800; animation: pending-pulse 1s ease-in-out infinite alternate; }
+.pending-row small { color: var(--ink-soft); font-size: 15px; }
+@keyframes pending-pulse { to { opacity: .55; } }
