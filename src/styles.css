@@ -48,6 +48,8 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 ::selection { background: var(--yellow); color: var(--on-yellow); }
 
 .brand-mark { display: inline-flex; flex: none; }
+.hl { margin: 0 -.06em; padding: 0 .16em; border-radius: .28em .42em .3em .46em / .5em .3em .5em .34em; background: var(--yellow); color: var(--on-yellow); -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 .auth-loading { display: grid; min-height: 100vh; place-content: center; justify-items: center; gap: 13px; padding: 24px; background: #f4f5f7; color: #77817a; font-size: 12px; }
 .auth-loading .brand-mark { margin-bottom: 4px; }
