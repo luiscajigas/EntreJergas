@@ -24,8 +24,13 @@ const parcero: ExpressionEntry = {
   example: 'Mi parcero.',
   pronunciation: null,
   audioUrl: null,
-  source: 'database'
+  source: 'database',
+  countries: ['CO'],
+  register: 'informal'
 };
+
+const foundResponse = (...entries: ExpressionEntry[]): LookupResponse => ({ found: true, entry: entries[0], entries, unresolved: [] });
+const emptyResponse = (fields: Partial<LookupResponse> = {}): LookupResponse => ({ found: false, entry: null, entries: [], unresolved: [], ...fields });
 
 function createApi(signedIn: boolean) {
   return {
@@ -34,8 +39,8 @@ function createApi(signedIn: boolean) {
     register: () => of({ user: ana }),
     logout: () => of(undefined),
     history: () => of({ items: [] }),
-    dashboard: () => of({ expressions: 16, searches: 0, regions: [] }),
-    lookup: (): ReturnType<ApiService['lookup']> => of({ found: false, entry: null, reason: 'not_found' } as LookupResponse),
+    dashboard: () => of({ expressions: 16, searches: 0, regions: [], countries: [{ country: 'AR', count: 3 }, { country: 'CO', count: 2 }] }),
+    lookup: (): ReturnType<ApiService['lookup']> => of(emptyResponse({ reason: 'not_found' })),
     translate: () => of({ translation: { meaning: 'A close friend', region: 'Antioquia', context: 'Informal', equivalent: 'buddy', example: 'My parcero helped me.' } })
   };
 }
@@ -157,6 +162,7 @@ describe('App', () => {
     await TestBed.inject(Router).navigateByUrl('/diccionario');
     await settle(fixture);
     expect(element.querySelector('.stats')?.textContent).toContain('16');
+    expect(element.querySelector('.region-list')?.textContent).toContain('Argentina');
   });
 
   it('lleva a la búsqueda con Ctrl K desde cualquier vista', async () => {
@@ -202,21 +208,60 @@ describe('Búsqueda', () => {
     const { fixture, element, search, api } = await renderApp();
     const lookup = vi.spyOn(api, 'lookup');
 
-    lookup.mockReturnValue(of({ found: true, entry: { ...parcero, id: null, expression: 'palabra nueva', source: 'ai' } }));
+    lookup.mockReturnValue(of(foundResponse({ ...parcero, id: null, expression: 'palabra nueva', source: 'ai', classification: 'regional' })));
     await search.search('palabra nueva');
     await settle(fixture);
     expect(element.querySelector('.result-eyebrow')?.textContent).toContain('Generado con IA');
     expect(localStorage.getItem('entrejergas.entries.v1')).toBeNull();
 
-    lookup.mockReturnValue(of({ found: true, entry: { ...parcero, id: 24, expression: 'otra', source: 'ai' } }));
+    lookup.mockReturnValue(of(foundResponse({ ...parcero, id: 24, expression: 'otra', source: 'ai' })));
     await search.search('“otra”');
     await settle(fixture);
     expect(element.querySelector('.result-eyebrow')?.textContent).toContain('agregado al diccionario');
   });
 
+  it('muestra una ficha por expresión de la frase y sugiere la forma correcta', async () => {
+    const { fixture, element, search, api } = await renderApp();
+    const mochila: ExpressionEntry = { ...parcero, id: null, expression: 'mochila', source: 'ai', countries: [], register: 'neutral', classification: 'common' };
+    const lookup = vi.spyOn(api, 'lookup').mockReturnValue(of({
+      ...foundResponse(parcero, mochila),
+      unresolved: [{ text: 'parzero', reason: 'typo', suggestion: 'parcero' }, { text: 'trompicho', reason: 'unknown', suggestion: null }]
+    }));
+
+    await search.search('qué significa parcero, mochila, parzero y trompicho');
+    await settle(fixture);
+
+    const labels = Array.from(element.querySelectorAll('.result-eyebrow')).map((item) => item.textContent);
+    expect(labels[0]).toContain('En el diccionario');
+    expect(labels[1]).toContain('Palabra común');
+    const unresolved = element.querySelectorAll('.unresolved-card');
+    expect(unresolved.length).toBe(2);
+    expect(unresolved[1].textContent).toContain('No reconocemos');
+
+    lookup.mockClear();
+    (unresolved[0].querySelector('button') as HTMLButtonElement).click();
+    await settle(fixture);
+    expect(lookup).toHaveBeenCalledWith('parcero');
+  });
+
+  it('muestra el país en el idioma elegido y avisa si la palabra puede ofender', async () => {
+    const { fixture, element, search, api } = await renderApp();
+    const boludo: ExpressionEntry = { ...parcero, expression: 'boludo', region: 'Río de la Plata', countries: ['AR', 'ES'], register: 'vulgar' };
+    vi.spyOn(api, 'lookup').mockReturnValue(of(foundResponse(boludo)));
+
+    await search.search('boludo');
+    await settle(fixture);
+    expect(element.querySelector('.region')?.textContent).toContain('Argentina · España · Río de la Plata');
+    expect(element.querySelector('.register-badge')?.textContent).toContain('Puede ser ofensiva');
+
+    (element.querySelector('.lang-toggle') as HTMLButtonElement).click();
+    await settle(fixture);
+    expect(element.querySelector('.region')?.textContent).toContain('Spain');
+  });
+
   it('muestra el motivo del fallo en el idioma elegido', async () => {
     const { fixture, element, search, api } = await renderApp({ language: 'en' });
-    vi.spyOn(api, 'lookup').mockReturnValue(of({ found: false, entry: null, reason: 'provider_unavailable', message: 'Gemini no pudo responder (error 503).' }));
+    vi.spyOn(api, 'lookup').mockReturnValue(of(emptyResponse({ reason: 'provider_unavailable', message: 'Gemini no pudo responder (error 503).' })));
 
     await search.search('cachon');
     await settle(fixture);
@@ -226,7 +271,7 @@ describe('Búsqueda', () => {
 
   it('muestra el mensaje del servidor si no recibe un motivo', async () => {
     const { fixture, element, search, api } = await renderApp();
-    vi.spyOn(api, 'lookup').mockReturnValue(of({ found: false, entry: null, message: 'Gemini no pudo responder (error 503).' }));
+    vi.spyOn(api, 'lookup').mockReturnValue(of(emptyResponse({ message: 'Gemini no pudo responder (error 503).' })));
 
     await search.search('cachon');
     await settle(fixture);
@@ -238,7 +283,7 @@ describe('Búsqueda', () => {
     const { fixture, element, search, api } = await renderApp();
     const lookup = vi.spyOn(api, 'lookup');
 
-    lookup.mockReturnValue(of({ found: true, entry: parcero }));
+    lookup.mockReturnValue(of(foundResponse(parcero)));
     await search.search('parcero');
     lookup.mockReturnValue(throwError(() => new HttpErrorResponse({ status: 0 })));
     await search.search('PARCERO');
@@ -256,7 +301,7 @@ describe('Búsqueda', () => {
 describe('Traducción de definiciones', () => {
   it('muestra las definiciones en inglés al cambiar el idioma y vuelve al español', async () => {
     const { fixture, element, search, api } = await renderApp();
-    vi.spyOn(api, 'lookup').mockReturnValue(of({ found: true, entry: parcero }));
+    vi.spyOn(api, 'lookup').mockReturnValue(of(foundResponse(parcero)));
     const translate = vi.spyOn(api, 'translate');
 
     await search.search('parcero');
@@ -278,7 +323,7 @@ describe('Traducción de definiciones', () => {
 
   it('conserva el español y avisa si la traducción falla', async () => {
     const { fixture, element, search, api } = await renderApp({ language: 'en' });
-    vi.spyOn(api, 'lookup').mockReturnValue(of({ found: true, entry: parcero }));
+    vi.spyOn(api, 'lookup').mockReturnValue(of(foundResponse(parcero)));
     vi.spyOn(api, 'translate').mockReturnValue(throwError(() => new Error('502')));
 
     await search.search('parcero');
