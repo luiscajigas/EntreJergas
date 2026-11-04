@@ -24,11 +24,11 @@ const es = {
   'auth.switch.register': '¿Ya tienes una cuenta?',
   'auth.switch.action.login': 'Regístrate',
   'auth.switch.action.register': 'Inicia sesión',
-  'nav.newChat': 'Nueva consulta',
+  'nav.newChat': "Nueva búsqueda",
   'nav.explore': "Buscar",
   'nav.history': 'Historial',
   'nav.dictionary': 'Diccionario',
-  'nav.recent': 'CONSULTAS RECIENTES',
+  'nav.recent': "Lo último que buscaste",
   'nav.betaTitle': 'Diccionario vivo',
   'nav.betaText': 'Las palabras también cuentan de dónde venimos.',
   'nav.logout': 'Salir',
@@ -42,7 +42,7 @@ const es = {
   'welcome.kicker': 'PALABRAS CON ACENTO PROPIO',
   'welcome.title': '¿Qué significa\neso que dijeron?',
   'welcome.copy': "Escribe la palabra o la frase tal como la escuchaste.",
-  'search.try': 'Prueba con una expresión',
+  'search.try': "Prueba con estas",
   'suggestion.parcero.use': '¿Cómo se usa?',
   'suggestion.chimba.use': '¿De dónde viene?',
   'suggestion.chichai.use': '¿Te suena?',
@@ -106,6 +106,7 @@ const es = {
   'nav.sections': "Secciones",
   'nav.account': "Tu cuenta",
   'search.submit': "Buscar",
+  'nav.recentEmpty': "Lo que busques aparecerá aquí.",
 };
 
 export type TranslationKey = keyof typeof es;
@@ -134,11 +135,11 @@ const en: Record<TranslationKey, string> = {
   'auth.switch.register': 'Already have an account?',
   'auth.switch.action.login': 'Create one',
   'auth.switch.action.register': 'Sign in',
-  'nav.newChat': 'New search',
+  'nav.newChat': "New search",
   'nav.explore': "Search",
   'nav.history': 'History',
   'nav.dictionary': 'Dictionary',
-  'nav.recent': 'RECENT SEARCHES',
+  'nav.recent': "Your latest searches",
   'nav.betaTitle': 'Living dictionary',
   'nav.betaText': 'Words also tell us where we come from.',
   'nav.logout': 'Log out',
@@ -152,7 +153,7 @@ const en: Record<TranslationKey, string> = {
   'welcome.kicker': 'WORDS WITH THEIR OWN ACCENT',
   'welcome.title': 'What does it mean\nwhen they say that?',
   'welcome.copy': "Type the word or phrase just as you heard it.",
-  'search.try': 'Try an expression',
+  'search.try': "Try one of these",
   'suggestion.parcero.use': 'How is it used?',
   'suggestion.chimba.use': 'Where does it come from?',
   'suggestion.chichai.use': 'Does it sound familiar?',
@@ -216,6 +217,7 @@ const en: Record<TranslationKey, string> = {
   'nav.sections': "Sections",
   'nav.account': "Your account",
   'search.submit': "Search",
+  'nav.recentEmpty': "What you look up will show up here.",
 };
 
 export const translations: Record<AppLanguage, Record<TranslationKey, string>> = { es, en };

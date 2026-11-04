@@ -116,35 +116,48 @@
         </div>
       </div>
 
-      <div class="conversation-scroll" #conversation>
-        <div class="welcome" *ngIf="lookups().length === 0">
-                    <div class="suggestion-grid" [attr.aria-label]="t('search.try')">
-            <button type="button" (click)="onDraftChange('parcero')"><span class="suggestion-mark mark-green">01</span><span><strong>parcero</strong><small>{{ t('suggestion.parcero.use') }}</small></span><span class="suggestion-arrow">↗</span></button>
-            <button type="button" (click)="onDraftChange('qué chimba')"><span class="suggestion-mark mark-coral">02</span><span><strong>qué chimba</strong><small>{{ t('suggestion.chimba.use') }}</small></span><span class="suggestion-arrow">↗</span></button>
-            <button type="button" (click)="onDraftChange('chichai')"><span class="suggestion-mark mark-blue">03</span><span><strong>chichai</strong><small>{{ t('suggestion.chichai.use') }}</small></span><span class="suggestion-arrow">↗</span></button>
-            <button type="button" (click)="onDraftChange('dar papaya')"><span class="suggestion-mark mark-yellow">04</span><span><strong>dar papaya</strong><small>{{ t('suggestion.papaya.use') }}</small></span><span class="suggestion-arrow">↗</span></button>
+      <div class="search-body">
+        <div class="search-main">
+          <section *ngIf="lookups().length === 0" aria-labelledby="words-title">
+            <h2 class="section-title" id="words-title">{{ t('search.try') }}</h2>
+            <ul class="word-list">
+              <li *ngFor="let suggestion of suggestions">
+                <button type="button" (click)="tryWord(suggestion.word)"><strong>{{ suggestion.word }}</strong><small>{{ t(suggestion.hint) }}</small><app-icon name="arrow" /></button>
+              </li>
+            </ul>
+          </section>
+
+          <div class="results" *ngIf="lookups().length > 0">
+            <div class="results-toolbar">
+              <button class="text-button" type="button" (click)="startNewChat()"><app-icon name="plus" />{{ t('nav.newChat') }}</button>
+            </div>
+            <ng-container *ngFor="let lookup of lookups()">
+              <app-entry-card *ngIf="lookup.entry as entry" [entry]="entry" [offline]="!!lookup.offline" />
+              <article class="missing-body" *ngIf="lookup.missing">
+                <app-icon name="help" />
+                <div>
+                  <h2>{{ lookup.query }}</h2>
+                  <strong>{{ t('notfound.title') }}</strong>
+                  <p>{{ lookup.text }}</p>
+                  <span class="missing-footnote">{{ t('notfound.subtitle') }}</span>
+                </div>
+              </article>
+              <div class="pending-row" *ngIf="lookup.pending" role="status"><span class="hl">{{ lookup.query }}</span><small>{{ t('thinking.searching') }}</small></div>
+            </ng-container>
           </div>
-          <div class="beta-note"><span class="note-star">✳</span><span>{{ t('beta.note') }}</span></div>
         </div>
 
-        <div class="results" *ngIf="lookups().length > 0">
-          <ng-container *ngFor="let lookup of lookups()">
-            <app-entry-card *ngIf="lookup.entry as entry" [entry]="entry" [offline]="!!lookup.offline" />
-            <article class="missing-body" *ngIf="lookup.missing">
-              <app-icon name="help" />
-              <div>
-                <h2>{{ lookup.query }}</h2>
-                <strong>{{ t('notfound.title') }}</strong>
-                <p>{{ lookup.text }}</p>
-                <span class="missing-footnote">{{ t('notfound.subtitle') }}</span>
-              </div>
-            </article>
-            <div class="pending-row" *ngIf="lookup.pending" role="status"><span class="hl">{{ lookup.query }}</span><small>{{ t('thinking.searching') }}</small></div>
-          </ng-container>
-        </div>
+        <aside aria-labelledby="recent-title">
+          <h2 class="section-title" id="recent-title">{{ t('nav.recent') }}</h2>
+          <ul class="recent-list" *ngIf="history().length; else noRecent">
+            <li *ngFor="let item of history().slice(0, 6)">
+              <button class="recent-item" [class.not-found]="!item.found" type="button" (click)="openHistoryItem(item)"><app-icon [name]="item.found ? 'check' : 'help'" /><span>{{ item.expression }}</span></button>
+            </li>
+          </ul>
+          <ng-template #noRecent><p class="recent-empty">{{ t('nav.recentEmpty') }}</p></ng-template>
+        </aside>
       </div>
-
-      </section>
+    </section>
 
     <section class="page-view" *ngIf="activeView() === 'history'">
       <div class="page-heading"><span class="page-kicker">{{ t('history.kicker') }}</span><h1>{{ t('history.heading') }}</h1><p>{{ t('history.subheading') }}</p></div>

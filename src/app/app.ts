@@ -91,6 +91,13 @@ export class App implements OnInit, OnDestroy {
   readonly apiOnline = signal(false);
   readonly speechSupported = 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
 
+  readonly suggestions: ReadonlyArray<{ word: string; hint: TranslationKey }> = [
+    { word: 'parcero', hint: 'suggestion.parcero.use' },
+    { word: 'qué chimba', hint: 'suggestion.chimba.use' },
+    { word: 'chichai', hint: 'suggestion.chichai.use' },
+    { word: 'dar papaya', hint: 'suggestion.papaya.use' }
+  ];
+
   authName = '';
   authEmail = '';
   authPassword = '';
@@ -200,6 +207,11 @@ export class App implements OnInit, OnDestroy {
     this.candidates.set([]);
     this.worker?.postMessage('');
     this.activeView.set('chat');
+  }
+
+  tryWord(word: string): void {
+    this.onDraftChange(word);
+    void this.submit();
   }
 
   useCandidate(candidate: WorkerCandidate): void {
