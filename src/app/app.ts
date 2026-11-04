@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, effect, inject, signal } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, effect, inject, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { ApiService, AuthUser, Dashboard, ExpressionEntry, HistoryItem } from './api.service';
@@ -102,6 +102,7 @@ export class App implements OnInit, OnDestroy {
   authEmail = '';
   authPassword = '';
 
+  private readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
   private worker?: Worker;
   private recognition?: SpeechRecognitionLike;
   private lookupId = 0;
@@ -139,6 +140,11 @@ export class App implements OnInit, OnDestroy {
 
   onDocumentKeydown(event: KeyboardEvent): void {
     if (event.key === 'Escape') this.accountOpen.set(false);
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k' && this.currentUser()) {
+      event.preventDefault();
+      this.activeView.set('chat');
+      setTimeout(() => this.searchInput()?.nativeElement.focus());
+    }
   }
 
   onDraftChange(value: string): void {

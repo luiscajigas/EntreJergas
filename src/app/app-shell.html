@@ -105,6 +105,7 @@
           <form class="search-form" role="search" (ngSubmit)="submit()">
             <app-icon name="search" />
             <input #searchInput type="text" name="expression" [ngModel]="draft()" (ngModelChange)="onDraftChange($event)" [attr.aria-label]="t('composer.aria')" [placeholder]="t('composer.placeholder')" maxlength="100" autocomplete="off" autocapitalize="off" spellcheck="false">
+            <kbd class="search-kbd">Ctrl K</kbd>
             <button class="mic-button" *ngIf="speechSupported" [class.is-listening]="listening()" type="button" (click)="toggleDictation()" [attr.aria-label]="listening() ? t('composer.mic.stop') : t('composer.mic.start')" [title]="listening() ? t('composer.mic.stop') : t('composer.mic.start')"><app-icon name="mic" /></button>
             <button class="search-submit" type="submit" [disabled]="!draft().trim() || loading()"><span>{{ t('search.submit') }}</span><app-icon name="arrow" /></button>
           </form>
