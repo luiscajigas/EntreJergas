@@ -1,6 +1,6 @@
 # EntreJergas
 
-Beta académica de **Jerga Contextual**: un chat para explorar expresiones regionales. El backend consulta primero PostgreSQL; en esta etapa no hay integración con IA ni generación automática de definiciones.
+Beta académica de **EntreJergas**: un diccionario para buscar expresiones regionales. El backend consulta primero PostgreSQL y, si la expresión no está, pide una definición a la IA. Esa definición solo se agrega al diccionario compartido cuando la expresión se escribe entre comillas.
 
 ## Requisitos
 
@@ -25,6 +25,13 @@ npm run dev
 ```
 
 Abre `http://localhost:4200`. Angular sirve la interfaz y reenvía `/api` a Express en `http://localhost:3000`. El backend crea las tablas e inserta las expresiones de ejemplo de manera idempotente al arrancar. Para correr solo el servidor: `npm run dev:api`.
+
+## Diseño
+
+- Los colores y las fuentes se definen como variables en `src/styles.css`; el modo oscuro solo cambia esas variables.
+- Los estilos de cada vista están en `src/app/styles/`, y la ficha de palabra en `src/app/entry-card.css`.
+- Los iconos viven en `src/app/icon.ts` y los textos en español e inglés en `src/app/i18n.ts`.
+- Tipografías: Chivo para la interfaz y Alegreya para las palabras y definiciones, cargadas desde Google Fonts.
 
 ## Vistas y flujo
 
