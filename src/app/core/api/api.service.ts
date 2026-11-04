@@ -41,10 +41,6 @@ export class ApiService {
     return this.http.post<void>(`${this.baseUrl}/auth/logout`, {});
   }
 
-  health(): Observable<Schemas['HealthResponse']> {
-    return this.http.get<Schemas['HealthResponse']>(`${this.baseUrl}/health`);
-  }
-
   lookup(expression: string): Observable<LookupResponse> {
     const body: Schemas['LookupRequest'] = { expression };
     return this.http.post<LookupResponse>(`${this.baseUrl}/lookup`, body);
