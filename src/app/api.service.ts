@@ -2,50 +2,20 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-export interface ExpressionEntry {
-  id: number | null;
-  expression: string;
-  meaning: string;
-  region: string;
-  context: string;
-  equivalent: string;
-  example: string;
-  pronunciation: string | null;
-  audioUrl: string | null;
-  source: 'database' | 'ai';
-}
+import { components } from './api-contract';
 
-export type EntryTranslation = Pick<ExpressionEntry, 'meaning' | 'region' | 'context' | 'equivalent' | 'example'>;
+type Schemas = components['schemas'];
 
-export interface LookupResponse {
-  found: boolean;
-  entry: ExpressionEntry | null;
-  message?: string;
-}
-
-export interface HistoryItem {
-  id: number;
-  expression: string;
-  found: boolean;
-  source: 'database' | 'ai' | 'ai_saved' | 'not_found';
-  createdAt: string;
-}
-
-export interface Dashboard {
-  expressions: number;
-  searches: number;
-  regions: Array<{ region: string; count: number }>;
-}
-
-export interface AuthUser {
-  id: number;
-  email: string;
-  name: string;
-}
-
-export interface AuthResponse {
-  user: AuthUser;
-}
+export type AuthResponse = Schemas['AuthResponse'];
+export type AuthUser = Schemas['User'];
+export type Dashboard = Schemas['DashboardResponse'];
+export type EntryTranslation = Schemas['DefinitionText'];
+export type ExpressionEntry = Schemas['ExpressionEntry'];
+export type HistoryItem = Schemas['HistoryItem'];
+export type HistorySource = Schemas['HistorySource'];
+export type LookupFailureReason = Schemas['LookupFailureReason'];
+export type LookupResponse = Schemas['LookupResponse'];
+export type ApiError = Schemas['ErrorResponse'];
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -54,11 +24,13 @@ export class ApiService {
   constructor(private readonly http: HttpClient) {}
 
   register(name: string, email: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.baseUrl}/auth/register`, { name, email, password });
+    const body: Schemas['RegisterRequest'] = { name, email, password };
+    return this.http.post<AuthResponse>(`${this.baseUrl}/auth/register`, body);
   }
 
   login(email: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.baseUrl}/auth/login`, { email, password });
+    const body: Schemas['LoginRequest'] = { email, password };
+    return this.http.post<AuthResponse>(`${this.baseUrl}/auth/login`, body);
   }
 
   currentUser(): Observable<AuthResponse> {
@@ -69,22 +41,25 @@ export class ApiService {
     return this.http.post<void>(`${this.baseUrl}/auth/logout`, {});
   }
 
-  health(): Observable<{ status: string; service: string }> {
-    return this.http.get<{ status: string; service: string }>(`${this.baseUrl}/health`);
+  health(): Observable<Schemas['HealthResponse']> {
+    return this.http.get<Schemas['HealthResponse']>(`${this.baseUrl}/health`);
   }
 
   lookup(expression: string): Observable<LookupResponse> {
-    return this.http.post<LookupResponse>(`${this.baseUrl}/lookup`, { expression });
+    const body: Schemas['LookupRequest'] = { expression };
+    return this.http.post<LookupResponse>(`${this.baseUrl}/lookup`, body);
   }
 
-  translate(entry: ExpressionEntry): Observable<{ translation: EntryTranslation }> {
+  translate(entry: ExpressionEntry): Observable<Schemas['TranslateResponse']> {
     const { id, expression, meaning, region, context, equivalent, example } = entry;
-    const body = id !== null ? { id } : { expression, meaning, region, context, equivalent, example };
-    return this.http.post<{ translation: EntryTranslation }>(`${this.baseUrl}/translate`, body);
+    const body: Schemas['TranslateRequest'] = id !== null
+      ? { id }
+      : { expression, meaning, region, context, equivalent, example };
+    return this.http.post<Schemas['TranslateResponse']>(`${this.baseUrl}/translate`, body);
   }
 
-  history(): Observable<{ items: HistoryItem[] }> {
-    return this.http.get<{ items: HistoryItem[] }>(`${this.baseUrl}/history`);
+  history(): Observable<Schemas['HistoryResponse']> {
+    return this.http.get<Schemas['HistoryResponse']>(`${this.baseUrl}/history`);
   }
 
   dashboard(): Observable<Dashboard> {
