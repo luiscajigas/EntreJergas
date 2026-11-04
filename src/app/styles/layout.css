@@ -43,3 +43,6 @@ h1, h2, h3, p { margin: 0; }
   .tabs button:hover { background: var(--accent-soft); }
   .tabs :focus-visible { outline-color: var(--accent); }
 }
+
+.global-footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 24px; padding: 18px clamp(16px, 4vw, 48px); border-top: 1px solid var(--line); color: var(--ink-faint); font-size: 14px; }
+.global-footer strong { color: var(--ink); font-weight: 700; }
