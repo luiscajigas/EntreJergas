@@ -3,6 +3,7 @@ import { EntryTranslation, ExpressionEntry } from '../../core/api/api.service';
 import { Icon, IconName } from '../icon';
 import { TranslationKey } from '../../core/i18n/i18n';
 import { I18nService } from '../../core/i18n/i18n.service';
+import { countryName } from '../country-names';
 import { TranslationService } from './translation.service';
 
 @Component({
@@ -30,10 +31,24 @@ export class EntryCard {
   readonly status = computed<{ icon: IconName; label: TranslationKey; tone: string }>(() => {
     const entry = this.entry();
     if (this.offline()) return { icon: 'bookmark', label: 'message.result.saved', tone: 'tone-neutral' };
+    if (entry.classification === 'common') return { icon: 'book', label: 'message.result.common', tone: 'tone-neutral' };
     if (entry.source !== 'ai') return { icon: 'check', label: 'message.result.found', tone: 'tone-dictionary' };
     return entry.id !== null
       ? { icon: 'book', label: 'message.result.aiSaved', tone: 'tone-saved' }
       : { icon: 'pen', label: 'message.result.ai', tone: 'tone-ai' };
+  });
+
+  /** Países y región sin repetir: la región se omite si ya nombra uno de los países. */
+  readonly place = computed(() => {
+    const { countries, region } = this.view();
+    const names = countries.map((code) => countryName(code, this.i18n.language()));
+    const repeated = names.some((name) => region.toLowerCase().includes(name.toLowerCase()));
+    return (repeated ? names : [...names, region]).join(' · ');
+  });
+
+  readonly registerKey = computed<TranslationKey | null>(() => {
+    const { register } = this.entry();
+    return register === 'informal' || register === 'vulgar' ? `register.${register}` : null;
   });
 
   constructor() {

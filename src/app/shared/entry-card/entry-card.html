@@ -1,7 +1,12 @@
 <article class="entry">
-  <p class="result-eyebrow {{ status().tone }}"><app-icon [name]="status().icon" />{{ i18n.t(status().label) }}</p>
+  <div class="labels">
+    <p class="result-eyebrow {{ status().tone }}"><app-icon [name]="status().icon" />{{ i18n.t(status().label) }}</p>
+    @if (registerKey(); as key) {
+      <p class="register-badge" [class.is-vulgar]="entry().register === 'vulgar'">{{ i18n.t(key) }}</p>
+    }
+  </div>
   <h2 class="headword"><span class="hl">{{ entry().expression }}</span></h2>
-  <p class="region"><app-icon name="pin" />{{ view().region }}</p>
+  <p class="region"><app-icon name="pin" />{{ place() }}</p>
   @if (translating()) {
     <p class="translate-note" role="status">{{ i18n.t('entry.translating') }}</p>
   }
