@@ -5,6 +5,7 @@ import { firstValueFrom } from 'rxjs';
 import { ApiService, AuthUser, Dashboard, ExpressionEntry, HistoryItem } from './api.service';
 import { TranslationKey } from './i18n';
 import { I18nService } from './i18n.service';
+import { Logo } from './logo';
 
 interface ChatMessage {
   id: number;
@@ -60,7 +61,7 @@ function readThemePreference(): ColorTheme {
 }
 
 @Component({
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, Logo],
   selector: 'app-root',
   styleUrl: './app-shell.css',
   templateUrl: './app-shell.html',
@@ -125,10 +126,6 @@ export class App implements OnInit, OnDestroy {
   onDraftChange(value: string): void {
     this.draft.set(value);
     this.worker?.postMessage(value);
-  }
-
-  onBrandLogoError(event: Event): void {
-    (event.target as HTMLImageElement).hidden = true;
   }
 
   t(key: TranslationKey): string {

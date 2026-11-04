@@ -1,5 +1,5 @@
 <main class="auth-loading" *ngIf="authLoading()" aria-live="polite">
-  <span class="brand-mark" aria-hidden="true"><img class="brand-logo" src="/logo.jpg" alt="" (error)="onBrandLogoError($event)"><span class="brand-letters">E<span>J</span></span></span>
+  <span class="brand-mark"><app-logo /></span>
   <span>{{ t('auth.loading') }}</span>
 </main>
 
@@ -7,7 +7,7 @@
   <div class="auth-shell">
     <header class="auth-header">
       <div class="auth-brand">
-        <span class="brand-mark" aria-hidden="true"><img class="brand-logo" src="/logo.jpg" alt="" (error)="onBrandLogoError($event)"><span class="brand-letters">E<span>J</span></span></span>
+        <span class="brand-mark"><app-logo /></span>
         <span class="brand-name">entre<span>jergas</span></span>
       </div>
       <div class="auth-controls">
@@ -67,7 +67,7 @@
 <div class="app-frame" *ngIf="!authLoading() && currentUser()" [class.sidebar-open]="sidebarOpen()">
   <aside class="sidebar" aria-label="Navegación principal">
     <div class="brand-lockup">
-      <span class="brand-mark" aria-hidden="true"><img class="brand-logo" src="/logo.jpg" alt="" (error)="onBrandLogoError($event)"><span class="brand-letters">E<span>J</span></span></span>
+      <span class="brand-mark"><app-logo /></span>
       <span class="brand-name">entre<span>jergas</span></span>
       <button class="icon-button mobile-close" type="button" aria-label="Cerrar menú" (click)="sidebarOpen.set(false)">×</button>
     </div>
@@ -149,7 +149,7 @@
           <article class="message-row" *ngFor="let message of messages()" [class.user-row]="message.role === 'user'">
             <div class="message-avatar" [class.assistant-avatar]="message.role === 'assistant'">
               <ng-container *ngIf="message.role === 'user'; else assistantAvatar">TÚ</ng-container>
-              <ng-template #assistantAvatar><img class="brand-logo" src="/logo.jpg" alt="" (error)="onBrandLogoError($event)"><span class="assistant-fallback">EJ</span></ng-template>
+              <ng-template #assistantAvatar><app-logo /></ng-template>
             </div>
             <div class="message-body" *ngIf="message.role === 'user'"><span class="message-label">{{ t('message.user') }}</span><p class="user-quote">{{ message.text }}</p></div>
             <div class="message-body result-body" *ngIf="message.role === 'assistant' && message.entry as entry">
@@ -168,7 +168,7 @@
               <div class="missing-icon">?</div><div><strong>{{ t('notfound.title') }}</strong><p>{{ message.text }}</p><span class="missing-footnote">{{ t('notfound.subtitle') }}</span></div>
             </div>
           </article>
-          <div class="thinking-row" *ngIf="loading()"><span class="thinking-mark"><img class="brand-logo" src="/logo.jpg" alt="" (error)="onBrandLogoError($event)"><span class="assistant-fallback">EJ</span></span><span class="thinking-dots"><i></i><i></i><i></i></span><small>{{ t('thinking.searching') }}</small></div>
+          <div class="thinking-row" *ngIf="loading()"><span class="thinking-mark"><app-logo /></span><span class="thinking-dots"><i></i><i></i><i></i></span><small>{{ t('thinking.searching') }}</small></div>
         </div>
       </div>
 

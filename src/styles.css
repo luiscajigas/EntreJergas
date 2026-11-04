@@ -47,11 +47,7 @@ body { font-family: var(--font-ui); font-size: 16px; line-height: 1.5; -webkit-f
 button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 ::selection { background: var(--yellow); color: var(--on-yellow); }
 
-.brand-mark { position: relative; display: grid; width: 32px; height: 32px; overflow: hidden; place-items: center; border-radius: 9px 9px 9px 3px; background: var(--green); color: #fff; font-family: Georgia, serif; font-size: 17px; }
-.brand-logo { position: absolute; z-index: 1; inset: 0; width: 100%; height: 100%; padding: 2px; object-fit: contain; }
-.brand-letters, .assistant-fallback { position: relative; z-index: 0; }
-.brand-letters span { color: #f4c27b; }
-.assistant-avatar .brand-logo, .thinking-mark .brand-logo { padding: 2px; }
+.brand-mark { display: inline-flex; flex: none; }
 
 .auth-loading { display: grid; min-height: 100vh; place-content: center; justify-items: center; gap: 13px; padding: 24px; background: #f4f5f7; color: #77817a; font-size: 12px; }
 .auth-loading .brand-mark { margin-bottom: 4px; }
