@@ -77,6 +77,48 @@ Para reducir el costo principal de CSR, cada vista se carga por ruta: la búsque
 
 **Cuándo cambiaría la decisión:** si el diccionario tuviera páginas públicas como `/palabra/parcero` para aparecer en Google, esas páginas serían un buen caso para ISR: contenido público que cambia poco, sin renderizar en cada visita ni recompilar para cada palabra nueva.
 
+## Qué se guarda en el diccionario
+
+El usuario puede escribir una frase completa, y la IA identifica por qué expresiones pregunta. Pero la IA solo clasifica: **la decisión de guardar es del código**, en `lookup-service.js`.
+
+```text
+Texto ─> ¿Ya está en el diccionario? ── sí ─> responde sin gastar IA
+              │ no
+              v
+       La IA extrae hasta 3 expresiones
+              │
+              v
+       ¿Salió del texto? ¿Difiere en una letra de otra ya guardada?
+              │
+              v
+       Si es regional, un revisor independiente confirma que existe
+              │
+              v
+       Regional + confianza alta + país válido + confirmada ─> se guarda
+```
+
+| Caso | Qué hace |
+| --- | --- |
+| `boludo` | Se responde desde el diccionario |
+| `zarpado`, jerga nueva confirmada | Se guarda con sus países |
+| `mochila`, palabra común | Se explica, pero no se guarda |
+| `parzero`, error de escritura | Sugiere `parcero` |
+| Palabra inventada que el revisor rechaza | Avisa que no la reconoce |
+| Instrucciones dentro del texto | Se tratan como datos |
+
+Se probó con Gemini real (`gemini-3.5-flash-lite`) en 25 casos difíciles, con tres resultados:
+
+- Ninguna palabra inventada ni intento de dar órdenes a la IA llegó a guardarse.
+- 2 de las 9 palabras reales de la prueba no se guardaron: `flipante` y `pendejo` se clasificaron como comunes. Se explican, pero no entran al diccionario.
+- En una primera versión, `parzero` y `estar mondongueado` se daban por reales. Por eso existen la barrera por distancia de texto y el revisor.
+
+**Trade-offs:**
+
+- Se prefiere no guardar a guardar algo falso, así que algunas jergas reales quedan fuera.
+- Cada expresión regional nueva gasta una llamada más, a cambio de un diccionario más limpio.
+- Reduce el riesgo, pero no da una garantía: por eso estas entradas quedan marcadas como generadas con IA.
+- El plan gratuito de Gemini limita las llamadas por minuto (en las pruebas empezó a responder 429 tras unas 18 llamadas seguidas). Con muchos usuarios a la vez haría falta un plan de pago.
+
 ## Organización
 
 ```text
@@ -100,4 +142,4 @@ backend/src
 | Límites de uso en memoria | Protegen la cuota de la IA sin otro servicio | Se reinician al desplegar y solo sirven con una instancia |
 | Bloqueo de ingreso por correo | No depende de la IP, que el proxy oculta | Alguien podría bloquear temporalmente una cuenta ajena |
 | Traducciones guardadas en la base | Cada palabra guardada gasta IA una sola vez | Si cambia la definición original, hay que invalidar la traducción |
-| Guardar solo entre comillas | Evita llenar el diccionario de erratas | El usuario debe conocer esa regla |
+| Una ficha por expresión, con países | Admite jergas de cualquier país y preguntas en lenguaje natural | Una palabra con varios sentidos por país comparte una sola ficha |
