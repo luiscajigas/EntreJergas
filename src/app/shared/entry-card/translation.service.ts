@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { ApiService, EntryTranslation, ExpressionEntry } from './api.service';
+import { ApiService, EntryTranslation, ExpressionEntry } from '../../core/api/api.service';
 
 @Injectable({ providedIn: 'root' })
 export class TranslationService {

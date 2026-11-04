@@ -17,7 +17,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "start:api": "npm --prefix ../EntreJergas-Back/backend start",
-    "api:types": "npx -y openapi-typescript@7.13.0 ../EntreJergas-Back/backend/openapi.yaml -o src/app/api-contract.ts"
+    "api:types": "npx -y openapi-typescript@7.13.0 ../EntreJergas-Back/backend/openapi.yaml -o src/app/core/api/contract.ts"
   },
   "dependencies": {
     "@angular/common": "^22.2.0",

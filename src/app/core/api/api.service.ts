@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { components } from './api-contract';
+import { components } from './contract';
 
 type Schemas = components['schemas'];
 

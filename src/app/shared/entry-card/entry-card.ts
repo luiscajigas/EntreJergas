@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal, untracked } from '@angular/core';
-import { EntryTranslation, ExpressionEntry } from './api.service';
-import { Icon, IconName } from './icon';
-import { TranslationKey } from './i18n';
-import { I18nService } from './i18n.service';
+import { EntryTranslation, ExpressionEntry } from '../../core/api/api.service';
+import { Icon, IconName } from '../icon';
+import { TranslationKey } from '../../core/i18n/i18n';
+import { I18nService } from '../../core/i18n/i18n.service';
 import { TranslationService } from './translation.service';
 
 @Component({

@@ -3,12 +3,12 @@ import localeEs from '@angular/common/locales/es';
 import { Component, ElementRef, OnDestroy, OnInit, effect, inject, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
-import { ApiService, AuthUser, Dashboard, ExpressionEntry, HistoryItem } from './api.service';
-import { TranslationKey } from './i18n';
-import { I18nService } from './i18n.service';
-import { EntryCard } from './entry-card';
-import { Icon, IconName } from './icon';
-import { Logo } from './logo';
+import { ApiService, AuthUser, Dashboard, ExpressionEntry, HistoryItem } from './core/api/api.service';
+import { TranslationKey } from './core/i18n/i18n';
+import { I18nService } from './core/i18n/i18n.service';
+import { EntryCard } from './shared/entry-card/entry-card';
+import { Icon, IconName } from './shared/icon';
+import { Logo } from './shared/logo';
 
 interface Lookup {
   id: number;

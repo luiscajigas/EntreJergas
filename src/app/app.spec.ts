@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 import { vi } from 'vitest';
 import { App } from './app';
-import { ApiService } from './api.service';
+import { ApiService } from './core/api/api.service';
 
 describe('App', () => {
   beforeEach(async () => {
