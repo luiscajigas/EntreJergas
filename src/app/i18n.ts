@@ -41,7 +41,7 @@ const es = {
   'status.offline': 'Sin conexión',
   'welcome.kicker': 'PALABRAS CON ACENTO PROPIO',
   'welcome.title': '¿Qué significa\neso que dijeron?',
-  'welcome.copy': 'Cada región tiene su manera de nombrar el mundo.\nEscribe una expresión y descubramos su historia.',
+  'welcome.copy': "Escribe la palabra o la frase tal como la escuchaste.",
   'search.try': 'Prueba con una expresión',
   'suggestion.parcero.use': '¿Cómo se usa?',
   'suggestion.chimba.use': '¿De dónde viene?',
@@ -63,7 +63,7 @@ const es = {
   'candidate.caption': '¿Te refieres a?',
   'composer.aria': 'Escribe una expresión regional',
   'composer.placeholder': 'Escribe una palabra o frase…',
-  'composer.hint': 'Para agregarla al diccionario compartido, escribe la expresión completa entre comillas.',
+  'composer.hint': "Para agregarla al diccionario de todos, escríbela entre comillas:",
   'composer.mic.start': 'Dictar expresión',
   'composer.mic.stop': 'Detener dictado',
   'composer.mic.unsupported': 'Dictado no compatible con este navegador',
@@ -105,6 +105,7 @@ const es = {
   'detail.usage': "CÓMO SE USA",
   'nav.sections': "Secciones",
   'nav.account': "Tu cuenta",
+  'search.submit': "Buscar",
 };
 
 export type TranslationKey = keyof typeof es;
@@ -150,7 +151,7 @@ const en: Record<TranslationKey, string> = {
   'status.offline': 'Offline',
   'welcome.kicker': 'WORDS WITH THEIR OWN ACCENT',
   'welcome.title': 'What does it mean\nwhen they say that?',
-  'welcome.copy': 'Every region has its own way of naming the world.\nWrite an expression and let’s discover its story.',
+  'welcome.copy': "Type the word or phrase just as you heard it.",
   'search.try': 'Try an expression',
   'suggestion.parcero.use': 'How is it used?',
   'suggestion.chimba.use': 'Where does it come from?',
@@ -172,7 +173,7 @@ const en: Record<TranslationKey, string> = {
   'candidate.caption': 'Did you mean?',
   'composer.aria': 'Write a regional expression',
   'composer.placeholder': 'Write a word or phrase…',
-  'composer.hint': 'To add it to the shared dictionary, write the whole expression in quotation marks.',
+  'composer.hint': "To add it to everyone’s dictionary, put it in quotation marks:",
   'composer.mic.start': 'Dictate expression',
   'composer.mic.stop': 'Stop dictation',
   'composer.mic.unsupported': 'Dictation not supported in this browser',
@@ -214,6 +215,7 @@ const en: Record<TranslationKey, string> = {
   'detail.usage': "HOW IT IS USED",
   'nav.sections': "Sections",
   'nav.account': "Your account",
+  'search.submit': "Search",
 };
 
 export const translations: Record<AppLanguage, Record<TranslationKey, string>> = { es, en };

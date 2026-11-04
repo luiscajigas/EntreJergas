@@ -97,13 +97,28 @@
   </header>
 
   <main class="app-main">
-    <section class="chat-view" *ngIf="activeView() === 'chat'">
+    <section class="search-view" *ngIf="activeView() === 'chat'">
+      <div class="search-band" [class.compact]="lookups().length > 0">
+        <div class="band-inner">
+          <h1 [class.visually-hidden]="lookups().length > 0">{{ t('welcome.title').split('\n')[0] }}<br><span class="hl">{{ t('welcome.title').split('\n')[1] }}</span></h1>
+          <p class="search-lead" *ngIf="lookups().length === 0">{{ t('welcome.copy') }}</p>
+          <form class="search-form" role="search" (ngSubmit)="submit()">
+            <app-icon name="search" />
+            <input #searchInput type="text" name="expression" [ngModel]="draft()" (ngModelChange)="onDraftChange($event)" [attr.aria-label]="t('composer.aria')" [placeholder]="t('composer.placeholder')" maxlength="100" autocomplete="off" autocapitalize="off" spellcheck="false">
+            <button class="mic-button" *ngIf="speechSupported" [class.is-listening]="listening()" type="button" (click)="toggleDictation()" [attr.aria-label]="listening() ? t('composer.mic.stop') : t('composer.mic.start')" [title]="listening() ? t('composer.mic.stop') : t('composer.mic.start')"><app-icon name="mic" /></button>
+            <button class="search-submit" type="submit" [disabled]="!draft().trim() || loading()"><span>{{ t('search.submit') }}</span><app-icon name="arrow" /></button>
+          </form>
+          <div class="candidate-row" *ngIf="candidates().length && draft()">
+            <span class="candidate-caption">{{ t('candidate.caption') }}</span>
+            <button class="candidate-chip" *ngFor="let candidate of candidates()" type="button" (click)="useCandidate(candidate)">{{ candidate.expression }}<small>{{ candidate.region }}</small></button>
+          </div>
+          <p class="search-hint">{{ t('composer.hint') }} <b>"hacer vaca"</b></p>
+        </div>
+      </div>
+
       <div class="conversation-scroll" #conversation>
         <div class="welcome" *ngIf="lookups().length === 0">
-          <div class="welcome-kicker"><span class="kicker-line"></span>{{ t('welcome.kicker') }}<span class="kicker-line"></span></div>
-          <h1>{{ t('welcome.title').split('\n')[0] }}<br>{{ t('welcome.title').split('\n')[1] }}</h1>
-          <p class="welcome-copy">{{ t('welcome.copy').split('\n')[0] }}<br>{{ t('welcome.copy').split('\n')[1] }}</p>
-          <div class="suggestion-grid" [attr.aria-label]="t('search.try')">
+                    <div class="suggestion-grid" [attr.aria-label]="t('search.try')">
             <button type="button" (click)="onDraftChange('parcero')"><span class="suggestion-mark mark-green">01</span><span><strong>parcero</strong><small>{{ t('suggestion.parcero.use') }}</small></span><span class="suggestion-arrow">↗</span></button>
             <button type="button" (click)="onDraftChange('qué chimba')"><span class="suggestion-mark mark-coral">02</span><span><strong>qué chimba</strong><small>{{ t('suggestion.chimba.use') }}</small></span><span class="suggestion-arrow">↗</span></button>
             <button type="button" (click)="onDraftChange('chichai')"><span class="suggestion-mark mark-blue">03</span><span><strong>chichai</strong><small>{{ t('suggestion.chichai.use') }}</small></span><span class="suggestion-arrow">↗</span></button>
@@ -129,21 +144,7 @@
         </div>
       </div>
 
-      <div class="composer-dock">
-        <div class="candidate-row" *ngIf="candidates().length && draft()">
-          <span class="candidate-caption">{{ t('candidate.caption') }}</span>
-          <button class="candidate-chip" *ngFor="let candidate of candidates()" type="button" (click)="useCandidate(candidate)">{{ candidate.expression }}<small>{{ candidate.region }}</small></button>
-        </div>
-        <form class="composer" (ngSubmit)="submit()">
-          <textarea [attr.aria-label]="t('composer.aria')" rows="1" [ngModel]="draft()" (ngModelChange)="onDraftChange($event)" name="expression" [placeholder]="t('composer.placeholder')" maxlength="100" (keydown.enter)="$event.preventDefault(); submit()"></textarea>
-          <div class="composer-footer"><span class="input-hint"><span class="hint-dot"></span> {{ t('composer.hint') }}</span><div class="composer-actions">
-            <button class="mic-button" [class.is-listening]="listening()" type="button" [disabled]="!speechSupported" (click)="toggleDictation()" [attr.aria-label]="speechSupported ? (listening() ? t('composer.mic.stop') : t('composer.mic.start')) : t('composer.mic.unsupported')" [title]="speechSupported ? (listening() ? t('composer.mic.stop') : t('composer.mic.start')) : t('composer.mic.unsupported')"><app-icon name="mic" /></button>
-            <button class="send-button" type="submit" [disabled]="!draft().trim() || loading()" [attr.aria-label]="t('composer.send')" [title]="t('composer.send')"><app-icon name="arrow" /></button>
-          </div></div>
-        </form>
-        <p class="composer-disclaimer">{{ t('composer.disclaimer') }}</p>
-      </div>
-    </section>
+      </section>
 
     <section class="page-view" *ngIf="activeView() === 'history'">
       <div class="page-heading"><span class="page-kicker">{{ t('history.kicker') }}</span><h1>{{ t('history.heading') }}</h1><p>{{ t('history.subheading') }}</p></div>
