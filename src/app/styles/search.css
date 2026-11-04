@@ -44,7 +44,7 @@
   .search-submit span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 }
 
-.search-body { display: grid; width: min(100%, 1120px); flex: 1; grid-template-columns: minmax(0, 1fr) 300px; align-items: start; gap: clamp(32px, 5vw, 64px); margin: 0 auto; padding: clamp(28px, 5vw, 56px) clamp(16px, 4vw, 48px) 56px; box-sizing: content-box; max-width: calc(100% - clamp(32px, 8vw, 96px)); padding-inline: 0; }
+.search-body { display: grid; width: min(100% - 2 * var(--gutter), 1120px); flex: 1; grid-template-columns: minmax(0, 1fr) 300px; align-items: start; gap: clamp(32px, 5vw, 64px); margin: 0 auto; padding: clamp(28px, 5vw, 56px) 0 56px; }
 .section-title { font-size: 19px; font-weight: 700; letter-spacing: -.01em; }
 
 .word-list { margin-top: 10px; padding: 0; list-style: none; }

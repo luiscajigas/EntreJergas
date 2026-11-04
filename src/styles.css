@@ -19,6 +19,7 @@
   --red: #a81c28;
   --red-soft: #fce9eb;
   --shadow: 0 1px 2px rgb(16 22 58 / 8%), 0 12px 32px rgb(16 22 58 / 10%);
+  --gutter: clamp(16px, 4vw, 48px);
   --font-ui: 'Chivo', 'Segoe UI', system-ui, sans-serif;
   --font-text: 'Alegreya', Georgia, 'Times New Roman', serif;
 }
