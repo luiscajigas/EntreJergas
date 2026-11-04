@@ -4,35 +4,33 @@
 </main>
 
 <main class="auth-gate" *ngIf="!authLoading() && !currentUser()">
-  <div class="auth-shell">
-    <header class="auth-header">
+  <div class="auth-layout">
+    <section class="auth-story" aria-labelledby="auth-story-title">
       <div class="auth-brand">
         <span class="brand-mark"><app-logo /></span>
         <span class="brand-name">entre<span>jergas</span></span>
       </div>
-      <div class="auth-controls">
-        <button class="lang-toggle" type="button" (click)="toggleLanguage()" [attr.aria-label]="t('language.toggle.aria')" [title]="t('language.toggle.aria')">{{ language() === 'es' ? 'ES' : 'EN' }}</button>
-        <button class="theme-toggle auth-theme-toggle" type="button" (click)="toggleTheme()" [attr.aria-pressed]="theme() === 'dark'" [attr.aria-label]="theme() === 'dark' ? t('theme.toggle.light') : t('theme.toggle.dark')" [title]="theme() === 'dark' ? t('theme.toggle.light') : t('theme.toggle.dark')">
-          <app-icon *ngIf="theme() === 'light'" name="sun" />
-          <app-icon *ngIf="theme() === 'dark'" name="moon" />
-        </button>
-      </div>
-    </header>
-
-    <div class="auth-layout">
-      <section class="auth-story" aria-labelledby="auth-story-title">
-        <span class="auth-story-kicker">{{ t('auth.hero.kicker') }}</span>
+      <div class="auth-story-body">
         <h1 id="auth-story-title">{{ t('auth.hero.title').split('\n')[0] }}<br>{{ t('auth.hero.title').split('\n')[1] }}</h1>
         <p class="auth-story-copy">{{ t('auth.hero.copy') }}</p>
-        <ul class="auth-benefits" [attr.aria-label]="t('auth.hero.benefits.aria')">
-          <li><span>01</span>{{ t('auth.benefit.expressions') }}</li>
-          <li><span>02</span>{{ t('auth.benefit.context') }}</li>
-          <li><span>03</span>{{ t('auth.benefit.history') }}</li>
-        </ul>
-      </section>
+        <div class="auth-sample">
+          <strong>parcero</strong>
+          <small><app-icon name="pin" />{{ t('auth.sample.region') }}</small>
+          <p>{{ t('auth.sample.meaning') }}</p>
+          <em>“{{ t('auth.sample.example') }}”</em>
+        </div>
+      </div>
+    </section>
 
-      <section class="auth-panel" aria-labelledby="auth-title">
-        <span class="auth-card-kicker">{{ t('auth.card.kicker') }}</span>
+    <section class="auth-side" aria-labelledby="auth-title">
+      <div class="auth-controls">
+        <button class="icon-btn lang-toggle" type="button" (click)="toggleLanguage()" [attr.aria-label]="t('language.toggle.aria')" [title]="t('language.toggle.aria')">{{ language() === 'es' ? 'EN' : 'ES' }}</button>
+        <button class="icon-btn theme-toggle auth-theme-toggle" type="button" (click)="toggleTheme()" [attr.aria-pressed]="theme() === 'dark'" [attr.aria-label]="theme() === 'dark' ? t('theme.toggle.light') : t('theme.toggle.dark')" [title]="theme() === 'dark' ? t('theme.toggle.light') : t('theme.toggle.dark')">
+          <app-icon [name]="theme() === 'dark' ? 'sun' : 'moon'" />
+        </button>
+      </div>
+
+      <div class="auth-panel">
         <h2 id="auth-title">{{ authMode() === 'login' ? t('auth.title.login') : t('auth.title.register') }}</h2>
         <p class="auth-intro">{{ authMode() === 'login' ? t('auth.intro.login') : t('auth.intro.register') }}</p>
 
@@ -59,8 +57,8 @@
           {{ authMode() === 'login' ? t('auth.switch.login') : t('auth.switch.register') }}
           <button type="button" (click)="toggleAuthMode()">{{ authMode() === 'login' ? t('auth.switch.action.login') : t('auth.switch.action.register') }}</button>
         </p>
-      </section>
-    </div>
+      </div>
+    </section>
   </div>
 </main>
 

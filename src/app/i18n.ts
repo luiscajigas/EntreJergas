@@ -1,14 +1,14 @@
 export type AppLanguage = 'es' | 'en';
 
 const es = {
-  'auth.loading': 'Preparando tu espacio…',
+  'auth.loading': "Abriendo el diccionario…",
   'auth.title.login': 'Qué bueno verte.',
-  'auth.title.register': 'Tu espacio empieza aquí.',
-  'auth.intro.login': 'Entra para continuar explorando expresiones.',
-  'auth.intro.register': 'Crea una cuenta para guardar tu recorrido.',
+  'auth.title.register': "Crea tu cuenta.",
+  'auth.intro.login': "Entra para seguir buscando palabras.",
+  'auth.intro.register': "Así guardamos lo que vas buscando.",
   'auth.hero.kicker': 'UN ESPACIO PARA EXPLORAR',
-  'auth.hero.title': 'Tu forma de hablar\ntambién cuenta una historia.',
-  'auth.hero.copy': 'Descubre expresiones regionales, conoce su origen y guarda las palabras que te acompañan.',
+  'auth.hero.title': "Aquí nadie se queda\nsin entender el chiste.",
+  'auth.hero.copy': "Busca esa palabra que no entendiste, mira de dónde viene y cómo se usa. Si no la tenemos, la IA te propone una definición.",
   'auth.hero.benefits.aria': 'Lo que encontrarás en EntreJergas',
   'auth.benefit.expressions': 'Expresiones de distintas regiones',
   'auth.benefit.context': 'Significados con su contexto',
@@ -107,19 +107,22 @@ const es = {
   'nav.account': "Tu cuenta",
   'search.submit': "Buscar",
   'nav.recentEmpty': "Lo que busques aparecerá aquí.",
+  'auth.sample.region': "Antioquia y región Andina",
+  'auth.sample.meaning': "Amigo cercano o compañero.",
+  'auth.sample.example': "Ese parcero siempre está cuando lo necesito.",
 };
 
 export type TranslationKey = keyof typeof es;
 
 const en: Record<TranslationKey, string> = {
-  'auth.loading': 'Preparing your space…',
+  'auth.loading': "Opening the dictionary…",
   'auth.title.login': 'Nice to see you again.',
-  'auth.title.register': 'Your space starts here.',
-  'auth.intro.login': 'Sign in to keep exploring expressions.',
-  'auth.intro.register': 'Create an account to keep your journey.',
+  'auth.title.register': "Create your account.",
+  'auth.intro.login': "Sign in to keep looking up words.",
+  'auth.intro.register': "That way we keep track of what you look up.",
   'auth.hero.kicker': 'A PLACE TO EXPLORE',
-  'auth.hero.title': 'The way you speak\ntells a story.',
-  'auth.hero.copy': 'Discover regional expressions, learn where they come from, and keep the words that stay with you.',
+  'auth.hero.title': "Nobody here\nmisses the joke.",
+  'auth.hero.copy': "Look up that word you did not get, see where it comes from and how it is used. If we do not have it, AI suggests a definition.",
   'auth.hero.benefits.aria': 'What you will find on EntreJergas',
   'auth.benefit.expressions': 'Expressions from different regions',
   'auth.benefit.context': 'Meanings with their context',
@@ -218,6 +221,9 @@ const en: Record<TranslationKey, string> = {
   'nav.account': "Your account",
   'search.submit': "Search",
   'nav.recentEmpty': "What you look up will show up here.",
+  'auth.sample.region': "Antioquia and the Andean region",
+  'auth.sample.meaning': "A close friend or buddy.",
+  'auth.sample.example': "My parcero always has my back.",
 };
 
 export const translations: Record<AppLanguage, Record<TranslationKey, string>> = { es, en };
