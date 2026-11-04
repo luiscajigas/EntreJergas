@@ -110,6 +110,9 @@ const es = {
   'auth.sample.region': "Antioquia y región Andina",
   'auth.sample.meaning': "Amigo cercano o compañero.",
   'auth.sample.example': "Ese parcero siempre está cuando lo necesito.",
+  'lookup.offline': "No pude conectar con el diccionario. Revisa tu conexión e inténtalo de nuevo.",
+  'auth.error.credentials': "Correo o contraseña incorrectos.",
+  'auth.error.network': "No fue posible iniciar sesión. Revisa tu conexión e inténtalo de nuevo.",
 };
 
 export type TranslationKey = keyof typeof es;
@@ -224,6 +227,9 @@ const en: Record<TranslationKey, string> = {
   'auth.sample.region': "Antioquia and the Andean region",
   'auth.sample.meaning': "A close friend or buddy.",
   'auth.sample.example': "My parcero always has my back.",
+  'lookup.offline': "I could not reach the dictionary. Check your connection and try again.",
+  'auth.error.credentials': "Incorrect email or password.",
+  'auth.error.network': "We could not sign you in. Check your connection and try again.",
 };
 
 export const translations: Record<AppLanguage, Record<TranslationKey, string>> = { es, en };

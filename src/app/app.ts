@@ -194,8 +194,8 @@ export class App implements OnInit, OnDestroy {
       const status = (error as { status?: number }).status;
       const message = (error as { error?: { error?: string } }).error?.error;
       this.authError.set(message || (status === 401
-        ? 'Correo o contraseña incorrectos.'
-        : 'No fue posible iniciar sesión. Revisa tu conexión e inténtalo de nuevo.'));
+        ? this.t('auth.error.credentials')
+        : this.t('auth.error.network')));
     } finally {
       this.authSubmitting.set(false);
     }
@@ -262,7 +262,7 @@ export class App implements OnInit, OnDestroy {
       this.apiOnline.set(false);
       this.resolveLookup(id, cachedEntry
         ? { entry: cachedEntry, offline: true }
-        : { text: 'No pude conectar con el diccionario. La consulta quedó en esta conversación; revisa tu conexión e inténtalo de nuevo.', missing: true });
+        : { text: this.t('lookup.offline'), missing: true });
     } finally {
       this.loading.set(false);
     }
