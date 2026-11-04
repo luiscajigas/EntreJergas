@@ -21,7 +21,22 @@ const vocabulary: VocabularyEntry[] = [
   { expression: 'mamar gallo', normalized: 'mamar gallo', region: 'Caribe colombiano' },
   { expression: 'dar papaya', normalized: 'dar papaya', region: 'Colombia' },
   { expression: 'rumba', normalized: 'rumba', region: 'Caribe y Colombia' },
-  { expression: 'chichai', normalized: 'chichai', region: 'Por confirmar' }
+  { expression: 'chichai', normalized: 'chichai', region: 'Por confirmar' },
+  { expression: 'boludo', normalized: 'boludo', region: 'Argentina y Uruguay' },
+  { expression: 'che', normalized: 'che', region: 'Argentina y Uruguay' },
+  { expression: 'pibe', normalized: 'pibe', region: 'Argentina y Uruguay' },
+  { expression: 'güey', normalized: 'guey', region: 'México' },
+  { expression: 'chido', normalized: 'chido', region: 'México' },
+  { expression: 'la neta', normalized: 'la neta', region: 'México' },
+  { expression: 'chamo', normalized: 'chamo', region: 'Venezuela' },
+  { expression: 'pana', normalized: 'pana', region: 'Venezuela, Ecuador y Panamá' },
+  { expression: 'weón', normalized: 'weon', region: 'Chile' },
+  { expression: 'cachai', normalized: 'cachai', region: 'Chile' },
+  { expression: 'tío', normalized: 'tio', region: 'España' },
+  { expression: 'guay', normalized: 'guay', region: 'España' },
+  { expression: 'pura vida', normalized: 'pura vida', region: 'Costa Rica' },
+  { expression: 'mae', normalized: 'mae', region: 'Costa Rica' },
+  { expression: 'asere', normalized: 'asere', region: 'Cuba' }
 ];
 
 const maxCandidates = 4;
