@@ -132,7 +132,7 @@
 
     <section class="chat-view" *ngIf="activeView() === 'chat'">
       <div class="conversation-scroll" #conversation>
-        <div class="welcome" *ngIf="messages().length === 0">
+        <div class="welcome" *ngIf="lookups().length === 0">
           <div class="welcome-kicker"><span class="kicker-line"></span>{{ t('welcome.kicker') }}<span class="kicker-line"></span></div>
           <h1>{{ t('welcome.title').split('\n')[0] }}<br>{{ t('welcome.title').split('\n')[1] }}</h1>
           <p class="welcome-copy">{{ t('welcome.copy').split('\n')[0] }}<br>{{ t('welcome.copy').split('\n')[1] }}</p>
@@ -145,30 +145,20 @@
           <div class="beta-note"><span class="note-star">✳</span><span>{{ t('beta.note') }}</span></div>
         </div>
 
-        <div class="message-list" *ngIf="messages().length > 0">
-          <article class="message-row" *ngFor="let message of messages()" [class.user-row]="message.role === 'user'">
-            <div class="message-avatar" [class.assistant-avatar]="message.role === 'assistant'">
-              <ng-container *ngIf="message.role === 'user'; else assistantAvatar">TÚ</ng-container>
-              <ng-template #assistantAvatar><app-logo /></ng-template>
-            </div>
-            <div class="message-body" *ngIf="message.role === 'user'"><span class="message-label">{{ t('message.user') }}</span><p class="user-quote">{{ message.text }}</p></div>
-            <div class="message-body result-body" *ngIf="message.role === 'assistant' && message.entry as entry">
-              <div class="result-eyebrow"><span class="result-dot"></span>{{ message.offline ? t('message.result.saved') : (entry.source === 'ai' ? (entry.id !== null ? t('message.result.aiSaved') : t('message.result.ai')) : t('message.result.found')) }}</div>
-              <h2>{{ entry.expression }}</h2>
-              <p class="meaning">{{ entry.meaning }}</p>
-              <div class="result-meta"><span class="region-tag"><span aria-hidden="true">⌖</span>{{ entry.region }}</span><span class="usage-tag">{{ entry.context }}</span></div>
-              <div class="result-divider"></div>
-              <div class="detail-columns">
-                <div><span class="detail-label">{{ t('detail.equivalent') }}</span><p>{{ entry.equivalent }}</p></div>
-                <div><span class="detail-label">{{ t('detail.phrase') }}</span><p class="example-text">“{{ entry.example }}”</p></div>
+        <div class="results" *ngIf="lookups().length > 0">
+          <ng-container *ngFor="let lookup of lookups()">
+            <app-entry-card *ngIf="lookup.entry as entry" [entry]="entry" [offline]="!!lookup.offline" />
+            <article class="missing-body" *ngIf="lookup.missing">
+              <app-icon name="help" />
+              <div>
+                <h2>{{ lookup.query }}</h2>
+                <strong>{{ t('notfound.title') }}</strong>
+                <p>{{ lookup.text }}</p>
+                <span class="missing-footnote">{{ t('notfound.subtitle') }}</span>
               </div>
-              <div class="pronunciation-row" *ngIf="entry.pronunciation"><span class="detail-label">{{ t('detail.pronunciation') }}</span><span class="phonetic">{{ entry.pronunciation }}</span><button class="audio-button" *ngIf="entry.audioUrl" type="button" [attr.aria-label]="t('audio.play')">▶</button></div>
-            </div>
-            <div class="message-body missing-body" *ngIf="message.role === 'assistant' && message.missing">
-              <div class="missing-icon">?</div><div><strong>{{ t('notfound.title') }}</strong><p>{{ message.text }}</p><span class="missing-footnote">{{ t('notfound.subtitle') }}</span></div>
-            </div>
-          </article>
-          <div class="thinking-row" *ngIf="loading()"><span class="thinking-mark"><app-logo /></span><span class="thinking-dots"><i></i><i></i><i></i></span><small>{{ t('thinking.searching') }}</small></div>
+            </article>
+            <div class="pending-row" *ngIf="lookup.pending" role="status"><span class="hl">{{ lookup.query }}</span><small>{{ t('thinking.searching') }}</small></div>
+          </ng-container>
         </div>
       </div>
 

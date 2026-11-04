@@ -5,16 +5,18 @@ import { firstValueFrom } from 'rxjs';
 import { ApiService, AuthUser, Dashboard, ExpressionEntry, HistoryItem } from './api.service';
 import { TranslationKey } from './i18n';
 import { I18nService } from './i18n.service';
+import { EntryCard } from './entry-card';
 import { Icon } from './icon';
 import { Logo } from './logo';
 
-interface ChatMessage {
+interface Lookup {
   id: number;
-  role: 'user' | 'assistant';
-  text?: string;
+  query: string;
   entry?: ExpressionEntry;
+  text?: string;
   missing?: boolean;
   offline?: boolean;
+  pending?: boolean;
 }
 
 interface WorkerCandidate {
@@ -62,7 +64,7 @@ function readThemePreference(): ColorTheme {
 }
 
 @Component({
-  imports: [CommonModule, FormsModule, Icon, Logo],
+  imports: [CommonModule, EntryCard, FormsModule, Icon, Logo],
   selector: 'app-root',
   styleUrl: './app-shell.css',
   templateUrl: './app-shell.html',
@@ -80,7 +82,7 @@ export class App implements OnInit, OnDestroy {
   readonly authError = signal('');
   readonly sidebarOpen = signal(false);
   readonly draft = signal('');
-  readonly messages = signal<ChatMessage[]>([]);
+  readonly lookups = signal<Lookup[]>([]);
   readonly candidates = signal<WorkerCandidate[]>([]);
   readonly history = signal<HistoryItem[]>([]);
   readonly dashboard = signal<Dashboard | null>(null);
@@ -95,7 +97,7 @@ export class App implements OnInit, OnDestroy {
 
   private worker?: Worker;
   private recognition?: SpeechRecognitionLike;
-  private messageId = 0;
+  private lookupId = 0;
 
   constructor(private readonly api: ApiService) {
     effect(() => {
@@ -184,7 +186,7 @@ export class App implements OnInit, OnDestroy {
     this.currentUser.set(null);
     this.history.set([]);
     this.dashboard.set(null);
-    this.messages.set([]);
+    this.lookups.set([]);
     this.draft.set('');
     this.candidates.set([]);
     this.worker?.postMessage('');
@@ -201,11 +203,8 @@ export class App implements OnInit, OnDestroy {
 
     this.activeView.set('chat');
     this.sidebarOpen.set(false);
-    this.messages.update((items) => [...items, {
-      id: ++this.messageId,
-      role: 'user',
-      text: expression
-    }]);
+    const id = ++this.lookupId;
+    this.lookups.update((items) => [{ id, query: expression, pending: true }, ...items]);
     this.draft.set('');
     this.candidates.set([]);
     this.worker?.postMessage('');
@@ -215,23 +214,16 @@ export class App implements OnInit, OnDestroy {
       const result = await firstValueFrom(this.api.lookup(expression));
       this.apiOnline.set(true);
       if (result.entry?.source === 'database') this.saveCachedEntry(result.entry);
-      this.messages.update((items) => [...items, result.entry
-        ? { id: ++this.messageId, role: 'assistant', entry: result.entry }
-        : { id: ++this.messageId, role: 'assistant', text: result.message, missing: true }
-      ]);
+      this.resolveLookup(id, result.entry
+        ? { entry: result.entry }
+        : { text: result.message, missing: true });
       void this.refreshPanels();
     } catch {
       const cachedEntry = this.readCachedEntry(expression);
       this.apiOnline.set(false);
-      this.messages.update((items) => [...items, cachedEntry
-        ? { id: ++this.messageId, role: 'assistant', entry: cachedEntry, offline: true }
-        : {
-            id: ++this.messageId,
-            role: 'assistant',
-            text: 'No pude conectar con el diccionario. La consulta quedó en esta conversación; revisa tu conexión e inténtalo de nuevo.',
-            missing: true
-          }
-      ]);
+      this.resolveLookup(id, cachedEntry
+        ? { entry: cachedEntry, offline: true }
+        : { text: 'No pude conectar con el diccionario. La consulta quedó en esta conversación; revisa tu conexión e inténtalo de nuevo.', missing: true });
     } finally {
       this.loading.set(false);
     }
@@ -239,7 +231,7 @@ export class App implements OnInit, OnDestroy {
 
   startNewChat(): void {
     this.activeView.set('chat');
-    this.messages.set([]);
+    this.lookups.set([]);
     this.onDraftChange('');
     this.sidebarOpen.set(false);
   }
@@ -280,6 +272,10 @@ export class App implements OnInit, OnDestroy {
     this.recognition = recognition;
     this.listening.set(true);
     recognition.start();
+  }
+
+  private resolveLookup(id: number, patch: Partial<Lookup>): void {
+    this.lookups.update((items) => items.map((item) => item.id === id ? { ...item, ...patch, pending: false } : item));
   }
 
   private async refreshPanels(): Promise<void> {

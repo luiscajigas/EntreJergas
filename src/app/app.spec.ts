@@ -144,7 +144,7 @@ describe('App', () => {
     await app.submit();
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.querySelectorAll('.result-eyebrow')[1]?.textContent)
+    expect(fixture.nativeElement.querySelectorAll('.result-eyebrow')[0]?.textContent)
       .toContain('AGREGADO AL DICCIONARIO');
 
     lookup.mockReturnValue(of({
