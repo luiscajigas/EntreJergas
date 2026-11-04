@@ -231,6 +231,7 @@ export class App implements OnInit, OnDestroy {
     this.activeView.set('chat');
     const id = ++this.lookupId;
     this.lookups.update((items) => [{ id, query: expression, pending: true }, ...items]);
+    document.scrollingElement?.scrollTo?.({ top: 0, behavior: 'smooth' });
     this.draft.set('');
     this.candidates.set([]);
     this.worker?.postMessage('');
