@@ -36,10 +36,10 @@ Abre `http://localhost:4200`. Angular sirve la interfaz y reenvía `/api` a Expr
 ## Vistas y flujo
 
 - Crea una cuenta con nombre, correo y contraseña, o inicia sesión. La sesión se conserva en una cookie `HttpOnly`; el historial solo muestra consultas de la cuenta activa.
-- Escribe una expresión, selecciónala entre las sugerencias mientras aparece en el editor o envíala con Enter/botón.
+- Escribe una expresión, selecciónala entre las sugerencias que aparecen bajo el buscador o envíala con Enter/botón.
 - El dictado usa Web Speech API del navegador; no se sube audio al servidor. Algunos navegadores no implementan esta API.
 - El Worker recibe las ediciones, espera 280 ms y busca candidatos en un vocabulario pequeño fuera del hilo principal. No hace llamadas de red ni sustituye la búsqueda autoritativa de la API.
-- El servidor normaliza la expresión y consulta primero PostgreSQL. Una coincidencia responde con definición, región, contexto, equivalente y ejemplo; si no existe, responde `found: false`. No hay llamada de IA ni se inventan definiciones.
+- El servidor normaliza la expresión y consulta primero PostgreSQL. Una coincidencia responde con definición, región, contexto, equivalente y ejemplo; si no existe, pide una definición a la IA y la marca como generada. Si la IA falla, responde `found: false` con el motivo.
 - La interfaz guarda localmente las definiciones consultadas para poder mostrarlas si se pierde la conexión. El historial y las métricas requieren la API; las consultas sin conexión no se sincronizan posteriormente.
 
 ## Contrato REST
