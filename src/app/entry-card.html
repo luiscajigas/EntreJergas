@@ -1,20 +1,26 @@
 <article class="entry">
   <p class="result-eyebrow {{ status().tone }}"><app-icon [name]="status().icon" />{{ i18n.t(status().label) }}</p>
   <h2 class="headword"><span class="hl">{{ entry().expression }}</span></h2>
-  <p class="region"><app-icon name="pin" />{{ entry().region }}</p>
-  <p class="meaning">{{ entry().meaning }}</p>
+  <p class="region"><app-icon name="pin" />{{ view().region }}</p>
+  @if (translating()) {
+    <p class="translate-note" role="status">{{ i18n.t('entry.translating') }}</p>
+  }
+  @if (translateFailed()) {
+    <p class="translate-note" role="status">{{ i18n.t('entry.translateFailed') }}</p>
+  }
+  <p class="meaning">{{ view().meaning }}</p>
   <dl class="details">
     <div>
       <dt>{{ i18n.t('detail.equivalent') }}</dt>
-      <dd>{{ entry().equivalent }}</dd>
+      <dd>{{ view().equivalent }}</dd>
     </div>
     <div>
       <dt>{{ i18n.t('detail.usage') }}</dt>
-      <dd>{{ entry().context }}</dd>
+      <dd>{{ view().context }}</dd>
     </div>
     <div class="details-wide">
       <dt>{{ i18n.t('detail.phrase') }}</dt>
-      <dd class="example">“{{ entry().example }}”</dd>
+      <dd class="example">“{{ view().example }}”</dd>
     </div>
     @if (entry().pronunciation) {
       <div class="details-wide">

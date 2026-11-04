@@ -85,6 +85,8 @@ const es = {
   'lookup.offline': "No pude conectar con el diccionario. Revisa tu conexión e inténtalo de nuevo.",
   'auth.error.credentials': "Correo o contraseña incorrectos.",
   'auth.error.network': "No fue posible iniciar sesión. Revisa tu conexión e inténtalo de nuevo.",
+  'entry.translating': "Traduciendo…",
+  'entry.translateFailed': "No se pudo traducir esta definición. Se muestra en español.",
 };
 
 export type TranslationKey = keyof typeof es;
@@ -174,6 +176,8 @@ const en: Record<TranslationKey, string> = {
   'lookup.offline': "I could not reach the dictionary. Check your connection and try again.",
   'auth.error.credentials': "Incorrect email or password.",
   'auth.error.network': "We could not sign you in. Check your connection and try again.",
+  'entry.translating': "Translating…",
+  'entry.translateFailed': "We could not translate this definition, so it is shown in Spanish.",
 };
 
 export const translations: Record<AppLanguage, Record<TranslationKey, string>> = { es, en };

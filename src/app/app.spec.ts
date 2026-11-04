@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { vi } from 'vitest';
 import { App } from './app';
 import { ApiService } from './api.service';
@@ -16,7 +16,8 @@ describe('App', () => {
           history: () => of({ items: [] }),
           dashboard: () => of({ expressions: 16, searches: 0, regions: [] }),
           health: () => of({ status: 'ok', service: 'entrejergas-api' }),
-          lookup: () => of({ found: false, entry: null, message: 'No encontrada' })
+          lookup: () => of({ found: false, entry: null, message: 'No encontrada' }),
+          translate: () => of({ translation: { meaning: 'A close friend', region: 'Antioquia', context: 'Informal', equivalent: 'buddy', example: 'My parcero helped me.' } })
         }
       }]
     })
@@ -147,6 +148,66 @@ describe('App', () => {
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelector('.account-menu')).toBeNull();
+  });
+
+  const settle = async (fixture: { detectChanges(): void; whenStable(): Promise<unknown> }) => {
+    fixture.detectChanges();
+    await new Promise((resolve) => setTimeout(resolve));
+    await fixture.whenStable();
+    fixture.detectChanges();
+  };
+
+  const parcero = { id: 1, expression: 'parcero', meaning: 'Amigo cercano.', region: 'Antioquia', context: 'Informal', equivalent: 'amigo', example: 'Mi parcero.', pronunciation: null, audioUrl: null, source: 'database' as const };
+
+  it('shows definitions in English when the language changes, and back in Spanish', async () => {
+    localStorage.setItem('entrejergas.language.v1', 'es');
+    localStorage.removeItem('entrejergas.entries.v1');
+    const fixture = TestBed.createComponent(App);
+    const app = fixture.componentInstance;
+    const api = TestBed.inject(ApiService);
+    vi.spyOn(api, 'lookup').mockReturnValue(of({ found: true, entry: parcero }));
+    const translate = vi.spyOn(api, 'translate');
+    app.currentUser.set({ id: 1, email: 'ana@example.com', name: 'Ana' });
+    app.authLoading.set(false);
+    app.onDraftChange('parcero');
+    await app.submit();
+    await settle(fixture);
+
+    const meaning = () => fixture.nativeElement.querySelector('.meaning')?.textContent;
+    expect(meaning()).toContain('Amigo cercano.');
+    expect(translate).not.toHaveBeenCalled();
+
+    app.toggleLanguage();
+    await settle(fixture);
+    expect(translate).toHaveBeenCalledTimes(1);
+    expect(meaning()).toContain('A close friend');
+    expect(fixture.nativeElement.querySelector('.headword')?.textContent).toContain('parcero');
+
+    app.toggleLanguage();
+    await settle(fixture);
+    expect(meaning()).toContain('Amigo cercano.');
+    localStorage.setItem('entrejergas.language.v1', 'es');
+    localStorage.removeItem('entrejergas.entries.v1');
+  });
+
+  it('keeps the Spanish definition and explains it when the translation fails', async () => {
+    localStorage.setItem('entrejergas.language.v1', 'en');
+    localStorage.removeItem('entrejergas.entries.v1');
+    const fixture = TestBed.createComponent(App);
+    const app = fixture.componentInstance;
+    const api = TestBed.inject(ApiService);
+    vi.spyOn(api, 'lookup').mockReturnValue(of({ found: true, entry: parcero }));
+    vi.spyOn(api, 'translate').mockReturnValue(throwError(() => new Error('502')));
+    app.currentUser.set({ id: 1, email: 'ana@example.com', name: 'Ana' });
+    app.authLoading.set(false);
+    app.onDraftChange('parcero');
+    await app.submit();
+    await settle(fixture);
+
+    expect(fixture.nativeElement.querySelector('.meaning')?.textContent).toContain('Amigo cercano.');
+    expect(fixture.nativeElement.querySelector('.translate-note')?.textContent).toContain('could not translate');
+    localStorage.setItem('entrejergas.language.v1', 'es');
+    localStorage.removeItem('entrejergas.entries.v1');
   });
 
   it('labels AI answers and does not cache them as dictionary entries', async () => {
