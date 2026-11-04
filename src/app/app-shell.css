@@ -340,3 +340,7 @@ button { color: inherit; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }
 }
+
+.auth-submit { color: #fff; }
+:host([data-theme='dark']) .auth-submit { color: #17191b; }
+:host([data-theme='dark']) .lang-toggle { border-color: var(--line); background: var(--panel-bg); color: var(--ink); }
