@@ -13,7 +13,7 @@
 
 .details { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 22px 32px; margin: 26px 0 0; padding: 24px 0 0; border-top: 2px solid var(--ink); }
 .details-wide { grid-column: 1 / -1; }
-dt { color: var(--ink-faint); font-size: 13px; font-weight: 700; letter-spacing: .06em; }
+dt { color: var(--ink-faint); font-size: 15px; font-weight: 700; }
 dd { margin: 5px 0 0; color: var(--ink-soft); font-size: 17px; line-height: 1.45; }
 .example { color: var(--ink); font-family: var(--font-text); font-size: 22px; font-style: italic; line-height: 1.35; }
 .phonetic { display: flex; align-items: center; gap: 10px; font-family: var(--font-text); font-size: 20px; font-style: italic; }

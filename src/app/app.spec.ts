@@ -124,7 +124,7 @@ describe('App', () => {
     await app.submit();
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.querySelector('.result-eyebrow')?.textContent).toContain('GENERADO CON IA');
+    expect(fixture.nativeElement.querySelector('.result-eyebrow')?.textContent).toContain('Generado con IA');
     expect(localStorage.getItem('entrejergas.entries.v1')).toBeNull();
 
     lookup.mockReturnValue(of({
@@ -147,7 +147,7 @@ describe('App', () => {
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelectorAll('.result-eyebrow')[0]?.textContent)
-      .toContain('AGREGADO AL DICCIONARIO');
+      .toContain('agregado al diccionario');
 
     lookup.mockReturnValue(of({
       found: false,
