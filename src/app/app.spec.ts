@@ -97,6 +97,58 @@ describe('App', () => {
     expect(localStorage.getItem('entrejergas.language.v1')).toBe('en');
   });
 
+  it('shows the newest result first and searches when a suggested word is chosen', async () => {
+    const fixture = TestBed.createComponent(App);
+    const app = fixture.componentInstance;
+    app.currentUser.set({ id: 1, email: 'ana@example.com', name: 'Ana' });
+    app.authLoading.set(false);
+    const lookup = vi.spyOn(TestBed.inject(ApiService), 'lookup');
+
+    app.tryWord('parcero');
+    await fixture.whenStable();
+    app.tryWord('chichai');
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(lookup).toHaveBeenCalledWith('parcero');
+    expect(lookup).toHaveBeenCalledWith('chichai');
+    expect(app.lookups().map((item) => item.query)).toEqual(['chichai', 'parcero']);
+    expect(fixture.nativeElement.querySelector('.missing-body h2')?.textContent).toContain('chichai');
+    lookup.mockRestore();
+  });
+
+  it('focuses the search box with Ctrl K from any view', async () => {
+    const fixture = TestBed.createComponent(App);
+    const app = fixture.componentInstance;
+    app.currentUser.set({ id: 1, email: 'ana@example.com', name: 'Ana' });
+    app.authLoading.set(false);
+    app.openView('history');
+    fixture.detectChanges();
+    document.body.appendChild(fixture.nativeElement);
+
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', ctrlKey: true, cancelable: true }));
+    fixture.detectChanges();
+    await new Promise((resolve) => setTimeout(resolve));
+
+    expect(app.activeView()).toBe('chat');
+    expect(document.activeElement?.getAttribute('name')).toBe('expression');
+    fixture.nativeElement.remove();
+  });
+
+  it('closes the account menu with Escape', () => {
+    const fixture = TestBed.createComponent(App);
+    const app = fixture.componentInstance;
+    app.currentUser.set({ id: 1, email: 'ana@example.com', name: 'Ana' });
+    app.authLoading.set(false);
+    app.accountOpen.set(true);
+    fixture.detectChanges();
+
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.account-menu')).toBeNull();
+  });
+
   it('labels AI answers and does not cache them as dictionary entries', async () => {
     localStorage.setItem('entrejergas.language.v1', 'es');
     localStorage.removeItem('entrejergas.entries.v1');
