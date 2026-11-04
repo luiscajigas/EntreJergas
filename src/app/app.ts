@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { ApiService, AuthUser, Dashboard, ExpressionEntry, HistoryItem } from './api.service';
@@ -95,7 +95,16 @@ export class App implements OnInit, OnDestroy {
   private recognition?: SpeechRecognitionLike;
   private messageId = 0;
 
-  constructor(private readonly api: ApiService) {}
+  constructor(private readonly api: ApiService) {
+    effect(() => {
+      const theme = this.theme();
+      document.documentElement.dataset['theme'] = theme;
+      document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#18227a' : '#1c2fa8');
+    });
+    effect(() => {
+      document.documentElement.lang = this.language();
+    });
+  }
 
   ngOnInit(): void {
     if (typeof Worker !== 'undefined') {
