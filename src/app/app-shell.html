@@ -13,8 +13,8 @@
       <div class="auth-controls">
         <button class="lang-toggle" type="button" (click)="toggleLanguage()" [attr.aria-label]="t('language.toggle.aria')" [title]="t('language.toggle.aria')">{{ language() === 'es' ? 'ES' : 'EN' }}</button>
         <button class="theme-toggle auth-theme-toggle" type="button" (click)="toggleTheme()" [attr.aria-pressed]="theme() === 'dark'" [attr.aria-label]="theme() === 'dark' ? t('theme.toggle.light') : t('theme.toggle.dark')" [title]="theme() === 'dark' ? t('theme.toggle.light') : t('theme.toggle.dark')">
-          <svg *ngIf="theme() === 'light'" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.5"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path></svg>
-          <svg *ngIf="theme() === 'dark'" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.6 8.6 0 1 0 20.2 15.2Z"></path></svg>
+          <app-icon *ngIf="theme() === 'light'" name="sun" />
+          <app-icon *ngIf="theme() === 'dark'" name="moon" />
         </button>
       </div>
     </header>
@@ -80,14 +80,14 @@
 
     <nav class="primary-nav" aria-label="Secciones">
       <button type="button" [class.selected]="activeView() === 'chat'" (click)="openView('chat')">
-        <span class="nav-icon chat-icon" aria-hidden="true"></span>{{ t('nav.explore') }}
+        <app-icon name="search" />{{ t('nav.explore') }}
       </button>
       <button type="button" [class.selected]="activeView() === 'history'" (click)="openView('history')">
-        <span class="nav-icon history-icon" aria-hidden="true"></span>{{ t('nav.history') }}
+        <app-icon name="clock" />{{ t('nav.history') }}
         <span class="nav-count" *ngIf="history().length">{{ history().length }}</span>
       </button>
       <button type="button" [class.selected]="activeView() === 'dashboard'" (click)="openView('dashboard')">
-        <span class="nav-icon dashboard-icon" aria-hidden="true"></span>{{ t('nav.dictionary') }}
+        <app-icon name="book" />{{ t('nav.dictionary') }}
       </button>
     </nav>
 
@@ -123,8 +123,8 @@
       <div class="topbar-actions">
         <button class="lang-toggle" type="button" (click)="toggleLanguage()" [attr.aria-label]="t('language.toggle.aria')" [title]="t('language.toggle.aria')">{{ language() === 'es' ? 'ES' : 'EN' }}</button>
         <button class="theme-toggle" type="button" (click)="toggleTheme()" [attr.aria-pressed]="theme() === 'dark'" [attr.aria-label]="theme() === 'dark' ? t('theme.toggle.light') : t('theme.toggle.dark')" [title]="theme() === 'dark' ? t('theme.toggle.light') : t('theme.toggle.dark')">
-          <svg *ngIf="theme() === 'light'" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.5"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path></svg>
-          <svg *ngIf="theme() === 'dark'" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.6 8.6 0 1 0 20.2 15.2Z"></path></svg>
+          <app-icon *ngIf="theme() === 'light'" name="sun" />
+          <app-icon *ngIf="theme() === 'dark'" name="moon" />
         </button>
         <div class="connection-state" [class.offline]="!apiOnline()"><span></span>{{ apiOnline() ? t('status.connected') : t('status.offline') }}</div>
       </div>
@@ -180,8 +180,8 @@
         <form class="composer" (ngSubmit)="submit()">
           <textarea [attr.aria-label]="t('composer.aria')" rows="1" [ngModel]="draft()" (ngModelChange)="onDraftChange($event)" name="expression" [placeholder]="t('composer.placeholder')" maxlength="100" (keydown.enter)="$event.preventDefault(); submit()"></textarea>
           <div class="composer-footer"><span class="input-hint"><span class="hint-dot"></span> {{ t('composer.hint') }}</span><div class="composer-actions">
-            <button class="mic-button" [class.is-listening]="listening()" type="button" [disabled]="!speechSupported" (click)="toggleDictation()" [attr.aria-label]="speechSupported ? (listening() ? t('composer.mic.stop') : t('composer.mic.start')) : t('composer.mic.unsupported')" [title]="speechSupported ? (listening() ? t('composer.mic.stop') : t('composer.mic.start')) : t('composer.mic.unsupported')"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="2.8" width="6" height="12" rx="3"></rect><path d="M5.5 11.5v.8a6.5 6.5 0 0 0 13 0v-.8M12 19v3m-4 0h8"></path></svg></button>
-            <button class="send-button" type="submit" [disabled]="!draft().trim() || loading()" [attr.aria-label]="t('composer.send')" [title]="t('composer.send')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5m-7 7 7-7 7 7"></path></svg></button>
+            <button class="mic-button" [class.is-listening]="listening()" type="button" [disabled]="!speechSupported" (click)="toggleDictation()" [attr.aria-label]="speechSupported ? (listening() ? t('composer.mic.stop') : t('composer.mic.start')) : t('composer.mic.unsupported')" [title]="speechSupported ? (listening() ? t('composer.mic.stop') : t('composer.mic.start')) : t('composer.mic.unsupported')"><app-icon name="mic" /></button>
+            <button class="send-button" type="submit" [disabled]="!draft().trim() || loading()" [attr.aria-label]="t('composer.send')" [title]="t('composer.send')"><app-icon name="arrow" /></button>
           </div></div>
         </form>
         <p class="composer-disclaimer">{{ t('composer.disclaimer') }}</p>

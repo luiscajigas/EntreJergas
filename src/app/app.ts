@@ -5,6 +5,7 @@ import { firstValueFrom } from 'rxjs';
 import { ApiService, AuthUser, Dashboard, ExpressionEntry, HistoryItem } from './api.service';
 import { TranslationKey } from './i18n';
 import { I18nService } from './i18n.service';
+import { Icon } from './icon';
 import { Logo } from './logo';
 
 interface ChatMessage {
@@ -61,7 +62,7 @@ function readThemePreference(): ColorTheme {
 }
 
 @Component({
-  imports: [CommonModule, FormsModule, Logo],
+  imports: [CommonModule, FormsModule, Icon, Logo],
   selector: 'app-root',
   styleUrl: './app-shell.css',
   templateUrl: './app-shell.html',
