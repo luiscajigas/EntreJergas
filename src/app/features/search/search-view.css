@@ -33,7 +33,6 @@
 
 .search-hint { margin-top: 22px; color: var(--on-band-soft); font-size: 15px; line-height: 1.5; }
 .compact .search-hint { margin-top: 18px; }
-.search-hint b { color: var(--yellow); font-weight: 700; white-space: nowrap; }
 
 @media (max-width: 760px) {
   .search-form { height: 62px; padding: 0 7px 0 14px; border-radius: 16px; }
@@ -82,3 +81,9 @@
 .pending-row .hl { font-family: var(--font-text); font-size: 30px; font-weight: 800; animation: pending-pulse 1s ease-in-out infinite alternate; }
 .pending-row small { color: var(--ink-soft); font-size: 15px; }
 @keyframes pending-pulse { to { opacity: .55; } }
+
+.unresolved-card { display: flex; gap: 14px; padding: clamp(20px, 3vw, 28px); border: 1px solid var(--line); border-radius: 20px; background: var(--surface); }
+.unresolved-card > app-icon { margin-top: 3px; color: var(--ink-faint); font-size: 22px; }
+.unresolved-card h2 { font-family: var(--font-text); font-size: 30px; font-weight: 800; line-height: 1.15; overflow-wrap: anywhere; }
+.unresolved-card p { margin-top: 4px; color: var(--ink-soft); font-size: 16px; line-height: 1.45; }
+.unresolved-card .text-button { margin-top: 10px; }

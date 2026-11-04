@@ -7,7 +7,7 @@
       }
       <form class="search-form" role="search" (ngSubmit)="search.submit()">
         <app-icon name="search" />
-        <input #searchInput type="text" name="expression" [ngModel]="search.draft()" (ngModelChange)="search.setDraft($event)" [attr.aria-label]="i18n.t('composer.aria')" [placeholder]="i18n.t('composer.placeholder')" maxlength="100" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <input #searchInput type="text" name="expression" [ngModel]="search.draft()" (ngModelChange)="search.setDraft($event)" [attr.aria-label]="i18n.t('composer.aria')" [placeholder]="i18n.t('composer.placeholder')" maxlength="300" autocomplete="off" autocapitalize="off" spellcheck="false">
         <kbd class="search-kbd">Ctrl K</kbd>
         @if (dictation.supported) {
           <button class="mic-button" [class.is-listening]="dictation.listening()" type="button" (click)="toggleDictation()" [attr.aria-label]="micLabel()" [title]="micLabel()"><app-icon name="mic" /></button>
@@ -22,7 +22,7 @@
           }
         </div>
       }
-      <p class="search-hint">{{ i18n.t('composer.hint') }} <b>"hacer vaca"</b></p>
+      <p class="search-hint">{{ i18n.t('composer.hint') }}</p>
     </div>
   </div>
 
@@ -36,7 +36,23 @@
           @for (lookup of search.lookups(); track lookup.id) {
             @switch (lookup.status) {
               @case ('found') {
-                <app-entry-card [entry]="lookup.entry" [offline]="lookup.offline" />
+                @for (entry of lookup.entries; track entry.expression) {
+                  <app-entry-card [entry]="entry" [offline]="lookup.offline" />
+                }
+                @for (item of lookup.unresolved; track item.text) {
+                  <article class="unresolved-card">
+                    <app-icon name="help" />
+                    <div>
+                      <h2>{{ item.text }}</h2>
+                      @if (item.suggestion; as suggestion) {
+                        <p>{{ i18n.t('unresolved.typo') }}</p>
+                        <button class="text-button" type="button" (click)="search.search(suggestion)">{{ suggestion }}<app-icon name="arrow" /></button>
+                      } @else {
+                        <p>{{ i18n.t('unresolved.unknown') }}</p>
+                      }
+                    </div>
+                  </article>
+                }
               }
               @case ('missing') {
                 <article class="missing-body">
