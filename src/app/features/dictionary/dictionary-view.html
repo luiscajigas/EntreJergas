@@ -1,0 +1,28 @@
+<section class="page">
+  <div class="page-head">
+    <h1>{{ i18n.t('dashboard.heading') }}</h1>
+    <p>{{ i18n.t('dashboard.subheading') }}</p>
+  </div>
+  @if (activity.dashboard(); as stats) {
+    <div class="stats">
+      <div class="stat"><strong>{{ stats.expressions }}</strong><span>{{ i18n.t('dashboard.expressions') }}</span><small>{{ i18n.t('dashboard.expressions.label') }}</small></div>
+      <div class="stat"><strong>{{ stats.searches }}</strong><span>{{ i18n.t('dashboard.searches') }}</span><small>{{ i18n.t('dashboard.searches.label') }}</small></div>
+      <div class="stat"><strong>{{ stats.regions.length }}</strong><span>{{ i18n.t('dashboard.regions') }}</span><small>{{ i18n.t('dashboard.regions.label') }}</small></div>
+    </div>
+    <section class="region-panel" aria-labelledby="region-panel-title">
+      <h2 id="region-panel-title">{{ i18n.t('dashboard.region.panelTitle') }}</h2>
+      <ul class="region-list">
+        @for (region of stats.regions; track region.region) {
+          <li class="region-row">
+            <strong>{{ region.region }}</strong>
+            <span class="region-bar" aria-hidden="true"><i [style.width.%]="region.count / stats.regions[0].count * 100"></i></span>
+            <span class="region-count">{{ region.count }}</span>
+          </li>
+        }
+      </ul>
+    </section>
+  } @else {
+    <p class="stats-offline">{{ i18n.t('dashboard.loading') }}</p>
+  }
+  <p class="dictionary-note">{{ i18n.t('dictionary.note.title') }}<span>{{ i18n.t('dictionary.note.body') }}</span></p>
+</section>
