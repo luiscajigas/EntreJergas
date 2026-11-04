@@ -66,7 +66,7 @@ function readThemePreference(): ColorTheme {
 @Component({
   imports: [CommonModule, EntryCard, FormsModule, Icon, Logo],
   selector: 'app-root',
-  styleUrls: ['./app-shell.css', './styles/layout.css', './styles/search.css', './styles/pages.css', './styles/auth.css'],
+  styleUrls: ['./styles/layout.css', './styles/search.css', './styles/pages.css', './styles/auth.css'],
   templateUrl: './app-shell.html',
   host: { '[attr.data-theme]': 'theme()', '(document:click)': 'onDocumentClick($event)', '(document:keydown)': 'onDocumentKeydown($event)' },
 })
