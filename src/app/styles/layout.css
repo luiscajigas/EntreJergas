@@ -40,7 +40,7 @@ h1, h2, h3, p { margin: 0; }
   .app-main { padding-bottom: 72px; }
   .tabs { position: fixed; z-index: 20; right: 0; bottom: 0; left: 0; gap: 0; height: calc(66px + env(safe-area-inset-bottom)); padding: 6px 8px calc(6px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: var(--surface); color: var(--ink); }
   .tabs button { height: 54px; flex: 1; flex-direction: column; justify-content: center; gap: 2px; padding: 0; color: var(--ink-soft); font-size: 13px; }
-  .tabs button:hover { background: var(--accent-soft); }
+  .tabs button:not(.selected):hover { background: var(--accent-soft); }
   .tabs :focus-visible { outline-color: var(--accent); }
 }
 
