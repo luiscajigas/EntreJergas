@@ -26,11 +26,15 @@ npm run dev
 
 Abre `http://localhost:4200`. Angular sirve la interfaz y reenvía `/api` a Express en `http://localhost:3000`. El backend crea las tablas e inserta las expresiones de ejemplo de manera idempotente al arrancar. Para correr solo el servidor: `npm run dev:api`.
 
+## Arquitectura
+
+Las decisiones técnicas y sus trade-offs están en [docs/arquitectura.md](docs/arquitectura.md). Para actualizar los tipos de la API después de cambiar el contrato del backend: `npm run api:types`.
+
 ## Diseño
 
 - Los colores y las fuentes se definen como variables en `src/styles.css`; el modo oscuro solo cambia esas variables.
-- Los estilos de cada vista están en `src/app/styles/`, y la ficha de palabra en `src/app/entry-card.css`.
-- Los iconos viven en `src/app/icon.ts` y los textos en español e inglés en `src/app/i18n.ts`.
+- Cada vista tiene sus estilos junto a su componente, en `src/app/features/`.
+- Los iconos viven en `src/app/shared/icon.ts` y los textos en español e inglés en `src/app/core/i18n/i18n.ts`.
 - Tipografías: Chivo para la interfaz y Alegreya para las palabras y definiciones, cargadas desde Google Fonts.
 
 ## Vistas y flujo
@@ -45,22 +49,7 @@ Abre `http://localhost:4200`. Angular sirve la interfaz y reenvía `/api` a Expr
 
 ## Contrato REST
 
-Todas las rutas se sirven bajo `/api`. Las respuestas usan JSON.
-
-| Método y ruta         | Solicitud                         | Respuesta                                                                                                                                                                                                    |
-| --------------------- | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `GET /health`         | Sin cuerpo                        | `{ "status": "ok", "service": "entrejergas-api" }`                                                                                                                                                           |
-| `POST /auth/register` | `{ "name", "email", "password" }` | `{ "user": { "id", "email", "name" } }` y cookie de sesión                                                                                                                                                   |
-| `POST /auth/login`    | `{ "email", "password" }`         | `{ "user": { "id", "email", "name" } }` y cookie de sesión                                                                                                                                                   |
-| `GET /auth/me`        | Cookie de sesión                  | `{ "user": { "id", "email", "name" } }`                                                                                                                                                                      |
-| `POST /auth/logout`   | Cookie de sesión                  | HTTP 204; revoca la sesión                                                                                                                                                                                   |
-| `POST /lookup`        | `{ "expression": "parcero" }`     | `{ "found": true, "entry": { "id", "expression", "meaning", "region", "context", "equivalent", "example", "pronunciation", "audioUrl", "source" } }` o `{ "found": false, "entry": null, "message": "..." }` |
-| `GET /history`        | Sin cuerpo                        | `{ "items": [{ "id", "expression", "found", "createdAt" }] }` (máximo 30)                                                                                                                                    |
-| `GET /dashboard`      | Sin cuerpo                        | `{ "expressions": 16, "searches": 0, "regions": [{ "region", "count" }] }`                                                                                                                                   |
-
-Excepto `GET /health`, las rutas requieren iniciar sesión. La contraseña debe tener entre 8 y 128 caracteres. `POST /lookup` devuelve HTTP 400 si falta la expresión o tiene más de 100 caracteres. Tanto las coincidencias como las búsquedas sin coincidencia se guardan asociadas a la cuenta activa. Se ignoran tildes y mayúsculas al comparar expresiones.
-
-La API crea las tablas `users` (cuentas y hashes de contraseña) y `user_sessions` (hashes de sesiones con vencimiento). `search_history.user_id` vincula cada consulta a su propietario; el arranque agrega esa columna a instalaciones existentes.
+El contrato completo está en `../EntreJergas-Back/backend/openapi.yaml`.
 
 ## Arquitectura y rendimiento
 
