@@ -11,6 +11,7 @@ export type AuthUser = Schemas['User'];
 export type Dashboard = Schemas['DashboardResponse'];
 export type EntryTranslation = Schemas['DefinitionText'];
 export type ExpressionEntry = Schemas['ExpressionEntry'];
+export type UnresolvedExpression = Schemas['UnresolvedExpression'];
 export type HistoryItem = Schemas['HistoryItem'];
 export type HistorySource = Schemas['HistorySource'];
 export type LookupFailureReason = Schemas['LookupFailureReason'];
