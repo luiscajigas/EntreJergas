@@ -3,7 +3,8 @@
 .search-band { padding: clamp(36px, 7vw, 84px) clamp(16px, 4vw, 48px) clamp(36px, 6vw, 64px); background: var(--band); color: var(--on-band); }
 .search-band.compact { padding-top: 6px; padding-bottom: 24px; }
 .band-inner { width: min(100%, 1120px); margin: 0 auto; }
-.search-band h1 { max-width: 16ch; font-size: clamp(42px, 8vw, 92px); font-weight: 800; line-height: 1.04; letter-spacing: -.035em; }
+.search-band h1 .hl { margin: .1em 0 0 -.14em; }
+.search-band h1 { font-size: clamp(42px, 8vw, 92px); font-weight: 800; line-height: 1.04; letter-spacing: -.035em; }
 .search-lead { max-width: 52ch; margin-top: 20px; color: var(--on-band-soft); font-size: clamp(18px, 2vw, 21px); line-height: 1.4; }
 .search-band h1 + .search-form { margin-top: 28px; }
 

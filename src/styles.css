@@ -48,7 +48,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 ::selection { background: var(--yellow); color: var(--on-yellow); }
 
 .brand-mark { display: inline-flex; flex: none; }
-.hl { margin: 0 -.06em; padding: 0 .16em; border-radius: .28em .42em .3em .46em / .5em .3em .5em .34em; background: var(--yellow); color: var(--on-yellow); -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.hl { display: inline-block; max-width: 100%; padding: .04em .14em .1em; border-radius: .1em .16em .12em .18em; background: var(--yellow); color: var(--on-yellow); line-height: 1.02; overflow-wrap: anywhere; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 @media (prefers-reduced-motion: reduce) {

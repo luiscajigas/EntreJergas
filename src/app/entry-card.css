@@ -6,6 +6,7 @@
 .tone-saved, .tone-neutral { background: var(--accent-soft); color: var(--accent); }
 .tone-ai { background: var(--yellow); color: var(--on-yellow); }
 
+.headword .hl { margin-left: -.1em; }
 .headword { margin: 18px 0 0; font-family: var(--font-text); font-size: clamp(42px, 7vw, 64px); font-weight: 800; line-height: 1.12; letter-spacing: -.01em; }
 .region { display: flex; align-items: flex-start; gap: 6px; margin: 14px 0 0; color: var(--ink-faint); font-size: 16px; font-weight: 500; }
 .region app-icon { margin-top: 2px; }
