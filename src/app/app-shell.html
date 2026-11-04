@@ -165,7 +165,7 @@
           <button class="history-row" type="button" (click)="openHistoryItem(item)">
             <span class="history-expression">{{ item.expression }}</span>
             <span class="status-badge tone-{{ item.source }}"><app-icon [name]="historyStatus(item).icon" />{{ t(historyStatus(item).label) }}</span>
-            <span class="history-date">{{ item.createdAt | date:'d MMM, HH:mm' }}</span>
+            <span class="history-date">{{ item.createdAt | date:'d MMM, HH:mm':undefined:language() }}</span>
             <app-icon class="row-arrow" name="arrow" />
           </button>
         </li>

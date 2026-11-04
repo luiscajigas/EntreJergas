@@ -1,4 +1,5 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
 import { Component, ElementRef, OnDestroy, OnInit, effect, inject, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
@@ -47,6 +48,8 @@ type SpeechWindow = Window & {
 
 type AppView = 'chat' | 'history' | 'dashboard';
 type ColorTheme = 'light' | 'dark';
+
+registerLocaleData(localeEs);
 
 function readThemePreference(): ColorTheme {
   try {
