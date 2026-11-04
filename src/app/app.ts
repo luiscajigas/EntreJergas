@@ -66,9 +66,9 @@ function readThemePreference(): ColorTheme {
 @Component({
   imports: [CommonModule, EntryCard, FormsModule, Icon, Logo],
   selector: 'app-root',
-  styleUrl: './app-shell.css',
+  styleUrls: ['./app-shell.css', './styles/layout.css'],
   templateUrl: './app-shell.html',
-  host: { '[attr.data-theme]': 'theme()' },
+  host: { '[attr.data-theme]': 'theme()', '(document:click)': 'onDocumentClick($event)', '(document:keydown)': 'onDocumentKeydown($event)' },
 })
 export class App implements OnInit, OnDestroy {
   readonly theme = signal<ColorTheme>(readThemePreference());
@@ -80,7 +80,7 @@ export class App implements OnInit, OnDestroy {
   readonly authMode = signal<'login' | 'register'>('login');
   readonly authSubmitting = signal(false);
   readonly authError = signal('');
-  readonly sidebarOpen = signal(false);
+  readonly accountOpen = signal(false);
   readonly draft = signal('');
   readonly lookups = signal<Lookup[]>([]);
   readonly candidates = signal<WorkerCandidate[]>([]);
@@ -124,6 +124,14 @@ export class App implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.worker?.terminate();
     this.recognition?.stop();
+  }
+
+  onDocumentClick(event: Event): void {
+    if (!(event.target as Element | null)?.closest?.('.account')) this.accountOpen.set(false);
+  }
+
+  onDocumentKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Escape') this.accountOpen.set(false);
   }
 
   onDraftChange(value: string): void {
@@ -184,6 +192,7 @@ export class App implements OnInit, OnDestroy {
       // La interfaz se cierra aunque el servidor no esté disponible.
     }
     this.currentUser.set(null);
+    this.accountOpen.set(false);
     this.history.set([]);
     this.dashboard.set(null);
     this.lookups.set([]);
@@ -202,7 +211,6 @@ export class App implements OnInit, OnDestroy {
     if (!expression || this.loading()) return;
 
     this.activeView.set('chat');
-    this.sidebarOpen.set(false);
     const id = ++this.lookupId;
     this.lookups.update((items) => [{ id, query: expression, pending: true }, ...items]);
     this.draft.set('');
@@ -233,12 +241,10 @@ export class App implements OnInit, OnDestroy {
     this.activeView.set('chat');
     this.lookups.set([]);
     this.onDraftChange('');
-    this.sidebarOpen.set(false);
   }
 
   openView(view: AppView): void {
     this.activeView.set(view);
-    this.sidebarOpen.set(false);
     if (view === 'history') void this.loadHistory();
     if (view === 'dashboard') void this.loadDashboard();
   }

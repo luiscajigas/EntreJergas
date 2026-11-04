@@ -64,72 +64,39 @@
   </div>
 </main>
 
-<div class="app-frame" *ngIf="!authLoading() && currentUser()" [class.sidebar-open]="sidebarOpen()">
-  <aside class="sidebar" aria-label="Navegación principal">
-    <div class="brand-lockup">
+<div class="app-frame" *ngIf="!authLoading() && currentUser()">
+  <header class="app-header">
+    <button class="brand" type="button" (click)="startNewChat()">
       <span class="brand-mark"><app-logo /></span>
       <span class="brand-name">entre<span>jergas</span></span>
-      <button class="icon-button mobile-close" type="button" aria-label="Cerrar menú" (click)="sidebarOpen.set(false)">×</button>
-    </div>
-
-    <button class="new-chat-button" type="button" (click)="startNewChat()">
-      <span class="plus-icon" aria-hidden="true">+</span>
-      <span>{{ t('nav.newChat') }}</span>
-      <span class="shortcut">Ctrl K</span>
     </button>
 
-    <nav class="primary-nav" aria-label="Secciones">
-      <button type="button" [class.selected]="activeView() === 'chat'" (click)="openView('chat')">
-        <app-icon name="search" />{{ t('nav.explore') }}
-      </button>
-      <button type="button" [class.selected]="activeView() === 'history'" (click)="openView('history')">
-        <app-icon name="clock" />{{ t('nav.history') }}
-        <span class="nav-count" *ngIf="history().length">{{ history().length }}</span>
-      </button>
-      <button type="button" [class.selected]="activeView() === 'dashboard'" (click)="openView('dashboard')">
-        <app-icon name="book" />{{ t('nav.dictionary') }}
-      </button>
+    <nav class="tabs" [attr.aria-label]="t('nav.sections')">
+      <button type="button" [class.selected]="activeView() === 'chat'" [attr.aria-current]="activeView() === 'chat' ? 'page' : null" (click)="openView('chat')"><app-icon name="search" />{{ t('nav.explore') }}</button>
+      <button type="button" [class.selected]="activeView() === 'history'" [attr.aria-current]="activeView() === 'history' ? 'page' : null" (click)="openView('history')"><app-icon name="clock" />{{ t('nav.history') }}</button>
+      <button type="button" [class.selected]="activeView() === 'dashboard'" [attr.aria-current]="activeView() === 'dashboard' ? 'page' : null" (click)="openView('dashboard')"><app-icon name="book" />{{ t('nav.dictionary') }}</button>
     </nav>
 
-    <div class="sidebar-rule"></div>
-    <div class="sidebar-caption">{{ t('nav.recent') }}</div>
-    <div class="recent-list" *ngIf="history().length; else noRecent">
-      <button class="recent-item" type="button" *ngFor="let item of history().slice(0, 7)" (click)="openHistoryItem(item)">
-        <span class="recent-dot" [class.not-found]="!item.found"></span>
-        <span>{{ item.expression }}</span>
+    <div class="header-actions">
+      <span class="offline-pill" *ngIf="!apiOnline()"><app-icon name="offline" />{{ t('status.offline') }}</span>
+      <button class="icon-btn lang-toggle" type="button" (click)="toggleLanguage()" [attr.aria-label]="t('language.toggle.aria')" [title]="t('language.toggle.aria')">{{ language() === 'es' ? 'EN' : 'ES' }}</button>
+      <button class="icon-btn theme-toggle" type="button" (click)="toggleTheme()" [attr.aria-pressed]="theme() === 'dark'" [attr.aria-label]="theme() === 'dark' ? t('theme.toggle.light') : t('theme.toggle.dark')" [title]="theme() === 'dark' ? t('theme.toggle.light') : t('theme.toggle.dark')">
+        <app-icon [name]="theme() === 'dark' ? 'sun' : 'moon'" />
       </button>
-    </div>
-    <ng-template #noRecent><p class="recent-empty">Tus consultas aparecerán aquí.</p></ng-template>
-
-    <div class="sidebar-bottom">
-      <div class="beta-card">
-        <span class="beta-spark" aria-hidden="true">✳</span>
-        <div><strong>{{ t('nav.betaTitle') }}</strong><p>{{ t('nav.betaText') }}</p></div>
-      </div>
-      <div class="profile-row"><span class="profile-avatar">{{ currentUser()?.name?.charAt(0)?.toUpperCase() }}</span><span class="profile-details"><strong>{{ currentUser()?.name }}</strong><small>{{ currentUser()?.email }}</small></span><button class="logout-button" type="button" (click)="logout()" [title]="t('nav.logout')">{{ t('nav.logout') }}</button></div>
-    </div>
-  </aside>
-
-  <div class="mobile-scrim" (click)="sidebarOpen.set(false)"></div>
-
-  <main class="main-column">
-    <header class="topbar">
-      <button class="icon-button menu-toggle" type="button" aria-label="Abrir menú" (click)="sidebarOpen.set(true)"><span class="hamburger"></span></button>
-      <div class="topbar-title">
-        <span class="topbar-section">{{ activeView() === 'chat' ? t('topbar.chat') : activeView() === 'history' ? t('topbar.history') : t('topbar.dictionary') }}</span>
-        <span class="topbar-divider">/</span>
-        <span class="topbar-current">{{ activeView() === 'chat' ? t('topbar.newConversation') : activeView() === 'history' ? t('nav.history') : t('topbar.summary') }}</span>
-      </div>
-      <div class="topbar-actions">
-        <button class="lang-toggle" type="button" (click)="toggleLanguage()" [attr.aria-label]="t('language.toggle.aria')" [title]="t('language.toggle.aria')">{{ language() === 'es' ? 'ES' : 'EN' }}</button>
-        <button class="theme-toggle" type="button" (click)="toggleTheme()" [attr.aria-pressed]="theme() === 'dark'" [attr.aria-label]="theme() === 'dark' ? t('theme.toggle.light') : t('theme.toggle.dark')" [title]="theme() === 'dark' ? t('theme.toggle.light') : t('theme.toggle.dark')">
-          <app-icon *ngIf="theme() === 'light'" name="sun" />
-          <app-icon *ngIf="theme() === 'dark'" name="moon" />
+      <div class="account">
+        <button class="account-button" type="button" (click)="accountOpen.set(!accountOpen())" [attr.aria-expanded]="accountOpen()" [attr.aria-label]="t('nav.account')">
+          <span class="profile-avatar">{{ currentUser()?.name?.charAt(0)?.toUpperCase() }}</span>
+          <app-icon name="chevron" />
         </button>
-        <div class="connection-state" [class.offline]="!apiOnline()"><span></span>{{ apiOnline() ? t('status.connected') : t('status.offline') }}</div>
+        <div class="account-menu" *ngIf="accountOpen()">
+          <div class="profile-details"><strong>{{ currentUser()?.name }}</strong><small>{{ currentUser()?.email }}</small></div>
+          <button class="logout-button" type="button" (click)="logout()"><app-icon name="logout" />{{ t('nav.logout') }}</button>
+        </div>
       </div>
-    </header>
+    </div>
+  </header>
 
+  <main class="app-main">
     <section class="chat-view" *ngIf="activeView() === 'chat'">
       <div class="conversation-scroll" #conversation>
         <div class="welcome" *ngIf="lookups().length === 0">

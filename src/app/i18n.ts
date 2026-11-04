@@ -25,7 +25,7 @@ const es = {
   'auth.switch.action.login': 'Regístrate',
   'auth.switch.action.register': 'Inicia sesión',
   'nav.newChat': 'Nueva consulta',
-  'nav.explore': 'Explorar expresiones',
+  'nav.explore': "Buscar",
   'nav.history': 'Historial',
   'nav.dictionary': 'Diccionario',
   'nav.recent': 'CONSULTAS RECIENTES',
@@ -99,10 +99,12 @@ const es = {
   'dictionary.note.title': 'Las palabras cambian según quién las dice.',
   'dictionary.note.body': 'El contexto y la región hacen parte de cada definición.',
   'footer.tagline': 'Hecho para escuchar mejor',
-  'language.toggle.aria': 'Cambiar idioma',
+  'language.toggle.aria': "EN: cambiar a inglés",
   'theme.toggle.light': 'Activar modo claro',
   'theme.toggle.dark': 'Activar modo oscuro',
   'detail.usage': "CÓMO SE USA",
+  'nav.sections': "Secciones",
+  'nav.account': "Tu cuenta",
 };
 
 export type TranslationKey = keyof typeof es;
@@ -132,7 +134,7 @@ const en: Record<TranslationKey, string> = {
   'auth.switch.action.login': 'Create one',
   'auth.switch.action.register': 'Sign in',
   'nav.newChat': 'New search',
-  'nav.explore': 'Explore expressions',
+  'nav.explore': "Search",
   'nav.history': 'History',
   'nav.dictionary': 'Dictionary',
   'nav.recent': 'RECENT SEARCHES',
@@ -206,10 +208,12 @@ const en: Record<TranslationKey, string> = {
   'dictionary.note.title': 'Words change depending on who says them.',
   'dictionary.note.body': 'Context and region are part of every definition.',
   'footer.tagline': 'Made to listen better',
-  'language.toggle.aria': 'Change language',
+  'language.toggle.aria': "ES: switch to Spanish",
   'theme.toggle.light': 'Activate light mode',
   'theme.toggle.dark': 'Activate dark mode',
   'detail.usage': "HOW IT IS USED",
+  'nav.sections': "Sections",
+  'nav.account': "Your account",
 };
 
 export const translations: Record<AppLanguage, Record<TranslationKey, string>> = { es, en };
