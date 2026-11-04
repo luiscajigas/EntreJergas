@@ -6,7 +6,7 @@ import { ApiService, AuthUser, Dashboard, ExpressionEntry, HistoryItem } from '.
 import { TranslationKey } from './i18n';
 import { I18nService } from './i18n.service';
 import { EntryCard } from './entry-card';
-import { Icon } from './icon';
+import { Icon, IconName } from './icon';
 import { Logo } from './logo';
 
 interface Lookup {
@@ -66,7 +66,7 @@ function readThemePreference(): ColorTheme {
 @Component({
   imports: [CommonModule, EntryCard, FormsModule, Icon, Logo],
   selector: 'app-root',
-  styleUrls: ['./app-shell.css', './styles/layout.css', './styles/search.css'],
+  styleUrls: ['./app-shell.css', './styles/layout.css', './styles/search.css', './styles/pages.css'],
   templateUrl: './app-shell.html',
   host: { '[attr.data-theme]': 'theme()', '(document:click)': 'onDocumentClick($event)', '(document:keydown)': 'onDocumentKeydown($event)' },
 })
@@ -213,6 +213,15 @@ export class App implements OnInit, OnDestroy {
     this.candidates.set([]);
     this.worker?.postMessage('');
     this.activeView.set('chat');
+  }
+
+  historyStatus(item: HistoryItem): { icon: IconName; label: TranslationKey } {
+    switch (item.source) {
+      case 'ai_saved': return { icon: 'book', label: 'history.aiSaved' };
+      case 'ai': return { icon: 'pen', label: 'history.ai' };
+      case 'not_found': return { icon: 'help', label: 'history.notFound' };
+      default: return { icon: 'check', label: 'history.found' };
+    }
   }
 
   tryWord(word: string): void {

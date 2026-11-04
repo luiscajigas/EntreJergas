@@ -160,13 +160,25 @@
       </div>
     </section>
 
-    <section class="page-view" *ngIf="activeView() === 'history'">
-      <div class="page-heading"><span class="page-kicker">{{ t('history.kicker') }}</span><h1>{{ t('history.heading') }}</h1><p>{{ t('history.subheading') }}</p></div>
-      <div class="history-panel" *ngIf="history().length; else emptyHistory">
-        <div class="table-head"><span>{{ t('history.table.expression') }}</span><span>{{ t('history.table.result') }}</span><span>{{ t('history.table.date') }}</span><span></span></div>
-        <button class="history-row" type="button" *ngFor="let item of history()" (click)="openHistoryItem(item)"><span class="history-expression"><span class="history-symbol">↗</span>{{ item.expression }}</span><span class="history-status" [class.not-found]="!item.found"><i></i>{{ item.source === 'ai_saved' ? t('history.aiSaved') : (item.source === 'ai' ? t('history.ai') : (item.found ? t('history.found') : t('history.notFound'))) }}</span><span class="history-date">{{ item.createdAt | date:'d MMM, HH:mm' }}</span><span class="row-arrow">→</span></button>
-      </div>
-      <ng-template #emptyHistory><div class="empty-state"><span class="empty-mark">↗</span><strong>{{ t('history.empty.title') }}</strong><p>{{ t('history.empty.text') }}</p><button type="button" (click)="startNewChat()">{{ t('history.empty.button') }}</button></div></ng-template>
+    <section class="page" *ngIf="activeView() === 'history'">
+      <div class="page-head"><h1>{{ t('history.heading') }}</h1><p>{{ t('history.subheading') }}</p></div>
+      <ul class="history-list" *ngIf="history().length; else emptyHistory">
+        <li *ngFor="let item of history()">
+          <button class="history-row" type="button" (click)="openHistoryItem(item)">
+            <span class="history-expression">{{ item.expression }}</span>
+            <span class="status-badge tone-{{ item.source }}"><app-icon [name]="historyStatus(item).icon" />{{ t(historyStatus(item).label) }}</span>
+            <span class="history-date">{{ item.createdAt | date:'d MMM, HH:mm' }}</span>
+            <app-icon class="row-arrow" name="arrow" />
+          </button>
+        </li>
+      </ul>
+      <ng-template #emptyHistory>
+        <div class="empty-state">
+          <strong>{{ t('history.empty.title') }}</strong>
+          <p>{{ t('history.empty.text') }}</p>
+          <button class="text-button" type="button" (click)="startNewChat()"><app-icon name="search" />{{ t('history.empty.button') }}</button>
+        </div>
+      </ng-template>
     </section>
 
     <section class="page-view" *ngIf="activeView() === 'dashboard'">
