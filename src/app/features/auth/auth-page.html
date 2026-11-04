@@ -1,0 +1,55 @@
+<main class="auth-layout">
+  <section class="auth-story" aria-labelledby="auth-story-title">
+    <app-brand />
+    <div class="auth-story-body">
+      <h1 id="auth-story-title">{{ i18n.t('auth.hero.title') }}</h1>
+      <p class="auth-story-copy">{{ i18n.t('auth.hero.copy') }}</p>
+      <div class="auth-sample">
+        <strong>parcero</strong>
+        <small><app-icon name="pin" />{{ i18n.t('auth.sample.region') }}</small>
+        <p>{{ i18n.t('auth.sample.meaning') }}</p>
+        <em>“{{ i18n.t('auth.sample.example') }}”</em>
+      </div>
+    </div>
+  </section>
+
+  <section class="auth-side" aria-labelledby="auth-title">
+    <div class="auth-controls"><app-preference-controls /></div>
+
+    <div class="auth-panel">
+      <h2 id="auth-title">{{ i18n.t(mode() === 'login' ? 'auth.title.login' : 'auth.title.register') }}</h2>
+      <p class="auth-intro">{{ i18n.t(mode() === 'login' ? 'auth.intro.login' : 'auth.intro.register') }}</p>
+
+      <form class="auth-form" (ngSubmit)="submit()">
+        @if (session.expired()) {
+          <p class="auth-error" role="status">{{ i18n.t('auth.error.expired') }}</p>
+        }
+        @if (mode() === 'register') {
+          <label>
+            {{ i18n.t('auth.name') }}
+            <input type="text" name="name" [(ngModel)]="name" autocomplete="name" minlength="2" maxlength="80" required>
+          </label>
+        }
+        <label>
+          {{ i18n.t('auth.email') }}
+          <input type="email" name="email" [(ngModel)]="email" autocomplete="email" maxlength="254" required>
+        </label>
+        <label>
+          {{ i18n.t('auth.password') }}
+          <input type="password" name="password" [(ngModel)]="password" [attr.autocomplete]="mode() === 'login' ? 'current-password' : 'new-password'" [attr.minlength]="mode() === 'login' ? null : 8" maxlength="128" required>
+        </label>
+        @if (errorKey(); as key) {
+          <p class="auth-error" role="alert">{{ i18n.t(key) }}</p>
+        }
+        <button class="auth-submit" type="submit" [disabled]="submitting()">
+          {{ i18n.t(submitting() ? 'auth.submit.pending' : mode() === 'login' ? 'auth.submit.login' : 'auth.submit.register') }}
+        </button>
+      </form>
+
+      <p class="auth-switch">
+        {{ i18n.t(mode() === 'login' ? 'auth.switch.login' : 'auth.switch.register') }}
+        <button type="button" (click)="toggleMode()">{{ i18n.t(mode() === 'login' ? 'auth.switch.action.login' : 'auth.switch.action.register') }}</button>
+      </p>
+    </div>
+  </section>
+</main>
