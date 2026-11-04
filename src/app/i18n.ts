@@ -101,7 +101,8 @@ const es = {
   'footer.tagline': 'Hecho para escuchar mejor',
   'language.toggle.aria': 'Cambiar idioma',
   'theme.toggle.light': 'Activar modo claro',
-  'theme.toggle.dark': 'Activar modo oscuro'
+  'theme.toggle.dark': 'Activar modo oscuro',
+  'detail.usage': "CÓMO SE USA",
 };
 
 export type TranslationKey = keyof typeof es;
@@ -207,7 +208,8 @@ const en: Record<TranslationKey, string> = {
   'footer.tagline': 'Made to listen better',
   'language.toggle.aria': 'Change language',
   'theme.toggle.light': 'Activate light mode',
-  'theme.toggle.dark': 'Activate dark mode'
+  'theme.toggle.dark': 'Activate dark mode',
+  'detail.usage': "HOW IT IS USED",
 };
 
 export const translations: Record<AppLanguage, Record<TranslationKey, string>> = { es, en };

@@ -1,0 +1,31 @@
+<article class="entry">
+  <p class="result-eyebrow {{ status().tone }}"><app-icon [name]="status().icon" />{{ i18n.t(status().label) }}</p>
+  <h2 class="headword"><span class="hl">{{ entry().expression }}</span></h2>
+  <p class="region"><app-icon name="pin" />{{ entry().region }}</p>
+  <p class="meaning">{{ entry().meaning }}</p>
+  <dl class="details">
+    <div>
+      <dt>{{ i18n.t('detail.equivalent') }}</dt>
+      <dd>{{ entry().equivalent }}</dd>
+    </div>
+    <div>
+      <dt>{{ i18n.t('detail.usage') }}</dt>
+      <dd>{{ entry().context }}</dd>
+    </div>
+    <div class="details-wide">
+      <dt>{{ i18n.t('detail.phrase') }}</dt>
+      <dd class="example">“{{ entry().example }}”</dd>
+    </div>
+    @if (entry().pronunciation) {
+      <div class="details-wide">
+        <dt>{{ i18n.t('detail.pronunciation') }}</dt>
+        <dd class="phonetic">
+          {{ entry().pronunciation }}
+          @if (entry().audioUrl) {
+            <button class="audio-button" type="button" (click)="play()" [attr.aria-label]="i18n.t('audio.play')"><app-icon name="volume" /></button>
+          }
+        </dd>
+      </div>
+    }
+  </dl>
+</article>

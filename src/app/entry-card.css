@@ -1,0 +1,25 @@
+.entry { padding: clamp(24px, 4vw, 36px); border: 1px solid var(--line); border-radius: 20px; background: var(--surface); box-shadow: var(--shadow); animation: entry-in 260ms ease-out both; }
+@keyframes entry-in { from { opacity: 0; transform: translateY(10px); } }
+
+.result-eyebrow { display: inline-flex; align-items: center; gap: 7px; margin: 0; padding: 5px 11px 5px 9px; border-radius: 999px; font-size: 14px; font-weight: 600; line-height: 1.3; }
+.tone-dictionary { background: var(--green-soft); color: var(--green); }
+.tone-saved, .tone-neutral { background: var(--accent-soft); color: var(--accent); }
+.tone-ai { background: var(--yellow); color: var(--on-yellow); }
+
+.headword { margin: 18px 0 0; font-family: var(--font-text); font-size: clamp(42px, 7vw, 64px); font-weight: 800; line-height: 1.12; letter-spacing: -.01em; }
+.region { display: flex; align-items: flex-start; gap: 6px; margin: 14px 0 0; color: var(--ink-faint); font-size: 16px; font-weight: 500; }
+.region app-icon { margin-top: 2px; }
+.meaning { margin: 16px 0 0; font-family: var(--font-text); font-size: clamp(22px, 3vw, 27px); line-height: 1.32; }
+
+.details { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 22px 32px; margin: 26px 0 0; padding: 24px 0 0; border-top: 2px solid var(--ink); }
+.details-wide { grid-column: 1 / -1; }
+dt { color: var(--ink-faint); font-size: 13px; font-weight: 700; letter-spacing: .06em; }
+dd { margin: 5px 0 0; color: var(--ink-soft); font-size: 17px; line-height: 1.45; }
+.example { color: var(--ink); font-family: var(--font-text); font-size: 22px; font-style: italic; line-height: 1.35; }
+.phonetic { display: flex; align-items: center; gap: 10px; font-family: var(--font-text); font-size: 20px; font-style: italic; }
+.audio-button { display: inline-grid; width: 40px; height: 40px; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: var(--surface); color: var(--accent); cursor: pointer; }
+.audio-button:hover { background: var(--accent-soft); }
+
+@media (max-width: 560px) {
+  .details { grid-template-columns: 1fr; }
+}
