@@ -1,7 +1,7 @@
 import { Injectable, effect, inject, signal, untracked } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { ActivityStore } from '../../core/activity.store';
-import { ApiService, ExpressionEntry, LookupFailureReason } from '../../core/api/api.service';
+import { ApiService, ExpressionEntry, LookupFailureReason, UnresolvedExpression } from '../../core/api/api.service';
 import { isConnectivityError } from '../../core/api/http-errors';
 import { SessionStore } from '../../core/session.store';
 import { CandidatesService } from './candidates/candidates.service';
@@ -15,7 +15,7 @@ export type LookupFailure =
 
 /** Cada consulta está en un solo estado: el compilador impide mezclar sus datos. */
 type SettledLookup =
-  | { status: 'found'; entry: ExpressionEntry; offline: boolean }
+  | { status: 'found'; entries: ExpressionEntry[]; unresolved: UnresolvedExpression[]; offline: boolean }
   | { status: 'missing'; failure: LookupFailure };
 
 export type Lookup = { id: number; query: string } & ({ status: 'pending' } | SettledLookup);
@@ -63,16 +63,18 @@ export class SearchStore {
     try {
       const result = await firstValueFrom(this.api.lookup(query));
       this.activity.online.set(true);
-      if (result.entry?.source === 'database') this.cache.save(result.entry);
-      this.settle(id, result.entry
-        ? { status: 'found', entry: result.entry, offline: false }
+      for (const entry of result.entries) {
+        if (entry.source === 'database') this.cache.save(entry);
+      }
+      this.settle(id, result.entries.length || result.unresolved.length
+        ? { status: 'found', entries: result.entries, unresolved: result.unresolved, offline: false }
         : { status: 'missing', failure: this.describeResult(result.reason, result.message) });
       void this.activity.refresh();
     } catch (error) {
       this.activity.reportFailure(error);
       const cached = isConnectivityError(error) ? this.cache.find(query) : null;
       this.settle(id, cached
-        ? { status: 'found', entry: cached, offline: true }
+        ? { status: 'found', entries: [cached], unresolved: [], offline: true }
         : { status: 'missing', failure: { kind: isConnectivityError(error) ? 'offline' : 'rejected' } });
     } finally {
       this.loading.set(false);
