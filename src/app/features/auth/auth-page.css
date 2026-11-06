@@ -32,3 +32,13 @@
   .auth-sample { display: none; }
   .auth-panel { margin: 0 auto; padding-top: 12px; }
 }
+
+.demo-box { margin-top: 24px; padding: 16px; border: 1.5px dashed var(--ink-faint); border-radius: 12px; }
+.demo-box h3 { margin: 0; font-size: 16px; font-weight: 700; }
+.demo-box dl { display: grid; gap: 6px; margin: 10px 0 12px; }
+.demo-box dl div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 12px; }
+.demo-box dt { color: var(--ink-soft); font-size: 15px; }
+.demo-box dd { margin: 0; font-size: 15px; font-weight: 700; overflow-wrap: anywhere; user-select: all; }
+.demo-button { width: 100%; min-height: 44px; border: 1.5px solid var(--ink-faint); border-radius: 10px; background: none; color: var(--ink); font-size: 15px; font-weight: 700; cursor: pointer; }
+.demo-button:hover:not(:disabled) { background: var(--accent-soft); }
+.demo-button:disabled { cursor: wait; opacity: .7; }

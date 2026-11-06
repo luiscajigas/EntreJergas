@@ -46,6 +46,15 @@
         </button>
       </form>
 
+      <section class="demo-box" aria-labelledby="demo-title">
+        <h3 id="demo-title">{{ i18n.t('auth.demo.title') }}</h3>
+        <dl>
+          <div><dt>{{ i18n.t('auth.email') }}</dt><dd>{{ demoAccount.email }}</dd></div>
+          <div><dt>{{ i18n.t('auth.password') }}</dt><dd>{{ demoAccount.password }}</dd></div>
+        </dl>
+        <button class="demo-button" type="button" [disabled]="submitting()" (click)="useDemoAccount()">{{ i18n.t('auth.demo.button') }}</button>
+      </section>
+
       <p class="auth-switch">
         {{ i18n.t(mode() === 'login' ? 'auth.switch.login' : 'auth.switch.register') }}
         <button type="button" (click)="toggleMode()">{{ i18n.t(mode() === 'login' ? 'auth.switch.action.login' : 'auth.switch.action.register') }}</button>

@@ -8,6 +8,9 @@ import { Brand } from '../../shared/brand';
 import { Icon } from '../../shared/icon';
 import { PreferenceControls } from '../../shared/preference-controls';
 
+/** Cuenta pública para evaluar la aplicación. La misma se crea en el backend al arrancar. */
+const demoAccount = { email: 'test@gmail.com', password: '12345677' };
+
 function errorKey(error: unknown): TranslationKey {
   if (apiErrorCode(error) === 'rate_limited') return 'auth.error.rateLimited';
   switch (httpStatus(error)) {
@@ -36,6 +39,15 @@ export class AuthPage {
   protected name = '';
   protected email = '';
   protected password = '';
+
+  protected readonly demoAccount = demoAccount;
+
+  protected useDemoAccount(): void {
+    this.mode.set('login');
+    this.email = demoAccount.email;
+    this.password = demoAccount.password;
+    void this.submit();
+  }
 
   protected toggleMode(): void {
     this.mode.update((mode) => mode === 'login' ? 'register' : 'login');
