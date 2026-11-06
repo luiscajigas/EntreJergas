@@ -38,6 +38,7 @@ Las decisiones técnicas y sus trade-offs están en [docs/arquitectura.md](docs/
 
 - Los colores y las fuentes se definen como variables en `src/styles.css`; el modo oscuro solo cambia esas variables.
 - Cada vista tiene sus estilos junto a su componente, en `src/app/features/`.
+- El logo es `public/logo.svg`, un SVG vectorial sin fondo: su contorno blanco lo separa de la cabecera azul. `public/favicon.ico` se genera a partir de él.
 - Los iconos viven en `src/app/shared/icon.ts` y los textos en español e inglés en `src/app/core/i18n/i18n.ts`.
 - Tipografías: Chivo para la interfaz y Alegreya para las palabras y definiciones, cargadas desde Google Fonts.
 
