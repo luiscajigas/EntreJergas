@@ -122,6 +122,20 @@ describe('App', () => {
     expect(element.querySelector('.auth-panel')).toBeTruthy();
   });
 
+  it('muestra la cuenta de prueba y entra con un clic', async () => {
+    const { fixture, element, api } = await renderApp({ signedIn: false });
+    const login = vi.spyOn(api, 'login');
+    const box = element.querySelector('.demo-box') as HTMLElement;
+    expect(box.textContent).toContain('test@gmail.com');
+    expect(box.textContent).toContain('12345677');
+
+    (box.querySelector('button') as HTMLButtonElement).click();
+    await settle(fixture);
+
+    expect(login).toHaveBeenCalledWith('test@gmail.com', '12345677');
+    expect(element.querySelector('.app-header')).toBeTruthy();
+  });
+
   it('traduce el motivo cuando las credenciales son incorrectas', async () => {
     const { fixture, element, api } = await renderApp({ signedIn: false, language: 'en' });
     vi.spyOn(api, 'login').mockReturnValue(throwError(() => new HttpErrorResponse({ status: 401, error: { error: 'Correo o contraseña incorrectos.' } })));
