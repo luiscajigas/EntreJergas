@@ -13,7 +13,7 @@ import { Logo } from './shared/logo';
   template: `
     @if (session.restoring()) {
       <main class="auth-loading" aria-live="polite">
-        <app-logo />
+        <app-logo [size]="96" />
         <span>{{ i18n.t('auth.loading') }}</span>
       </main>
     } @else if (session.user()) {
