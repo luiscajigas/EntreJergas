@@ -20,8 +20,8 @@
 .auth-form input { width: 100%; height: 52px; padding: 0 14px; border: 1.5px solid var(--ink-faint); border-radius: 12px; outline: 0; background: var(--surface); font-size: 17px; font-weight: 400; }
 .auth-form input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
 .auth-error { padding: 10px 14px; border-radius: 10px; background: var(--red-soft); color: var(--red); font-size: 15px; font-weight: 500; }
-.auth-submit { height: 54px; border: 0; border-radius: 12px; background: var(--band); color: var(--on-band); font-size: 17px; font-weight: 700; cursor: pointer; transition: background 120ms ease; }
-.auth-submit:hover:not(:disabled) { background: var(--band-deep); }
+.auth-submit { height: 54px; border: 0; border-radius: 12px; background: var(--primary); color: var(--on-primary); font-size: 17px; font-weight: 700; cursor: pointer; transition: background 120ms ease; }
+.auth-submit:hover:not(:disabled) { background: var(--primary-hover); }
 .auth-submit:disabled { cursor: wait; opacity: .7; }
 .auth-switch { margin-top: 22px; color: var(--ink-soft); font-size: 16px; }
 .auth-switch button { min-height: 44px; margin-left: 2px; padding: 0 4px; border: 0; background: none; color: var(--accent); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }

@@ -12,6 +12,9 @@
   --on-band-soft: #dfe3ff;
   --accent: #1c2fa8;
   --accent-soft: #e4e7fb;
+  --primary: #1c2fa8;
+  --primary-hover: #141f7a;
+  --on-primary: #ffffff;
   --yellow: #ffd21f;
   --on-yellow: #10163a;
   --green: #0b6246;
@@ -36,6 +39,9 @@
   --band-deep: #111958;
   --accent: #a9b6ff;
   --accent-soft: #232b66;
+  --primary: #ffd21f;
+  --primary-hover: #ffdf5c;
+  --on-primary: #10163a;
   --green: #79e3bd;
   --green-soft: #0f3331;
   --red: #ffa3aa;
