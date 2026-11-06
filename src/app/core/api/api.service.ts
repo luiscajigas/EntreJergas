@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { components } from './contract';
@@ -12,6 +12,9 @@ export type Dashboard = Schemas['DashboardResponse'];
 export type EntryTranslation = Schemas['DefinitionText'];
 export type ExpressionEntry = Schemas['ExpressionEntry'];
 export type UnresolvedExpression = Schemas['UnresolvedExpression'];
+export type ExpressionPage = Schemas['ExpressionPage'];
+export type GameRound = Schemas['GameRound'];
+export type GameAnswer = Schemas['GameAnswerResponse'];
 export type HistoryItem = Schemas['HistoryItem'];
 export type HistorySource = Schemas['HistorySource'];
 export type LookupFailureReason = Schemas['LookupFailureReason'];
@@ -57,6 +60,23 @@ export class ApiService {
 
   history(): Observable<Schemas['HistoryResponse']> {
     return this.http.get<Schemas['HistoryResponse']>(`${this.baseUrl}/history`);
+  }
+
+  searchExpressions(filters: { q: string; country: string | null; page: number; pageSize: number }): Observable<ExpressionPage> {
+    let params = new HttpParams().set('page', filters.page).set('pageSize', filters.pageSize);
+    if (filters.q) params = params.set('q', filters.q);
+    if (filters.country) params = params.set('country', filters.country);
+    return this.http.get<ExpressionPage>(`${this.baseUrl}/expressions`, { params });
+  }
+
+  gameRound(exclude: number[]): Observable<Schemas['GameRoundResponse']> {
+    const params = exclude.length ? new HttpParams().set('exclude', exclude.join(',')) : undefined;
+    return this.http.get<Schemas['GameRoundResponse']>(`${this.baseUrl}/game/round`, { params });
+  }
+
+  gameAnswer(id: number, country: string): Observable<GameAnswer> {
+    const body: Schemas['GameAnswerRequest'] = { id, country };
+    return this.http.post<GameAnswer>(`${this.baseUrl}/game/answer`, body);
   }
 
   dashboard(): Observable<Dashboard> {
