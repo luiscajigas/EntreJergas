@@ -26,6 +26,10 @@ npm run dev
 
 Abre `http://localhost:4200`. Angular sirve la interfaz y reenvía `/api` a Express en `http://localhost:3000`. El backend crea las tablas e inserta las expresiones de ejemplo de manera idempotente al arrancar. Para correr solo el servidor: `npm run dev:api`.
 
+## Cuenta de prueba
+
+La pantalla de ingreso muestra la cuenta `test@gmail.com` con la contraseña `12345677`, y un botón para entrar con un clic. Es pública y la crea el backend al arrancar.
+
 ## Arquitectura
 
 Las decisiones técnicas y sus trade-offs están en [docs/arquitectura.md](docs/arquitectura.md). Para actualizar los tipos de la API después de cambiar el contrato del backend: `npm run api:types`.
