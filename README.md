@@ -41,6 +41,8 @@ Las decisiones técnicas y sus trade-offs están en [docs/arquitectura.md](docs/
 
 - Crea una cuenta con nombre, correo y contraseña, o inicia sesión. La sesión se conserva en una cookie `HttpOnly`; el historial solo muestra consultas de la cuenta activa.
 - Escribe una palabra o una frase completa, hasta 300 caracteres, o elige una sugerencia. Cada expresión aparece en su propia ficha, con sus países y su nivel de lenguaje.
+- En **Diccionario** se recorren todas las expresiones con búsqueda, filtro por país y paginación. Los filtros quedan en la URL.
+- En **Jugar**, el juego ¿De qué país es? usa las expresiones del diccionario que tienen un país conocido.
 - El dictado usa Web Speech API del navegador; no se sube audio al servidor. Algunos navegadores no implementan esta API.
 - Al cambiar a inglés, cada ficha pide su definición traducida al backend y vuelve al español sin otra llamada. Si la traducción falla, se conserva el español y se avisa.
 - El Worker recibe las ediciones, espera 280 ms y busca candidatos en un vocabulario pequeño fuera del hilo principal. No hace llamadas de red ni sustituye la búsqueda autoritativa de la API.

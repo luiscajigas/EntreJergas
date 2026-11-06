@@ -119,6 +119,15 @@ Se probó con Gemini real (`gemini-3.5-flash-lite`) en 25 casos difíciles, con 
 - Reduce el riesgo, pero no da una garantía: por eso estas entradas quedan marcadas como generadas con IA.
 - El plan gratuito de Gemini limita las llamadas por minuto (en las pruebas empezó a responder 429 tras unas 18 llamadas seguidas). Con muchos usuarios a la vez haría falta un plan de pago.
 
+## Explorar y jugar
+
+- **Filtros en la URL:** la búsqueda, el país y la página viven en la dirección (`/diccionario?q=bol&pais=AR`). Se pueden compartir, sobreviven al recargar y el botón atrás los respeta. Al escribir, se espera 250 ms antes de consultar, y una respuesta atrasada se descarta.
+- **Juego sin trampas:** la ronda no incluye la respuesta; el servidor la comprueba en `POST /api/game/answer`. Una palabra puede usarse en varios países, por eso las opciones incorrectas excluyen todos sus países.
+- **Función pura:** `buildRound` recibe el azar como parámetro y se prueba sin base de datos.
+- **Pruebas con PostgreSQL real:** el filtro usa `ANY` sobre un arreglo, que `pg-mem` no soporta. Se usa PGlite en esas pruebas en lugar de cambiar una consulta correcta por una limitación de la herramienta.
+
+**Trade-offs:** la lista del juego se lee completa en cada ronda, lo que basta para un diccionario pequeño, pero con muchas miles de palabras convendría elegirla con SQL. Los puntos solo duran la sesión, salvo la mejor racha, que queda en el navegador. En inglés, la lista no muestra el significado para no gastar una traducción por fila: se traduce al abrir la ficha.
+
 ## Organización
 
 ```text
