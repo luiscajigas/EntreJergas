@@ -132,6 +132,8 @@ const es = {
   'game.empty.title': "Todavía no hay palabras para jugar",
   'game.empty.text': "El juego usa las expresiones que tienen un país conocido. Busca algunas jergas y vuelve.",
   'game.error': "No pudimos cargar la ronda. Revisa tu conexión e inténtalo de nuevo.",
+  'auth.demo.title': "¿Solo quieres probarla?",
+  'auth.demo.button': "Entrar con la cuenta de prueba",
 };
 
 export type TranslationKey = keyof typeof es;
@@ -268,6 +270,8 @@ const en: Record<TranslationKey, string> = {
   'game.empty.title': "There are no words to play with yet",
   'game.empty.text': "The game uses expressions with a known country. Look up some slang and come back.",
   'game.error': "We could not load the round. Check your connection and try again.",
+  'auth.demo.title': "Just want to try it?",
+  'auth.demo.button': "Sign in with the test account",
 };
 
 export const translations: Record<AppLanguage, Record<TranslationKey, string>> = { es, en };
