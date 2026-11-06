@@ -1,0 +1,64 @@
+<section class="page">
+  <div class="page-head">
+    <h1>{{ i18n.t('game.title') }}</h1>
+    <p>{{ i18n.t('game.subtitle') }}</p>
+  </div>
+
+  <dl class="scoreboard">
+    <div><dt>{{ i18n.t('game.score') }}</dt><dd>{{ game.correct() }}/{{ game.played() }}</dd></div>
+    <div><dt>{{ i18n.t('game.streak') }}</dt><dd>{{ game.streak() }}</dd></div>
+    <div><dt>{{ i18n.t('game.best') }}</dt><dd>{{ game.bestStreak() }}</dd></div>
+  </dl>
+
+  @let state = game.state();
+  @switch (state.status) {
+    @case ('loading') {
+      <div class="game-card is-loading" role="status" aria-busy="true"></div>
+    }
+    @case ('error') {
+      <div class="game-message">
+        <p>{{ i18n.t('game.error') }}</p>
+        <button class="text-button" type="button" (click)="game.nextRound()">{{ i18n.t('explore.retry') }}</button>
+      </div>
+    }
+    @case ('empty') {
+      <div class="game-message">
+        <strong>{{ i18n.t('game.empty.title') }}</strong>
+        <p>{{ i18n.t('game.empty.text') }}</p>
+        <a class="text-button" routerLink="/"><app-icon name="search" />{{ i18n.t('history.empty.button') }}</a>
+      </div>
+    }
+    @case ('question') {
+      <div class="game-card">
+        <p class="game-question">{{ i18n.t('game.question') }}</p>
+        <h2 class="game-word"><span class="hl">{{ state.round.expression }}</span></h2>
+        <div class="game-options">
+          @for (code of state.round.options; track code) {
+            <button class="game-option" type="button" [disabled]="state.checking" (click)="game.answer(code)">{{ name(code) }}</button>
+          }
+        </div>
+      </div>
+    }
+    @case ('answered') {
+      <div class="game-card">
+        <p class="game-question">{{ i18n.t('game.question') }}</p>
+        <h2 class="game-word"><span class="hl">{{ state.round.expression }}</span></h2>
+        <div class="game-options">
+          @for (code of state.round.options; track code) {
+            <div class="game-option is-result" [class.is-correct]="state.entry.countries.includes(code)" [class.is-wrong]="code === state.chosen && !state.correct">
+              @if (state.entry.countries.includes(code)) { <app-icon name="check" /> }
+              @if (code === state.chosen && !state.correct) { <app-icon name="close" /> }
+              {{ name(code) }}
+            </div>
+          }
+        </div>
+        <div class="game-result" role="status">
+          <p class="game-verdict" [class.is-correct]="state.correct">{{ i18n.t(state.correct ? 'game.correct' : 'game.wrong') }}</p>
+          <p class="game-answer">{{ i18n.format('game.answerIs', { countries: names(state.entry.countries) }) }}</p>
+          <button #nextButton class="game-next" type="button" (click)="game.nextRound()">{{ i18n.t('game.next') }}<app-icon name="arrow" /></button>
+        </div>
+      </div>
+      <div class="game-entry"><app-entry-card [entry]="state.entry" /></div>
+    }
+  }
+</section>
