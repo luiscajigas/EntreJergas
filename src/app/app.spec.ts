@@ -2,11 +2,11 @@ import { HttpClient, HttpErrorResponse, provideHttpClient, withInterceptors } fr
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
-import { firstValueFrom, of, throwError } from 'rxjs';
+import { Subject, firstValueFrom, of, throwError } from 'rxjs';
 import { afterEach, vi } from 'vitest';
 import { App } from './app';
 import { routes } from './app.routes';
-import { ApiService, ExpressionEntry, LookupResponse } from './core/api/api.service';
+import { ApiService, ExpressionEntry, ExpressionPage, LookupResponse } from './core/api/api.service';
 import { sessionExpiredInterceptor } from './core/api/session-expired.interceptor';
 import { SessionStore } from './core/session.store';
 import { findCandidates } from './features/search/candidates/candidate-matcher';
@@ -41,6 +41,9 @@ function createApi(signedIn: boolean) {
     history: () => of({ items: [] }),
     dashboard: () => of({ expressions: 16, searches: 0, regions: [], countries: [{ country: 'AR', count: 3 }, { country: 'CO', count: 2 }] }),
     lookup: (): ReturnType<ApiService['lookup']> => of(emptyResponse({ reason: 'not_found' })),
+    searchExpressions: (): ReturnType<ApiService['searchExpressions']> => of({ items: [parcero, { ...parcero, id: 2, expression: 'parce' }], total: 2, page: 1, pageSize: 20 }),
+    gameRound: (): ReturnType<ApiService['gameRound']> => of({ round: { id: 1, expression: 'parcero', options: ['AR', 'CO', 'MX', 'ES'] } }),
+    gameAnswer: (id: number, country: string): ReturnType<ApiService['gameAnswer']> => of({ correct: country === 'CO', entry: parcero }),
     translate: () => of({ translation: { meaning: 'A close friend', region: 'Antioquia', context: 'Informal', equivalent: 'buddy', example: 'My parcero helped me.' } })
   };
 }
@@ -163,6 +166,7 @@ describe('App', () => {
     await settle(fixture);
     expect(element.querySelector('.stats')?.textContent).toContain('16');
     expect(element.querySelector('.region-list')?.textContent).toContain('Argentina');
+    expect(element.querySelector('.word-rows')?.textContent).toContain('parce');
   });
 
   it('lleva a la búsqueda con Ctrl K desde cualquier vista', async () => {
@@ -295,6 +299,184 @@ describe('Búsqueda', () => {
     await search.search('parcero');
     await settle(fixture);
     expect(element.querySelector('.missing-body p')?.textContent).toContain('no aceptó');
+  });
+});
+
+describe('Explorar el diccionario', () => {
+  it('lee los filtros de la URL y los envía a la API', async () => {
+    const { element, api } = await renderApp({ url: '/diccionario' });
+    const search = vi.spyOn(api, 'searchExpressions');
+    await TestBed.inject(Router).navigateByUrl('/diccionario?q=bol&pais=AR&pagina=2');
+    await new Promise((resolve) => setTimeout(resolve));
+
+    expect(search).toHaveBeenLastCalledWith({ q: 'bol', country: 'AR', page: 2, pageSize: 20 });
+    expect(element).toBeTruthy();
+  });
+
+  it('busca al escribir, sin enviar una consulta por cada letra', async () => {
+    const { fixture, element, api } = await renderApp({ url: '/diccionario' });
+    const search = vi.spyOn(api, 'searchExpressions');
+    const input = element.querySelector('input[name="dictionary-search"]') as HTMLInputElement;
+
+    for (const value of ['p', 'pa', 'par']) {
+      input.value = value;
+      input.dispatchEvent(new Event('input'));
+    }
+    await new Promise((resolve) => setTimeout(resolve, 320));
+    await settle(fixture);
+
+    expect(search).toHaveBeenCalledTimes(1);
+    expect(search.mock.calls[0][0].q).toBe('par');
+    expect(TestBed.inject(Router).url).toContain('q=par');
+  });
+
+  it('filtra por país con la lista lateral y lo quita al repetir', async () => {
+    const { fixture, element } = await renderApp({ url: '/diccionario' });
+    const row = () => element.querySelector('.region-row') as HTMLButtonElement;
+
+    row().click();
+    await settle(fixture);
+    expect(TestBed.inject(Router).url).toContain('pais=AR');
+    expect(row().getAttribute('aria-pressed')).toBe('true');
+
+    row().click();
+    await settle(fixture);
+    expect(TestBed.inject(Router).url).not.toContain('pais=');
+  });
+
+  it('abre la ficha al tocar una palabra', async () => {
+    const { fixture, element } = await renderApp({ url: '/diccionario' });
+    expect(element.querySelector('app-entry-card')).toBeNull();
+
+    (element.querySelector('.word-row') as HTMLButtonElement).click();
+    await settle(fixture);
+
+    expect(element.querySelector('app-entry-card .headword')?.textContent).toContain('parcero');
+    expect(element.querySelector('.word-row')?.getAttribute('aria-expanded')).toBe('true');
+  });
+
+  it('ignora una respuesta vieja que llega después de la más reciente', async () => {
+    const { fixture, element, api } = await renderApp({ url: '/diccionario' });
+    const slow = new Subject<ExpressionPage>();
+    const search = vi.spyOn(api, 'searchExpressions');
+    search.mockReturnValueOnce(slow);
+    search.mockReturnValueOnce(of({ items: [{ ...parcero, expression: 'reciente' }], total: 1, page: 1, pageSize: 20 }));
+
+    await TestBed.inject(Router).navigateByUrl('/diccionario?q=vieja');
+    await settle(fixture);
+    await TestBed.inject(Router).navigateByUrl('/diccionario?q=reciente');
+    await settle(fixture);
+    slow.next({ items: [{ ...parcero, expression: 'vieja' }], total: 1, page: 1, pageSize: 20 });
+    slow.complete();
+    await settle(fixture);
+
+    expect(element.querySelector('.word-rows')?.textContent).toContain('reciente');
+    expect(element.querySelector('.word-rows')?.textContent).not.toContain('vieja');
+  });
+
+  it('avisa si no hay resultados y permite quitar los filtros', async () => {
+    const { fixture, element, api } = await renderApp({ url: '/diccionario' });
+    vi.spyOn(api, 'searchExpressions').mockReturnValue(of({ items: [], total: 0, page: 1, pageSize: 20 }));
+
+    await TestBed.inject(Router).navigateByUrl('/diccionario?q=nada');
+    await settle(fixture);
+    expect(element.querySelector('.explore-state')?.textContent).toContain('No encontramos');
+
+    (element.querySelector('.explore-state button') as HTMLButtonElement).click();
+    await settle(fixture);
+    expect(TestBed.inject(Router).url).toBe('/diccionario');
+  });
+
+  it('permite reintentar si falla la carga', async () => {
+    const { fixture, element, api } = await renderApp({ url: '/diccionario' });
+    const search = vi.spyOn(api, 'searchExpressions').mockReturnValueOnce(throwError(() => new HttpErrorResponse({ status: 0 })));
+
+    await TestBed.inject(Router).navigateByUrl('/diccionario?q=error');
+    await settle(fixture);
+    expect(element.querySelector('.explore-state')?.textContent).toContain('No pudimos cargar');
+
+    (element.querySelector('.explore-state button') as HTMLButtonElement).click();
+    await settle(fixture);
+    expect(search).toHaveBeenCalledTimes(2);
+    expect(element.querySelector('.word-rows')).toBeTruthy();
+  });
+});
+
+describe('Juego', () => {
+  const options = (element: HTMLElement) => Array.from(element.querySelectorAll<HTMLButtonElement>('button.game-option'));
+
+  it('suma puntos y racha al acertar, y muestra la ficha', async () => {
+    localStorage.removeItem('entrejergas.game.best.v1');
+    const { fixture, element } = await renderApp({ url: '/jugar' });
+    expect(element.querySelector('.game-word')?.textContent).toContain('parcero');
+    expect(options(element).map((button) => button.textContent?.trim())).toEqual(['Argentina', 'Colombia', 'México', 'España']);
+    expect(element.querySelector('app-entry-card')).toBeNull();
+
+    options(element)[1].click();
+    await settle(fixture);
+
+    expect(element.querySelector('.game-verdict')?.textContent).toContain('Correcto');
+    expect(element.querySelector('.scoreboard')?.textContent).toContain('1/1');
+    expect(element.querySelector('app-entry-card .meaning')?.textContent).toContain('Amigo cercano');
+    expect(localStorage.getItem('entrejergas.game.best.v1')).toBe('1');
+  });
+
+  it('marca el error, reinicia la racha y conserva la mejor', async () => {
+    localStorage.setItem('entrejergas.game.best.v1', '4');
+    const { fixture, element } = await renderApp({ url: '/jugar' });
+
+    options(element)[0].click();
+    await settle(fixture);
+
+    expect(element.querySelector('.game-verdict')?.textContent).toContain('Esta vez no');
+    expect(element.querySelector('.game-option.is-wrong')?.textContent).toContain('Argentina');
+    expect(element.querySelector('.game-option.is-correct')?.textContent).toContain('Colombia');
+    expect(element.querySelector('.scoreboard')?.textContent).toContain('0/1');
+    expect(element.querySelector('.scoreboard')?.textContent).toContain('4');
+  });
+
+  it('pasa a la siguiente palabra sin repetir la anterior', async () => {
+    const { fixture, element, api } = await renderApp({ url: '/jugar' });
+    const round = vi.spyOn(api, 'gameRound');
+
+    options(element)[1].click();
+    await settle(fixture);
+    (element.querySelector('.game-next') as HTMLButtonElement).click();
+    await settle(fixture);
+
+    expect(round).toHaveBeenLastCalledWith([1]);
+    expect(options(element).length).toBe(4);
+  });
+
+  it('cuenta una sola respuesta aunque se toque dos veces', async () => {
+    const { fixture, element, api } = await renderApp({ url: '/jugar' });
+    const answer = vi.spyOn(api, 'gameAnswer');
+
+    const [first] = options(element);
+    first.click();
+    first.click();
+    await settle(fixture);
+
+    expect(answer).toHaveBeenCalledTimes(1);
+    expect(element.querySelector('.scoreboard')?.textContent).toContain('/1');
+  });
+
+  it('explica cuando no hay palabras para jugar', async () => {
+    TestBed.configureTestingModule({
+      imports: [App],
+      providers: [provideRouter(routes), { provide: ApiService, useValue: { ...createApi(true), gameRound: () => of({ round: null }) } }]
+    });
+    const fixture = TestBed.createComponent(App);
+    await settle(fixture);
+    await TestBed.inject(Router).navigateByUrl('/jugar');
+    await settle(fixture);
+
+    expect((fixture.nativeElement as HTMLElement).querySelector('.game-message')?.textContent).toContain('Todavía no hay palabras');
+  });
+
+  it('muestra los países en el idioma elegido', async () => {
+    const { element } = await renderApp({ url: '/jugar', language: 'en' });
+    expect(options(element).map((button) => button.textContent?.trim())).toContain('Spain');
   });
 });
 
