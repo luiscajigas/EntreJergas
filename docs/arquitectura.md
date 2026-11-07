@@ -151,7 +151,7 @@ Son patrones que el código realmente usa, con el archivo donde se pueden ver.
 
 Decisiones que se dejaron así a propósito, con su motivo:
 
-- **Certificado de la base de datos:** la conexión cifra, pero no valida el certificado (`rejectUnauthorized: false`). Validarlo es lo correcto, pero hay que probarlo contra la base real antes de cambiarlo, porque un error impediría arrancar el servidor.
+- **Modo de conexión a la base de datos:** el certificado se valida, pero `DATABASE_URL` debería usar `sslmode=verify-full`. Con `require`, la versión 9 de `pg` dejará de validarlo.
 - **Política de seguridad de contenido (CSP):** Vercel no envía una, porque la página tiene un script en línea para evitar el parpadeo del tema y carga fuentes externas.
 - **Registro sin límite de intentos:** el proxy oculta la IP real, así que no se puede limitar por origen de forma fiable.
 - **Alerta de `@angular/router`:** solo afecta el renderizado en servidor, que esta aplicación no usa.
