@@ -34,7 +34,7 @@
         <h2 class="game-word"><span class="hl">{{ state.round.expression }}</span></h2>
         <div class="game-options">
           @for (code of state.round.options; track code) {
-            <button class="game-option" type="button" [disabled]="state.checking" (click)="game.answer(code)">{{ name(code) }}</button>
+            <button class="game-option" type="button" [disabled]="state.checking" (click)="game.answer(code)">{{ i18n.country(code) }}</button>
           }
         </div>
       </div>
@@ -48,7 +48,7 @@
             <div class="game-option is-result" [class.is-correct]="state.entry.countries.includes(code)" [class.is-wrong]="code === state.chosen && !state.correct">
               @if (state.entry.countries.includes(code)) { <app-icon name="check" /> }
               @if (code === state.chosen && !state.correct) { <app-icon name="close" /> }
-              {{ name(code) }}
+              {{ i18n.country(code) }}
             </div>
           }
         </div>

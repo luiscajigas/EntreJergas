@@ -21,6 +21,11 @@ function readLanguagePreference(): AppLanguage {
 export class I18nService {
   readonly language = signal<AppLanguage>(readLanguagePreference());
 
+  private readonly regionNames: Record<AppLanguage, Intl.DisplayNames> = {
+    es: new Intl.DisplayNames(['es'], { type: 'region' }),
+    en: new Intl.DisplayNames(['en'], { type: 'region' })
+  };
+
   constructor() {
     effect(() => {
       document.documentElement.lang = this.language();
@@ -34,6 +39,11 @@ export class I18nService {
   /** Traduce un texto con valores: format('explore.page', { page: 1 }). */
   format(key: TranslationKey, values: Record<string, string | number>): string {
     return Object.entries(values).reduce((text, [name, value]) => text.replace(`{${name}}`, String(value)), this.t(key));
+  }
+
+  /** El navegador ya conoce los nombres de los países en cada idioma. */
+  country(code: string): string {
+    return this.regionNames[this.language()].of(code) ?? code;
   }
 
   toggle(): void {

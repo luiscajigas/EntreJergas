@@ -5,7 +5,6 @@ import { firstValueFrom } from 'rxjs';
 import { ActivityStore } from '../../core/activity.store';
 import { ApiService, ExpressionPage } from '../../core/api/api.service';
 import { I18nService } from '../../core/i18n/i18n.service';
-import { countryName } from '../../shared/country-names';
 import { EntryCard } from '../../shared/entry-card/entry-card';
 import { Icon } from '../../shared/icon';
 
@@ -62,12 +61,8 @@ export class DictionaryView {
     });
   }
 
-  protected name(code: string): string {
-    return countryName(code, this.i18n.language());
-  }
-
   protected countryNames(codes: string[]): string {
-    return codes.map((code) => this.name(code)).join(' · ');
+    return codes.map((code) => this.i18n.country(code)).join(' · ');
   }
 
   protected onSearch(value: string): void {

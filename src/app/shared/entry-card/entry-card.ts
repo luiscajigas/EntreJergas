@@ -3,7 +3,6 @@ import { EntryTranslation, ExpressionEntry } from '../../core/api/api.service';
 import { Icon, IconName } from '../icon';
 import { TranslationKey } from '../../core/i18n/i18n';
 import { I18nService } from '../../core/i18n/i18n.service';
-import { countryName } from '../country-names';
 import { TranslationService } from './translation.service';
 
 @Component({
@@ -16,19 +15,24 @@ import { TranslationService } from './translation.service';
 export class EntryCard {
   readonly entry = input.required<ExpressionEntry>();
   readonly offline = input(false);
-  readonly i18n = inject(I18nService);
+  protected readonly i18n = inject(I18nService);
   private readonly translations = inject(TranslationService);
 
-  private readonly translation = signal<EntryTranslation | null>(null);
-  readonly translating = signal(false);
-  readonly translateFailed = signal(false);
+  /** Guarda a qué entrada pertenece: una respuesta tardía nunca se muestra en otra palabra. */
+  private readonly loaded = signal<{ entry: ExpressionEntry; translation: EntryTranslation } | null>(null);
+  private readonly translation = computed(() => {
+    const loaded = this.loaded();
+    return loaded?.entry === this.entry() ? loaded.translation : null;
+  });
+  protected readonly translating = signal(false);
+  protected readonly translateFailed = signal(false);
 
-  readonly view = computed<ExpressionEntry>(() => ({
+  protected readonly view = computed<ExpressionEntry>(() => ({
     ...this.entry(),
     ...(this.i18n.language() === 'en' ? this.translation() : null)
   }));
 
-  readonly status = computed<{ icon: IconName; label: TranslationKey; tone: string }>(() => {
+  protected readonly status = computed<{ icon: IconName; label: TranslationKey; tone: string }>(() => {
     const entry = this.entry();
     if (this.offline()) return { icon: 'bookmark', label: 'message.result.saved', tone: 'tone-neutral' };
     if (entry.classification === 'common') return { icon: 'book', label: 'message.result.common', tone: 'tone-neutral' };
@@ -39,14 +43,14 @@ export class EntryCard {
   });
 
   /** Países y región sin repetir: la región se omite si ya nombra uno de los países. */
-  readonly place = computed(() => {
+  protected readonly place = computed(() => {
     const { countries, region } = this.view();
-    const names = countries.map((code) => countryName(code, this.i18n.language()));
+    const names = countries.map((code) => this.i18n.country(code));
     const repeated = names.some((name) => region.toLowerCase().includes(name.toLowerCase()));
     return (repeated ? names : [...names, region]).join(' · ');
   });
 
-  readonly registerKey = computed<TranslationKey | null>(() => {
+  protected readonly registerKey = computed<TranslationKey | null>(() => {
     const { register } = this.entry();
     return register === 'informal' || register === 'vulgar' ? `register.${register}` : null;
   });
@@ -64,15 +68,15 @@ export class EntryCard {
     this.translating.set(true);
     this.translateFailed.set(false);
     try {
-      this.translation.set(await this.translations.translate(entry));
+      this.loaded.set({ entry, translation: await this.translations.translate(entry) });
     } catch {
-      this.translateFailed.set(true);
+      this.translateFailed.set(entry === this.entry());
     } finally {
       this.translating.set(false);
     }
   }
 
-  play(): void {
+  protected play(): void {
     const url = this.entry().audioUrl;
     if (url) void new Audio(url).play();
   }

@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, ElementRef, effect, inject, viewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { I18nService } from '../../core/i18n/i18n.service';
-import { countryName } from '../../shared/country-names';
 import { EntryCard } from '../../shared/entry-card/entry-card';
 import { Icon } from '../../shared/icon';
 import { GameStore } from './game.store';
@@ -24,11 +23,7 @@ export class GameView {
     effect(() => this.nextButton()?.nativeElement.focus());
   }
 
-  protected name(code: string): string {
-    return countryName(code, this.i18n.language());
-  }
-
   protected names(codes: string[]): string {
-    return codes.map((code) => this.name(code)).join(', ');
+    return codes.map((code) => this.i18n.country(code)).join(', ');
   }
 }

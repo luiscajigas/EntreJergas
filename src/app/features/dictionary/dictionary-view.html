@@ -18,14 +18,14 @@
         <label class="explore-search">
           <span class="visually-hidden">{{ i18n.t('explore.search') }}</span>
           <app-icon name="search" />
-          <input type="search" name="dictionary-search" [value]="draft()" (input)="onSearch($any($event.target).value)" [placeholder]="i18n.t('explore.searchPlaceholder')" maxlength="100" autocomplete="off" autocapitalize="off" spellcheck="false">
+          <input #searchBox type="search" name="dictionary-search" [value]="draft()" (input)="onSearch(searchBox.value)" [placeholder]="i18n.t('explore.searchPlaceholder')" maxlength="100" autocomplete="off" autocapitalize="off" spellcheck="false">
         </label>
         <label class="explore-country">
           <span class="visually-hidden">{{ i18n.t('explore.country') }}</span>
-          <select name="dictionary-country" (change)="selectCountry($any($event.target).value || null)">
+          <select #countrySelect name="dictionary-country" (change)="selectCountry(countrySelect.value || null)">
             <option value="" [selected]="!country()">{{ i18n.t('explore.allCountries') }}</option>
             @for (item of activity.dashboard()?.countries; track item.country) {
-              <option [value]="item.country" [selected]="country() === item.country">{{ name(item.country) }} ({{ item.count }})</option>
+              <option [value]="item.country" [selected]="country() === item.country">{{ i18n.country(item.country) }} ({{ item.count }})</option>
             }
           </select>
         </label>
@@ -90,7 +90,7 @@
           @for (item of stats.countries; track item.country) {
             <li>
               <button class="region-row" type="button" [class.selected]="country() === item.country" [attr.aria-pressed]="country() === item.country" (click)="toggleCountry(item.country)">
-                <strong>{{ name(item.country) }}</strong>
+                <strong>{{ i18n.country(item.country) }}</strong>
                 <span class="region-count">{{ item.count }}</span>
                 <span class="region-bar" aria-hidden="true"><i [style.width.%]="item.count / stats.countries[0].count * 100"></i></span>
               </button>
