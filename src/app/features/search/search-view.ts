@@ -10,7 +10,7 @@ import { CandidatesService } from './candidates/candidates.service';
 import { DictationService } from './dictation.service';
 import { LookupFailure, SearchStore } from './search.store';
 
-const suggestions: ReadonlyArray<{ word: string; hint: TranslationKey }> = [
+const suggestions: readonly { word: string; hint: TranslationKey }[] = [
   { word: 'parcero', hint: 'suggestion.parcero.use' },
   { word: 'boludo', hint: 'suggestion.boludo.use' },
   { word: 'güey', hint: 'suggestion.guey.use' },

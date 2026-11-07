@@ -571,7 +571,7 @@ describe('Sugerencias en el worker', () => {
     class FakeWorker {
       onmessage: ((event: { data: unknown }) => void) | null = null;
       onerror: (() => void) | null = null;
-      sent: Array<{ id: number; text: string }> = [];
+      sent: { id: number; text: string }[] = [];
       terminated = false;
       constructor() { workers.push(this); }
       postMessage(message: { id: number; text: string }) { this.sent.push(message); }

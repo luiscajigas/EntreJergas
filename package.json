@@ -17,7 +17,10 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "start:api": "npm --prefix ../EntreJergas-Back/backend start",
-    "api:types": "npx -y openapi-typescript@7.13.0 ../EntreJergas-Back/backend/openapi.yaml -o src/app/core/api/contract.ts"
+    "api:types": "npx -y openapi-typescript@7.13.0 ../EntreJergas-Back/backend/openapi.yaml -o src/app/core/api/contract.ts",
+    "lint": "eslint .",
+    "format": "prettier --write \"src/**/*.{ts,html,css}\" \"*.{js,json}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,html,css}\" \"*.{js,json}\""
   },
   "dependencies": {
     "@angular/common": "^22.2.0",
@@ -33,10 +36,14 @@
     "@angular/build": "^22.2.0",
     "@angular/cli": "^22.2.0",
     "@angular/compiler-cli": "^22.2.0",
+    "@eslint/js": "^9.39.5",
+    "angular-eslint": "^22.6.0",
     "concurrently": "^9.2.1",
+    "eslint": "^9.39.5",
     "jsdom": "^30.0.0",
     "prettier": "^3.8.1",
     "typescript": "~6.0.2",
+    "typescript-eslint": "^8.72.1",
     "vitest": "^5.0.0"
   },
   "optionalDependencies": {
