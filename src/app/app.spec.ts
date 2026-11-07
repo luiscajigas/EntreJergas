@@ -591,6 +591,9 @@ describe('Sugerencias en el worker', () => {
     TestBed.configureTestingModule({});
     const service = TestBed.inject(CandidatesService);
 
+    service.request('   ');
+    expect(workers.length).toBe(0);
+
     service.request('par');
     service.request('parce');
     const worker = workers[0];

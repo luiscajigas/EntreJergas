@@ -19,7 +19,11 @@ export class CandidatesService {
 
   request(text: string): void {
     const id = ++this.latestRequest;
-    if (!text.trim()) this.candidates.set([]);
+    if (!text.trim()) {
+      // Vaciar no necesita al worker, y aumentar el id descarta lo que tenga pendiente.
+      this.candidates.set([]);
+      return;
+    }
     const message: CandidateRequest = { id, text };
     this.ensureWorker()?.postMessage(message);
   }
