@@ -572,6 +572,8 @@ describe('Sugerencias en el worker', () => {
     expect(findCandidates('par').map((item) => item.expression)).toEqual(['parce', 'parcero']);
     expect(findCandidates('pa')).toEqual([]);
     expect(findCandidates('   ')).toEqual([]);
+    expect(findCandidates('noche')).toEqual([]);
+    expect(findCandidates('oye che')[0].expression).toBe('che');
   });
 
   it('descarta las respuestas que llegan tarde y sobrevive a un fallo del worker', () => {
