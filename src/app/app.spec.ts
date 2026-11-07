@@ -9,6 +9,7 @@ import { routes } from './app.routes';
 import { ApiService, ExpressionEntry, ExpressionPage, LookupResponse } from './core/api/api.service';
 import { sessionExpiredInterceptor } from './core/api/session-expired.interceptor';
 import { SessionStore } from './core/session.store';
+import { EntryCacheService } from './features/search/entry-cache.service';
 import { findCandidates } from './features/search/candidates/candidate-matcher';
 import { CandidatesService } from './features/search/candidates/candidates.service';
 import { SearchStore } from './features/search/search.store';
@@ -60,7 +61,7 @@ async function settle(fixture: ComponentFixture<unknown>): Promise<void> {
 async function renderApp({ signedIn = true, language = 'es', url = '/' } = {}) {
   localStorage.setItem('entrejergas.language.v1', language);
   localStorage.setItem('entrejergas.theme.v1', 'light');
-  localStorage.removeItem('entrejergas.entries.v1');
+  localStorage.removeItem('entrejergas.entries.v2');
 
   TestBed.configureTestingModule({
     imports: [App],
@@ -230,7 +231,7 @@ describe('Búsqueda', () => {
     await search.search('palabra nueva');
     await settle(fixture);
     expect(element.querySelector('.result-eyebrow')?.textContent).toContain('Generado con IA');
-    expect(localStorage.getItem('entrejergas.entries.v1')).toBeNull();
+    expect(localStorage.getItem('entrejergas.entries.v2')).toBeNull();
 
     lookup.mockReturnValue(of(foundResponse({ ...parcero, id: 24, expression: 'otra', source: 'ai' })));
     await search.search('“otra”');
@@ -491,6 +492,18 @@ describe('Juego', () => {
   it('muestra los países en el idioma elegido', async () => {
     const { element } = await renderApp({ url: '/jugar', language: 'en' });
     expect(options(element).map((button) => button.textContent?.trim())).toContain('Spain');
+  });
+});
+
+describe('Copia local', () => {
+  it('ignora y borra las copias con el formato anterior, que no traen países', async () => {
+    localStorage.setItem('entrejergas.entries.v1', JSON.stringify({ parcero: { id: 1, expression: 'parcero', meaning: 'vieja' } }));
+    TestBed.configureTestingModule({});
+
+    const cache = TestBed.inject(EntryCacheService);
+
+    expect(cache.find('parcero')).toBeNull();
+    expect(localStorage.getItem('entrejergas.entries.v1')).toBeNull();
   });
 });
 
