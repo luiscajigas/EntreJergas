@@ -61,7 +61,6 @@ export class SearchView {
   protected failureMessage(failure: LookupFailure): string {
     switch (failure.kind) {
       case 'reason': return this.i18n.t(`lookup.reason.${failure.reason}`);
-      case 'server-message': return failure.message;
       case 'offline': return this.i18n.t('lookup.offline');
       case 'rejected': return this.i18n.t('lookup.rejected');
     }

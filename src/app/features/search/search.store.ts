@@ -9,7 +9,6 @@ import { EntryCacheService } from './entry-cache.service';
 
 export type LookupFailure =
   | { kind: 'reason'; reason: LookupFailureReason }
-  | { kind: 'server-message'; message: string }
   | { kind: 'offline' }
   | { kind: 'rejected' };
 
@@ -68,7 +67,7 @@ export class SearchStore {
       }
       this.settle(id, result.entries.length || result.unresolved.length
         ? { status: 'found', entries: result.entries, unresolved: result.unresolved, offline: false }
-        : { status: 'missing', failure: this.describeResult(result.reason, result.message) });
+        : { status: 'missing', failure: { kind: 'reason', reason: result.reason ?? 'not_found' } });
       void this.activity.refresh();
     } catch (error) {
       this.activity.reportFailure(error);
@@ -84,11 +83,6 @@ export class SearchStore {
   reset(): void {
     this.lookups.set([]);
     this.setDraft('');
-  }
-
-  private describeResult(reason?: LookupFailureReason, message?: string): LookupFailure {
-    if (reason) return { kind: 'reason', reason };
-    return message ? { kind: 'server-message', message } : { kind: 'reason', reason: 'not_found' };
   }
 
   private settle(id: number, state: SettledLookup): void {

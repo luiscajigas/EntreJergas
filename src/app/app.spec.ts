@@ -30,8 +30,8 @@ const parcero: ExpressionEntry = {
   register: 'informal'
 };
 
-const foundResponse = (...entries: ExpressionEntry[]): LookupResponse => ({ found: true, entry: entries[0], entries, unresolved: [] });
-const emptyResponse = (fields: Partial<LookupResponse> = {}): LookupResponse => ({ found: false, entry: null, entries: [], unresolved: [], ...fields });
+const foundResponse = (...entries: ExpressionEntry[]): LookupResponse => ({ found: true, entries, unresolved: [] });
+const emptyResponse = (fields: Partial<LookupResponse> = {}): LookupResponse => ({ found: false, entries: [], unresolved: [], ...fields });
 
 function createApi(signedIn: boolean) {
   return {
@@ -40,7 +40,7 @@ function createApi(signedIn: boolean) {
     register: () => of({ user: ana }),
     logout: () => of(undefined),
     history: () => of({ items: [] }),
-    dashboard: () => of({ expressions: 16, searches: 0, regions: [], countries: [{ country: 'AR', count: 3 }, { country: 'CO', count: 2 }] }),
+    dashboard: () => of({ expressions: 16, searches: 0, countries: [{ country: 'AR', count: 3 }, { country: 'CO', count: 2 }] }),
     lookup: (): ReturnType<ApiService['lookup']> => of(emptyResponse({ reason: 'not_found' })),
     searchExpressions: (): ReturnType<ApiService['searchExpressions']> => of({ items: [parcero, { ...parcero, id: 2, expression: 'parce' }], total: 2, page: 1, pageSize: 20 }),
     gameRound: (): ReturnType<ApiService['gameRound']> => of({ round: { id: 1, expression: 'parcero', options: ['AR', 'CO', 'MX', 'ES'] } }),
@@ -286,16 +286,6 @@ describe('Búsqueda', () => {
     await settle(fixture);
 
     expect(element.querySelector('.missing-body p')?.textContent).toContain('The AI could not reply');
-  });
-
-  it('muestra el mensaje del servidor si no recibe un motivo', async () => {
-    const { fixture, element, search, api } = await renderApp();
-    vi.spyOn(api, 'lookup').mockReturnValue(of(emptyResponse({ message: 'Gemini no pudo responder (error 503).' })));
-
-    await search.search('cachon');
-    await settle(fixture);
-
-    expect(element.querySelector('.missing-body p')?.textContent).toContain('error 503');
   });
 
   it('usa la copia local solo si falla la conexión', async () => {
