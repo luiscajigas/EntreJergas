@@ -23,7 +23,9 @@ export class ThemeService {
     effect(() => {
       const theme = this.theme();
       document.documentElement.dataset['theme'] = theme;
-      document.querySelector('meta[name="theme-color"]')?.setAttribute('content', themeColors[theme]);
+      document
+        .querySelector('meta[name="theme-color"]')
+        ?.setAttribute('content', themeColors[theme]);
     });
   }
 

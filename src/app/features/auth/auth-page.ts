@@ -14,10 +14,14 @@ const demoAccount = { email: 'test@gmail.com', password: '12345677' };
 function errorKey(error: unknown): TranslationKey {
   if (apiErrorCode(error) === 'rate_limited') return 'auth.error.rateLimited';
   switch (httpStatus(error)) {
-    case 400: return 'auth.error.invalid';
-    case 401: return 'auth.error.credentials';
-    case 409: return 'auth.error.exists';
-    default: return 'auth.error.network';
+    case 400:
+      return 'auth.error.invalid';
+    case 401:
+      return 'auth.error.credentials';
+    case 409:
+      return 'auth.error.exists';
+    default:
+      return 'auth.error.network';
   }
 }
 
@@ -50,7 +54,7 @@ export class AuthPage {
   }
 
   protected toggleMode(): void {
-    this.mode.update((mode) => mode === 'login' ? 'register' : 'login');
+    this.mode.update((mode) => (mode === 'login' ? 'register' : 'login'));
     this.errorKey.set(null);
   }
 
@@ -60,7 +64,8 @@ export class AuthPage {
     this.submitting.set(true);
     this.errorKey.set(null);
     try {
-      if (this.mode() === 'register') await this.session.register(this.name, this.email, this.password);
+      if (this.mode() === 'register')
+        await this.session.register(this.name, this.email, this.password);
       else await this.session.login(this.email, this.password);
     } catch (error) {
       this.errorKey.set(errorKey(error));

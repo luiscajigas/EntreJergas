@@ -6,9 +6,21 @@
 
   @if (activity.dashboard(); as stats) {
     <div class="stats">
-      <div class="stat"><strong>{{ stats.expressions }}</strong><span>{{ i18n.t('dashboard.expressions') }}</span><small>{{ i18n.t('dashboard.expressions.label') }}</small></div>
-      <div class="stat"><strong>{{ stats.searches }}</strong><span>{{ i18n.t('dashboard.searches') }}</span><small>{{ i18n.t('dashboard.searches.label') }}</small></div>
-      <div class="stat"><strong>{{ stats.countries.length }}</strong><span>{{ i18n.t('dashboard.regions') }}</span><small>{{ i18n.t('dashboard.regions.label') }}</small></div>
+      <div class="stat">
+        <strong>{{ stats.expressions }}</strong
+        ><span>{{ i18n.t('dashboard.expressions') }}</span
+        ><small>{{ i18n.t('dashboard.expressions.label') }}</small>
+      </div>
+      <div class="stat">
+        <strong>{{ stats.searches }}</strong
+        ><span>{{ i18n.t('dashboard.searches') }}</span
+        ><small>{{ i18n.t('dashboard.searches.label') }}</small>
+      </div>
+      <div class="stat">
+        <strong>{{ stats.countries.length }}</strong
+        ><span>{{ i18n.t('dashboard.regions') }}</span
+        ><small>{{ i18n.t('dashboard.regions.label') }}</small>
+      </div>
     </div>
   }
 
@@ -18,34 +30,60 @@
         <label class="explore-search">
           <span class="visually-hidden">{{ i18n.t('explore.search') }}</span>
           <app-icon name="search" />
-          <input #searchBox type="search" name="dictionary-search" [value]="draft()" (input)="onSearch(searchBox.value)" [placeholder]="i18n.t('explore.searchPlaceholder')" maxlength="100" autocomplete="off" autocapitalize="off" spellcheck="false">
+          <input
+            #searchBox
+            type="search"
+            name="dictionary-search"
+            [value]="draft()"
+            (input)="onSearch(searchBox.value)"
+            [placeholder]="i18n.t('explore.searchPlaceholder')"
+            maxlength="100"
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
+          />
         </label>
         <label class="explore-country">
           <span class="visually-hidden">{{ i18n.t('explore.country') }}</span>
-          <select #countrySelect name="dictionary-country" (change)="selectCountry(countrySelect.value || null)">
+          <select
+            #countrySelect
+            name="dictionary-country"
+            (change)="selectCountry(countrySelect.value || null)"
+          >
             <option value="" [selected]="!country()">{{ i18n.t('explore.allCountries') }}</option>
             @for (item of activity.dashboard()?.countries; track item.country) {
-              <option [value]="item.country" [selected]="country() === item.country">{{ i18n.country(item.country) }} ({{ item.count }})</option>
+              <option [value]="item.country" [selected]="country() === item.country">
+                {{ i18n.country(item.country) }} ({{ item.count }})
+              </option>
             }
           </select>
         </label>
       </div>
 
       <p class="explore-count" role="status">
-        @if (status() !== 'error' && result()) { {{ countLabel() }} }
+        @if (status() !== 'error' && result()) {
+          {{ countLabel() }}
+        }
       </p>
 
       @if (status() === 'error') {
         <div class="explore-state">
           <p>{{ i18n.t('explore.error') }}</p>
-          <button class="text-button" type="button" (click)="retry()">{{ i18n.t('explore.retry') }}</button>
+          <button class="text-button" type="button" (click)="retry()">
+            {{ i18n.t('explore.retry') }}
+          </button>
         </div>
       } @else if (result(); as page) {
         @if (page.items.length) {
           <ul class="word-rows" [class.is-loading]="status() === 'loading'">
             @for (entry of page.items; track entry.expression) {
               <li>
-                <button class="word-row" type="button" (click)="toggleEntry(entry.id)" [attr.aria-expanded]="expandedId() === entry.id">
+                <button
+                  class="word-row"
+                  type="button"
+                  (click)="toggleEntry(entry.id)"
+                  [attr.aria-expanded]="expandedId() === entry.id"
+                >
                   <span class="word-text">
                     <strong>{{ entry.expression }}</strong>
                     @if (i18n.language() === 'es') {
@@ -55,7 +93,11 @@
                   @if (entry.countries.length) {
                     <small class="word-countries">{{ countryNames(entry.countries) }}</small>
                   }
-                  <app-icon class="word-chevron" [class.is-open]="expandedId() === entry.id" name="chevron" />
+                  <app-icon
+                    class="word-chevron"
+                    [class.is-open]="expandedId() === entry.id"
+                    name="chevron"
+                  />
                 </button>
                 @if (expandedId() === entry.id) {
                   <div class="word-card"><app-entry-card [entry]="entry" /></div>
@@ -66,9 +108,25 @@
 
           @if (totalPages() > 1) {
             <nav class="pagination" [attr.aria-label]="i18n.t('explore.pagination')">
-              <button class="text-button" type="button" [disabled]="page.page <= 1" (click)="goToPage(page.page - 1)"><app-icon name="back" />{{ i18n.t('explore.previous') }}</button>
-              <span>{{ i18n.format('explore.page', { page: page.page, total: totalPages() }) }}</span>
-              <button class="text-button" type="button" [disabled]="page.page >= totalPages()" (click)="goToPage(page.page + 1)">{{ i18n.t('explore.next') }}<app-icon name="arrow" /></button>
+              <button
+                class="text-button"
+                type="button"
+                [disabled]="page.page <= 1"
+                (click)="goToPage(page.page - 1)"
+              >
+                <app-icon name="back" />{{ i18n.t('explore.previous') }}
+              </button>
+              <span>{{
+                i18n.format('explore.page', { page: page.page, total: totalPages() })
+              }}</span>
+              <button
+                class="text-button"
+                type="button"
+                [disabled]="page.page >= totalPages()"
+                (click)="goToPage(page.page + 1)"
+              >
+                {{ i18n.t('explore.next') }}<app-icon name="arrow" />
+              </button>
             </nav>
           }
         } @else {
@@ -76,7 +134,9 @@
             <strong>{{ i18n.t('explore.empty.title') }}</strong>
             <p>{{ i18n.t('explore.empty.text') }}</p>
             @if (hasFilters()) {
-              <button class="text-button" type="button" (click)="clearFilters()"><app-icon name="close" />{{ i18n.t('explore.clear') }}</button>
+              <button class="text-button" type="button" (click)="clearFilters()">
+                <app-icon name="close" />{{ i18n.t('explore.clear') }}
+              </button>
             }
           </div>
         }
@@ -89,10 +149,18 @@
         <ul class="region-list">
           @for (item of stats.countries; track item.country) {
             <li>
-              <button class="region-row" type="button" [class.selected]="country() === item.country" [attr.aria-pressed]="country() === item.country" (click)="toggleCountry(item.country)">
+              <button
+                class="region-row"
+                type="button"
+                [class.selected]="country() === item.country"
+                [attr.aria-pressed]="country() === item.country"
+                (click)="toggleCountry(item.country)"
+              >
                 <strong>{{ i18n.country(item.country) }}</strong>
                 <span class="region-count">{{ item.count }}</span>
-                <span class="region-bar" aria-hidden="true"><i [style.width.%]="item.count / stats.countries[0].count * 100"></i></span>
+                <span class="region-bar" aria-hidden="true"
+                  ><i [style.width.%]="(item.count / stats.countries[0].count) * 100"></i
+                ></span>
               </button>
             </li>
           }
@@ -101,5 +169,7 @@
     }
   </div>
 
-  <p class="dictionary-note">{{ i18n.t('dictionary.note.title') }}<span>{{ i18n.t('dictionary.note.body') }}</span></p>
+  <p class="dictionary-note">
+    {{ i18n.t('dictionary.note.title') }}<span>{{ i18n.t('dictionary.note.body') }}</span>
+  </p>
 </section>

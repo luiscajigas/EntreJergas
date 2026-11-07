@@ -23,7 +23,18 @@ import { Logo } from './shared/logo';
     }
   `,
   styles: `
-    .auth-loading { display: grid; min-height: 100vh; min-height: 100dvh; place-content: center; justify-items: center; gap: 14px; padding: 24px; background: var(--band); color: var(--on-band); font-size: 17px; }
+    .auth-loading {
+      display: grid;
+      min-height: 100vh;
+      min-height: 100dvh;
+      place-content: center;
+      justify-items: center;
+      gap: 14px;
+      padding: 24px;
+      background: var(--band);
+      color: var(--on-band);
+      font-size: 17px;
+    }
   `
 })
 export class App {

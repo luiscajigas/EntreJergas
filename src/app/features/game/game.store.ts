@@ -20,7 +20,13 @@ export type GameState =
   | { status: 'error' }
   | { status: 'empty' }
   | { status: 'question'; round: GameRound; checking: boolean }
-  | { status: 'answered'; round: GameRound; chosen: string; correct: boolean; entry: ExpressionEntry };
+  | {
+      status: 'answered';
+      round: GameRound;
+      chosen: string;
+      correct: boolean;
+      entry: ExpressionEntry;
+    };
 
 /** Los puntos viven en la sesión; el servidor es quien decide si una respuesta es correcta. */
 @Injectable({ providedIn: 'root' })

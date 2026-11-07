@@ -1,24 +1,60 @@
 <section class="search-view">
   <div class="search-band" [class.compact]="hasResults()">
     <div class="band-inner">
-      <h1 [class.visually-hidden]="hasResults()">{{ title()[0] }}<br><span class="hl">{{ title()[1] }}</span></h1>
+      <h1 [class.visually-hidden]="hasResults()">
+        {{ title()[0] }}<br /><span class="hl">{{ title()[1] }}</span>
+      </h1>
       @if (!hasResults()) {
         <p class="search-lead">{{ i18n.t('welcome.copy') }}</p>
       }
       <form class="search-form" role="search" (ngSubmit)="search.submit()">
         <app-icon name="search" />
-        <input #searchInput type="text" name="expression" [ngModel]="search.draft()" (ngModelChange)="search.setDraft($event)" [attr.aria-label]="i18n.t('composer.aria')" [placeholder]="i18n.t('composer.placeholder')" maxlength="300" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <input
+          #searchInput
+          type="text"
+          name="expression"
+          [ngModel]="search.draft()"
+          (ngModelChange)="search.setDraft($event)"
+          [attr.aria-label]="i18n.t('composer.aria')"
+          [placeholder]="i18n.t('composer.placeholder')"
+          maxlength="300"
+          autocomplete="off"
+          autocapitalize="off"
+          spellcheck="false"
+        />
         <kbd class="search-kbd">Ctrl K</kbd>
         @if (dictation.supported) {
-          <button class="mic-button" [class.is-listening]="dictation.listening()" type="button" (click)="toggleDictation()" [attr.aria-label]="micLabel()" [title]="micLabel()"><app-icon name="mic" /></button>
+          <button
+            class="mic-button"
+            [class.is-listening]="dictation.listening()"
+            type="button"
+            (click)="toggleDictation()"
+            [attr.aria-label]="micLabel()"
+            [title]="micLabel()"
+          >
+            <app-icon name="mic" />
+          </button>
         }
-        <button class="search-submit" type="submit" [disabled]="!search.draft().trim() || search.loading()"><span>{{ i18n.t('search.submit') }}</span><app-icon name="arrow" /></button>
+        <button
+          class="search-submit"
+          type="submit"
+          [disabled]="!search.draft().trim() || search.loading()"
+        >
+          <span>{{ i18n.t('search.submit') }}</span
+          ><app-icon name="arrow" />
+        </button>
       </form>
       @if (candidates.candidates().length && search.draft()) {
         <div class="candidate-row">
           <span class="candidate-caption">{{ i18n.t('candidate.caption') }}</span>
           @for (candidate of candidates.candidates(); track candidate.expression) {
-            <button class="candidate-chip" type="button" (click)="search.setDraft(candidate.expression)">{{ candidate.expression }}<small>{{ candidate.region }}</small></button>
+            <button
+              class="candidate-chip"
+              type="button"
+              (click)="search.setDraft(candidate.expression)"
+            >
+              {{ candidate.expression }}<small>{{ candidate.region }}</small>
+            </button>
           }
         </div>
       }
@@ -31,7 +67,9 @@
       @if (hasResults()) {
         <div class="results">
           <div class="results-toolbar">
-            <button class="text-button" type="button" (click)="search.reset()"><app-icon name="plus" />{{ i18n.t('nav.newChat') }}</button>
+            <button class="text-button" type="button" (click)="search.reset()">
+              <app-icon name="plus" />{{ i18n.t('nav.newChat') }}
+            </button>
           </div>
           @for (lookup of search.lookups(); track lookup.id) {
             @switch (lookup.status) {
@@ -46,7 +84,13 @@
                       <h2>{{ item.text }}</h2>
                       @if (item.suggestion; as suggestion) {
                         <p>{{ i18n.t('unresolved.typo') }}</p>
-                        <button class="text-button" type="button" (click)="search.search(suggestion)">{{ suggestion }}<app-icon name="arrow" /></button>
+                        <button
+                          class="text-button"
+                          type="button"
+                          (click)="search.search(suggestion)"
+                        >
+                          {{ suggestion }}<app-icon name="arrow" />
+                        </button>
                       } @else {
                         <p>{{ i18n.t('unresolved.unknown') }}</p>
                       }
@@ -66,7 +110,10 @@
                 </article>
               }
               @case ('pending') {
-                <div class="pending-row" role="status"><span class="hl">{{ lookup.query }}</span><small>{{ i18n.t('thinking.searching') }}</small></div>
+                <div class="pending-row" role="status">
+                  <span class="hl">{{ lookup.query }}</span
+                  ><small>{{ i18n.t('thinking.searching') }}</small>
+                </div>
               }
             }
           }
@@ -76,7 +123,13 @@
           <h2 class="section-title" id="words-title">{{ i18n.t('search.try') }}</h2>
           <ul class="word-list">
             @for (suggestion of suggestions; track suggestion.word) {
-              <li><button type="button" (click)="search.search(suggestion.word)"><strong>{{ suggestion.word }}</strong><small>{{ i18n.t(suggestion.hint) }}</small><app-icon name="arrow" /></button></li>
+              <li>
+                <button type="button" (click)="search.search(suggestion.word)">
+                  <strong>{{ suggestion.word }}</strong
+                  ><small>{{ i18n.t(suggestion.hint) }}</small
+                  ><app-icon name="arrow" />
+                </button>
+              </li>
             }
           </ul>
         </section>
@@ -88,7 +141,18 @@
       @if (recent().length) {
         <ul class="recent-list">
           @for (item of recent(); track item.id) {
-            <li><button class="recent-item" [class.not-found]="!item.found" type="button" (click)="openRecent(item)"><app-icon [name]="item.found ? 'check' : 'help'" /><span>{{ item.expression }}</span></button></li>
+            <li>
+              <button
+                class="recent-item"
+                [class.not-found]="!item.found"
+                type="button"
+                (click)="openRecent(item)"
+              >
+                <app-icon [name]="item.found ? 'check' : 'help'" /><span>{{
+                  item.expression
+                }}</span>
+              </button>
+            </li>
           }
         </ul>
       } @else {

@@ -3,10 +3,22 @@
     <a class="brand" routerLink="/" (click)="search.reset()"><app-brand /></a>
 
     <nav class="tabs" [attr.aria-label]="i18n.t('nav.sections')">
-      <a routerLink="/" routerLinkActive="selected" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page"><app-icon name="search" />{{ i18n.t('nav.explore') }}</a>
-      <a routerLink="/historial" routerLinkActive="selected" ariaCurrentWhenActive="page"><app-icon name="clock" />{{ i18n.t('nav.history') }}</a>
-      <a routerLink="/diccionario" routerLinkActive="selected" ariaCurrentWhenActive="page"><app-icon name="book" />{{ i18n.t('nav.dictionary') }}</a>
-      <a routerLink="/jugar" routerLinkActive="selected" ariaCurrentWhenActive="page"><app-icon name="play" />{{ i18n.t('nav.game') }}</a>
+      <a
+        routerLink="/"
+        routerLinkActive="selected"
+        [routerLinkActiveOptions]="{ exact: true }"
+        ariaCurrentWhenActive="page"
+        ><app-icon name="search" />{{ i18n.t('nav.explore') }}</a
+      >
+      <a routerLink="/historial" routerLinkActive="selected" ariaCurrentWhenActive="page"
+        ><app-icon name="clock" />{{ i18n.t('nav.history') }}</a
+      >
+      <a routerLink="/diccionario" routerLinkActive="selected" ariaCurrentWhenActive="page"
+        ><app-icon name="book" />{{ i18n.t('nav.dictionary') }}</a
+      >
+      <a routerLink="/jugar" routerLinkActive="selected" ariaCurrentWhenActive="page"
+        ><app-icon name="play" />{{ i18n.t('nav.game') }}</a
+      >
     </nav>
 
     <div class="header-actions">
@@ -15,14 +27,25 @@
       }
       <app-preference-controls />
       <div class="account">
-        <button class="account-button" type="button" (click)="accountOpen.set(!accountOpen())" [attr.aria-expanded]="accountOpen()" [attr.aria-label]="i18n.t('nav.account')">
+        <button
+          class="account-button"
+          type="button"
+          (click)="accountOpen.set(!accountOpen())"
+          [attr.aria-expanded]="accountOpen()"
+          [attr.aria-label]="i18n.t('nav.account')"
+        >
           <span class="profile-avatar">{{ initial() }}</span>
           <app-icon name="chevron" />
         </button>
         @if (accountOpen()) {
           <div class="account-menu">
-            <div class="profile-details"><strong>{{ session.user()?.name }}</strong><small>{{ session.user()?.email }}</small></div>
-            <button class="logout-button" type="button" (click)="session.logout()"><app-icon name="logout" />{{ i18n.t('nav.logout') }}</button>
+            <div class="profile-details">
+              <strong>{{ session.user()?.name }}</strong
+              ><small>{{ session.user()?.email }}</small>
+            </div>
+            <button class="logout-button" type="button" (click)="session.logout()">
+              <app-icon name="logout" />{{ i18n.t('nav.logout') }}
+            </button>
           </div>
         }
       </div>
@@ -31,6 +54,8 @@
 
   <main class="app-main">
     <router-outlet />
-    <footer class="global-footer"><strong>EntreJergas</strong><span>{{ i18n.t('composer.disclaimer') }}</span></footer>
+    <footer class="global-footer">
+      <strong>EntreJergas</strong><span>{{ i18n.t('composer.disclaimer') }}</span>
+    </footer>
   </main>
 </div>

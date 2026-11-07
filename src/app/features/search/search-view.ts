@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, ElementRef, computed, effect, inject, untracked, viewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  computed,
+  effect,
+  inject,
+  untracked,
+  viewChild
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivityStore } from '../../core/activity.store';
 import { HistoryItem } from '../../core/api/api.service';
@@ -35,7 +44,9 @@ export class SearchView {
   protected readonly title = computed(() => this.i18n.t('welcome.title').split('\n'));
   protected readonly hasResults = computed(() => this.search.lookups().length > 0);
   protected readonly recent = computed(() => this.activity.history().slice(0, 6));
-  protected readonly micLabel = computed(() => this.i18n.t(this.dictation.listening() ? 'composer.mic.stop' : 'composer.mic.start'));
+  protected readonly micLabel = computed(() =>
+    this.i18n.t(this.dictation.listening() ? 'composer.mic.stop' : 'composer.mic.start')
+  );
 
   private readonly searchInput = viewChild.required<ElementRef<HTMLInputElement>>('searchInput');
 
@@ -60,9 +71,12 @@ export class SearchView {
 
   protected failureMessage(failure: LookupFailure): string {
     switch (failure.kind) {
-      case 'reason': return this.i18n.t(`lookup.reason.${failure.reason}`);
-      case 'offline': return this.i18n.t('lookup.offline');
-      case 'rejected': return this.i18n.t('lookup.rejected');
+      case 'reason':
+        return this.i18n.t(`lookup.reason.${failure.reason}`);
+      case 'offline':
+        return this.i18n.t('lookup.offline');
+      case 'rejected':
+        return this.i18n.t('lookup.rejected');
     }
   }
 }

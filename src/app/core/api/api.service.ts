@@ -50,9 +50,8 @@ export class ApiService {
 
   translate(entry: ExpressionEntry): Observable<Schemas['TranslateResponse']> {
     const { id, expression, meaning, region, context, equivalent, example } = entry;
-    const body: Schemas['TranslateRequest'] = id !== null
-      ? { id }
-      : { expression, meaning, region, context, equivalent, example };
+    const body: Schemas['TranslateRequest'] =
+      id !== null ? { id } : { expression, meaning, region, context, equivalent, example };
     return this.http.post<Schemas['TranslateResponse']>(`${this.baseUrl}/translate`, body);
   }
 
@@ -60,7 +59,12 @@ export class ApiService {
     return this.http.get<Schemas['HistoryResponse']>(`${this.baseUrl}/history`);
   }
 
-  searchExpressions(filters: { q: string; country: string | null; page: number; pageSize: number }): Observable<ExpressionPage> {
+  searchExpressions(filters: {
+    q: string;
+    country: string | null;
+    page: number;
+    pageSize: number;
+  }): Observable<ExpressionPage> {
     let params = new HttpParams().set('page', filters.page).set('pageSize', filters.pageSize);
     if (filters.q) params = params.set('q', filters.q);
     if (filters.country) params = params.set('country', filters.country);

@@ -18,7 +18,8 @@ type SpeechWindow = Window & {
 
 @Injectable({ providedIn: 'root' })
 export class DictationService {
-  private readonly Recognition = (window as SpeechWindow).SpeechRecognition ?? (window as SpeechWindow).webkitSpeechRecognition;
+  private readonly Recognition =
+    (window as SpeechWindow).SpeechRecognition ?? (window as SpeechWindow).webkitSpeechRecognition;
   private recognition?: SpeechRecognitionLike;
 
   readonly supported = this.Recognition !== undefined;
@@ -39,7 +40,8 @@ export class DictationService {
     recognition.lang = 'es-CO';
     recognition.interimResults = false;
     recognition.continuous = false;
-    recognition.onresult = (event) => onTranscript(event.results[event.results.length - 1][0].transcript);
+    recognition.onresult = (event) =>
+      onTranscript(event.results[event.results.length - 1][0].transcript);
     recognition.onerror = () => this.listening.set(false);
     recognition.onend = () => this.listening.set(false);
     this.recognition = recognition;

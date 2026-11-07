@@ -9,7 +9,11 @@ export const sessionExpiredInterceptor: HttpInterceptorFn = (request, next) => {
 
   return next(request).pipe(
     catchError((error: unknown) => {
-      if (error instanceof HttpErrorResponse && error.status === 401 && !request.url.includes('/auth/')) {
+      if (
+        error instanceof HttpErrorResponse &&
+        error.status === 401 &&
+        !request.url.includes('/auth/')
+      ) {
         session.expire();
       }
       return throwError(() => error);

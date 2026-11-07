@@ -1,4 +1,9 @@
-import { HttpClient, HttpErrorResponse, provideHttpClient, withInterceptors } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  provideHttpClient,
+  withInterceptors
+} from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
@@ -6,7 +11,12 @@ import { Subject, firstValueFrom, of, throwError } from 'rxjs';
 import { afterEach, vi } from 'vitest';
 import { App } from './app';
 import { routes } from './app.routes';
-import { ApiService, ExpressionEntry, ExpressionPage, LookupResponse } from './core/api/api.service';
+import {
+  ApiService,
+  ExpressionEntry,
+  ExpressionPage,
+  LookupResponse
+} from './core/api/api.service';
 import { sessionExpiredInterceptor } from './core/api/session-expired.interceptor';
 import { SessionStore } from './core/session.store';
 import { EntryCacheService } from './features/search/entry-cache.service';
@@ -30,22 +40,57 @@ const parcero: ExpressionEntry = {
   register: 'informal'
 };
 
-const foundResponse = (...entries: ExpressionEntry[]): LookupResponse => ({ found: true, entries, unresolved: [] });
-const emptyResponse = (fields: Partial<LookupResponse> = {}): LookupResponse => ({ found: false, entries: [], unresolved: [], ...fields });
+const foundResponse = (...entries: ExpressionEntry[]): LookupResponse => ({
+  found: true,
+  entries,
+  unresolved: []
+});
+const emptyResponse = (fields: Partial<LookupResponse> = {}): LookupResponse => ({
+  found: false,
+  entries: [],
+  unresolved: [],
+  ...fields
+});
 
 function createApi(signedIn: boolean) {
   return {
-    currentUser: () => signedIn ? of({ user: ana }) : throwError(() => new HttpErrorResponse({ status: 401 })),
+    currentUser: () =>
+      signedIn ? of({ user: ana }) : throwError(() => new HttpErrorResponse({ status: 401 })),
     login: () => of({ user: ana }),
     register: () => of({ user: ana }),
     logout: () => of(undefined),
     history: () => of({ items: [] }),
-    dashboard: () => of({ expressions: 16, searches: 0, countries: [{ country: 'AR', count: 3 }, { country: 'CO', count: 2 }] }),
+    dashboard: () =>
+      of({
+        expressions: 16,
+        searches: 0,
+        countries: [
+          { country: 'AR', count: 3 },
+          { country: 'CO', count: 2 }
+        ]
+      }),
     lookup: (): ReturnType<ApiService['lookup']> => of(emptyResponse({ reason: 'not_found' })),
-    searchExpressions: (): ReturnType<ApiService['searchExpressions']> => of({ items: [parcero, { ...parcero, id: 2, expression: 'parce' }], total: 2, page: 1, pageSize: 20 }),
-    gameRound: (): ReturnType<ApiService['gameRound']> => of({ round: { id: 1, expression: 'parcero', options: ['AR', 'CO', 'MX', 'ES'] } }),
-    gameAnswer: (id: number, country: string): ReturnType<ApiService['gameAnswer']> => of({ correct: country === 'CO', entry: parcero }),
-    translate: () => of({ translation: { meaning: 'A close friend', region: 'Antioquia', context: 'Informal', equivalent: 'buddy', example: 'My parcero helped me.' } })
+    searchExpressions: (): ReturnType<ApiService['searchExpressions']> =>
+      of({
+        items: [parcero, { ...parcero, id: 2, expression: 'parce' }],
+        total: 2,
+        page: 1,
+        pageSize: 20
+      }),
+    gameRound: (): ReturnType<ApiService['gameRound']> =>
+      of({ round: { id: 1, expression: 'parcero', options: ['AR', 'CO', 'MX', 'ES'] } }),
+    gameAnswer: (id: number, country: string): ReturnType<ApiService['gameAnswer']> =>
+      of({ correct: country === 'CO', entry: parcero }),
+    translate: () =>
+      of({
+        translation: {
+          meaning: 'A close friend',
+          region: 'Antioquia',
+          context: 'Informal',
+          equivalent: 'buddy',
+          example: 'My parcero helped me.'
+        }
+      })
   };
 }
 
@@ -76,7 +121,13 @@ async function renderApp({ signedIn = true, language = 'es', url = '/' } = {}) {
   }
 
   const element = fixture.nativeElement as HTMLElement;
-  return { fixture, element, api: TestBed.inject(ApiService), search: TestBed.inject(SearchStore), session: TestBed.inject(SessionStore) };
+  return {
+    fixture,
+    element,
+    api: TestBed.inject(ApiService),
+    search: TestBed.inject(SearchStore),
+    session: TestBed.inject(SessionStore)
+  };
 }
 
 afterEach(() => {
@@ -90,7 +141,9 @@ describe('App', () => {
 
     expect(element.querySelector('.brand-name')?.textContent).toContain('entrejergas');
     expect(element.querySelector('.brand-mark .brand-logo')).toBeTruthy();
-    expect(element.querySelector('input[name="expression"]')?.getAttribute('aria-label')).toContain('expresión regional');
+    expect(element.querySelector('input[name="expression"]')?.getAttribute('aria-label')).toContain(
+      'expresión regional'
+    );
 
     (element.querySelector('.account-button') as HTMLButtonElement).click();
     await settle(fixture);
@@ -139,12 +192,22 @@ describe('App', () => {
 
   it('traduce el motivo cuando las credenciales son incorrectas', async () => {
     const { fixture, element, api } = await renderApp({ signedIn: false, language: 'en' });
-    vi.spyOn(api, 'login').mockReturnValue(throwError(() => new HttpErrorResponse({ status: 401, error: { error: 'Correo o contraseña incorrectos.' } })));
+    vi.spyOn(api, 'login').mockReturnValue(
+      throwError(
+        () =>
+          new HttpErrorResponse({
+            status: 401,
+            error: { error: 'Correo o contraseña incorrectos.' }
+          })
+      )
+    );
 
     (element.querySelector('.auth-form') as HTMLFormElement).dispatchEvent(new Event('submit'));
     await settle(fixture);
 
-    expect(element.querySelector('.auth-error')?.textContent).toContain('Incorrect email or password');
+    expect(element.querySelector('.auth-error')?.textContent).toContain(
+      'Incorrect email or password'
+    );
   });
 
   it('cambia el tema y lo recuerda', async () => {
@@ -188,7 +251,9 @@ describe('App', () => {
     const { fixture, element } = await renderApp({ url: '/historial' });
     document.body.appendChild(element);
 
-    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', ctrlKey: true, cancelable: true }));
+    document.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'k', ctrlKey: true, cancelable: true })
+    );
     await settle(fixture);
 
     expect(TestBed.inject(Router).url).toBe('/');
@@ -227,30 +292,59 @@ describe('Búsqueda', () => {
     const { fixture, element, search, api } = await renderApp();
     const lookup = vi.spyOn(api, 'lookup');
 
-    lookup.mockReturnValue(of(foundResponse({ ...parcero, id: null, expression: 'palabra nueva', source: 'ai', classification: 'regional' })));
+    lookup.mockReturnValue(
+      of(
+        foundResponse({
+          ...parcero,
+          id: null,
+          expression: 'palabra nueva',
+          source: 'ai',
+          classification: 'regional'
+        })
+      )
+    );
     await search.search('palabra nueva');
     await settle(fixture);
     expect(element.querySelector('.result-eyebrow')?.textContent).toContain('Generado con IA');
     expect(localStorage.getItem('entrejergas.entries.v2')).toBeNull();
 
-    lookup.mockReturnValue(of(foundResponse({ ...parcero, id: 24, expression: 'otra', source: 'ai' })));
+    lookup.mockReturnValue(
+      of(foundResponse({ ...parcero, id: 24, expression: 'otra', source: 'ai' }))
+    );
     await search.search('“otra”');
     await settle(fixture);
-    expect(element.querySelector('.result-eyebrow')?.textContent).toContain('agregado al diccionario');
+    expect(element.querySelector('.result-eyebrow')?.textContent).toContain(
+      'agregado al diccionario'
+    );
   });
 
   it('muestra una ficha por expresión de la frase y sugiere la forma correcta', async () => {
     const { fixture, element, search, api } = await renderApp();
-    const mochila: ExpressionEntry = { ...parcero, id: null, expression: 'mochila', source: 'ai', countries: [], register: 'neutral', classification: 'common' };
-    const lookup = vi.spyOn(api, 'lookup').mockReturnValue(of({
-      ...foundResponse(parcero, mochila),
-      unresolved: [{ text: 'parzero', reason: 'typo', suggestion: 'parcero' }, { text: 'trompicho', reason: 'unknown', suggestion: null }]
-    }));
+    const mochila: ExpressionEntry = {
+      ...parcero,
+      id: null,
+      expression: 'mochila',
+      source: 'ai',
+      countries: [],
+      register: 'neutral',
+      classification: 'common'
+    };
+    const lookup = vi.spyOn(api, 'lookup').mockReturnValue(
+      of({
+        ...foundResponse(parcero, mochila),
+        unresolved: [
+          { text: 'parzero', reason: 'typo', suggestion: 'parcero' },
+          { text: 'trompicho', reason: 'unknown', suggestion: null }
+        ]
+      })
+    );
 
     await search.search('qué significa parcero, mochila, parzero y trompicho');
     await settle(fixture);
 
-    const labels = Array.from(element.querySelectorAll('.result-eyebrow')).map((item) => item.textContent);
+    const labels = Array.from(element.querySelectorAll('.result-eyebrow')).map(
+      (item) => item.textContent
+    );
     expect(labels[0]).toContain('En el diccionario');
     expect(labels[1]).toContain('Palabra común');
     const unresolved = element.querySelectorAll('.unresolved-card');
@@ -265,12 +359,20 @@ describe('Búsqueda', () => {
 
   it('muestra el país en el idioma elegido y avisa si la palabra puede ofender', async () => {
     const { fixture, element, search, api } = await renderApp();
-    const boludo: ExpressionEntry = { ...parcero, expression: 'boludo', region: 'Río de la Plata', countries: ['AR', 'ES'], register: 'vulgar' };
+    const boludo: ExpressionEntry = {
+      ...parcero,
+      expression: 'boludo',
+      region: 'Río de la Plata',
+      countries: ['AR', 'ES'],
+      register: 'vulgar'
+    };
     vi.spyOn(api, 'lookup').mockReturnValue(of(foundResponse(boludo)));
 
     await search.search('boludo');
     await settle(fixture);
-    expect(element.querySelector('.region')?.textContent).toContain('Argentina · España · Río de la Plata');
+    expect(element.querySelector('.region')?.textContent).toContain(
+      'Argentina · España · Río de la Plata'
+    );
     expect(element.querySelector('.register-badge')?.textContent).toContain('Puede ser ofensiva');
 
     (element.querySelector('.lang-toggle') as HTMLButtonElement).click();
@@ -280,12 +382,21 @@ describe('Búsqueda', () => {
 
   it('muestra el motivo del fallo en el idioma elegido', async () => {
     const { fixture, element, search, api } = await renderApp({ language: 'en' });
-    vi.spyOn(api, 'lookup').mockReturnValue(of(emptyResponse({ reason: 'provider_unavailable', message: 'Gemini no pudo responder (error 503).' })));
+    vi.spyOn(api, 'lookup').mockReturnValue(
+      of(
+        emptyResponse({
+          reason: 'provider_unavailable',
+          message: 'Gemini no pudo responder (error 503).'
+        })
+      )
+    );
 
     await search.search('cachon');
     await settle(fixture);
 
-    expect(element.querySelector('.missing-body p')?.textContent).toContain('The AI could not reply');
+    expect(element.querySelector('.missing-body p')?.textContent).toContain(
+      'The AI could not reply'
+    );
   });
 
   it('usa la copia local solo si falla la conexión', async () => {
@@ -297,7 +408,9 @@ describe('Búsqueda', () => {
     lookup.mockReturnValue(throwError(() => new HttpErrorResponse({ status: 0 })));
     await search.search('PARCERO');
     await settle(fixture);
-    expect(element.querySelector('.result-eyebrow')?.textContent).toContain('Guardada en este dispositivo');
+    expect(element.querySelector('.result-eyebrow')?.textContent).toContain(
+      'Guardada en este dispositivo'
+    );
     expect(element.querySelector('.offline-pill')).toBeTruthy();
 
     lookup.mockReturnValue(throwError(() => new HttpErrorResponse({ status: 400 })));
@@ -365,7 +478,9 @@ describe('Explorar el diccionario', () => {
     const slow = new Subject<ExpressionPage>();
     const search = vi.spyOn(api, 'searchExpressions');
     search.mockReturnValueOnce(slow);
-    search.mockReturnValueOnce(of({ items: [{ ...parcero, expression: 'reciente' }], total: 1, page: 1, pageSize: 20 }));
+    search.mockReturnValueOnce(
+      of({ items: [{ ...parcero, expression: 'reciente' }], total: 1, page: 1, pageSize: 20 })
+    );
 
     await TestBed.inject(Router).navigateByUrl('/diccionario?q=vieja');
     await settle(fixture);
@@ -381,7 +496,9 @@ describe('Explorar el diccionario', () => {
 
   it('avisa si no hay resultados y permite quitar los filtros', async () => {
     const { fixture, element, api } = await renderApp({ url: '/diccionario' });
-    vi.spyOn(api, 'searchExpressions').mockReturnValue(of({ items: [], total: 0, page: 1, pageSize: 20 }));
+    vi.spyOn(api, 'searchExpressions').mockReturnValue(
+      of({ items: [], total: 0, page: 1, pageSize: 20 })
+    );
 
     await TestBed.inject(Router).navigateByUrl('/diccionario?q=nada');
     await settle(fixture);
@@ -394,7 +511,9 @@ describe('Explorar el diccionario', () => {
 
   it('permite reintentar si falla la carga', async () => {
     const { fixture, element, api } = await renderApp({ url: '/diccionario' });
-    const search = vi.spyOn(api, 'searchExpressions').mockReturnValueOnce(throwError(() => new HttpErrorResponse({ status: 0 })));
+    const search = vi
+      .spyOn(api, 'searchExpressions')
+      .mockReturnValueOnce(throwError(() => new HttpErrorResponse({ status: 0 })));
 
     await TestBed.inject(Router).navigateByUrl('/diccionario?q=error');
     await settle(fixture);
@@ -408,13 +527,19 @@ describe('Explorar el diccionario', () => {
 });
 
 describe('Juego', () => {
-  const options = (element: HTMLElement) => Array.from(element.querySelectorAll<HTMLButtonElement>('button.game-option'));
+  const options = (element: HTMLElement) =>
+    Array.from(element.querySelectorAll<HTMLButtonElement>('button.game-option'));
 
   it('suma puntos y racha al acertar, y muestra la ficha', async () => {
     localStorage.removeItem('entrejergas.game.best.v1');
     const { fixture, element } = await renderApp({ url: '/jugar' });
     expect(element.querySelector('.game-word')?.textContent).toContain('parcero');
-    expect(options(element).map((button) => button.textContent?.trim())).toEqual(['Argentina', 'Colombia', 'México', 'España']);
+    expect(options(element).map((button) => button.textContent?.trim())).toEqual([
+      'Argentina',
+      'Colombia',
+      'México',
+      'España'
+    ]);
     expect(element.querySelector('app-entry-card')).toBeNull();
 
     options(element)[1].click();
@@ -422,7 +547,9 @@ describe('Juego', () => {
 
     expect(element.querySelector('.game-verdict')?.textContent).toContain('Correcto');
     expect(element.querySelector('.scoreboard')?.textContent).toContain('1/1');
-    expect(element.querySelector('app-entry-card .meaning')?.textContent).toContain('Amigo cercano');
+    expect(element.querySelector('app-entry-card .meaning')?.textContent).toContain(
+      'Amigo cercano'
+    );
     expect(localStorage.getItem('entrejergas.game.best.v1')).toBe('1');
   });
 
@@ -469,14 +596,22 @@ describe('Juego', () => {
   it('explica cuando no hay palabras para jugar', async () => {
     TestBed.configureTestingModule({
       imports: [App],
-      providers: [provideRouter(routes), { provide: ApiService, useValue: { ...createApi(true), gameRound: () => of({ round: null }) } }]
+      providers: [
+        provideRouter(routes),
+        {
+          provide: ApiService,
+          useValue: { ...createApi(true), gameRound: () => of({ round: null }) }
+        }
+      ]
     });
     const fixture = TestBed.createComponent(App);
     await settle(fixture);
     await TestBed.inject(Router).navigateByUrl('/jugar');
     await settle(fixture);
 
-    expect((fixture.nativeElement as HTMLElement).querySelector('.game-message')?.textContent).toContain('Todavía no hay palabras');
+    expect(
+      (fixture.nativeElement as HTMLElement).querySelector('.game-message')?.textContent
+    ).toContain('Todavía no hay palabras');
   });
 
   it('muestra los países en el idioma elegido', async () => {
@@ -487,7 +622,10 @@ describe('Juego', () => {
 
 describe('Copia local', () => {
   it('ignora y borra las copias con el formato anterior, que no traen países', async () => {
-    localStorage.setItem('entrejergas.entries.v1', JSON.stringify({ parcero: { id: 1, expression: 'parcero', meaning: 'vieja' } }));
+    localStorage.setItem(
+      'entrejergas.entries.v1',
+      JSON.stringify({ parcero: { id: 1, expression: 'parcero', meaning: 'vieja' } })
+    );
     TestBed.configureTestingModule({});
 
     const cache = TestBed.inject(EntryCacheService);
@@ -536,7 +674,10 @@ describe('Traducción de definiciones', () => {
 describe('Sesión vencida', () => {
   it('cierra la sesión si una ruta protegida responde 401, pero no al fallar el ingreso', async () => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(withInterceptors([sessionExpiredInterceptor])), provideHttpClientTesting()]
+      providers: [
+        provideHttpClient(withInterceptors([sessionExpiredInterceptor])),
+        provideHttpClientTesting()
+      ]
     });
     const http = TestBed.inject(HttpClient);
     const backend = TestBed.inject(HttpTestingController);
@@ -544,12 +685,16 @@ describe('Sesión vencida', () => {
     session.user.set(ana);
 
     const login = firstValueFrom(http.post('/api/auth/login', {})).catch(() => undefined);
-    backend.expectOne('/api/auth/login').flush({ error: 'x' }, { status: 401, statusText: 'Unauthorized' });
+    backend
+      .expectOne('/api/auth/login')
+      .flush({ error: 'x' }, { status: 401, statusText: 'Unauthorized' });
     await login;
     expect(session.user()).toEqual(ana);
 
     const history = firstValueFrom(http.get('/api/history')).catch(() => undefined);
-    backend.expectOne('/api/history').flush({ error: 'x' }, { status: 401, statusText: 'Unauthorized' });
+    backend
+      .expectOne('/api/history')
+      .flush({ error: 'x' }, { status: 401, statusText: 'Unauthorized' });
     await history;
     expect(session.user()).toBeNull();
     expect(session.expired()).toBe(true);
@@ -573,9 +718,15 @@ describe('Sugerencias en el worker', () => {
       onerror: (() => void) | null = null;
       sent: { id: number; text: string }[] = [];
       terminated = false;
-      constructor() { workers.push(this); }
-      postMessage(message: { id: number; text: string }) { this.sent.push(message); }
-      terminate() { this.terminated = true; }
+      constructor() {
+        workers.push(this);
+      }
+      postMessage(message: { id: number; text: string }) {
+        this.sent.push(message);
+      }
+      terminate() {
+        this.terminated = true;
+      }
     }
     vi.stubGlobal('Worker', FakeWorker);
     TestBed.configureTestingModule({});
@@ -591,7 +742,9 @@ describe('Sugerencias en el worker', () => {
 
     const fresh = [{ expression: 'parce', region: 'Antioquia' }];
     worker.onmessage?.({ data: { id: worker.sent[1].id, candidates: fresh } });
-    worker.onmessage?.({ data: { id: worker.sent[0].id, candidates: [{ expression: 'tarde', region: 'x' }] } });
+    worker.onmessage?.({
+      data: { id: worker.sent[0].id, candidates: [{ expression: 'tarde', region: 'x' }] }
+    });
     expect(service.candidates()).toEqual(fresh);
 
     worker.onerror?.();

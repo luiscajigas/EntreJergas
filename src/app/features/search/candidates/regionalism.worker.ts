@@ -11,5 +11,8 @@ function respond(response: CandidateResponse): void {
 
 addEventListener('message', ({ data }: MessageEvent<CandidateRequest>) => {
   clearTimeout(pending);
-  pending = setTimeout(() => respond({ id: data.id, candidates: findCandidates(data.text) }), debounceMs);
+  pending = setTimeout(
+    () => respond({ id: data.id, candidates: findCandidates(data.text) }),
+    debounceMs
+  );
 });

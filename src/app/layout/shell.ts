@@ -27,7 +27,9 @@ export class Shell {
   private readonly router = inject(Router);
 
   protected readonly accountOpen = signal(false);
-  protected readonly initial = computed(() => this.session.user()?.name.charAt(0).toUpperCase() ?? '');
+  protected readonly initial = computed(
+    () => this.session.user()?.name.charAt(0).toUpperCase() ?? ''
+  );
 
   protected onDocumentClick(event: Event): void {
     if (!(event.target as Element).closest?.('.account')) this.accountOpen.set(false);

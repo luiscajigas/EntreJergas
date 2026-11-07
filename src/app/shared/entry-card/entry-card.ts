@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal, untracked } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  signal,
+  untracked
+} from '@angular/core';
 import { EntryTranslation, ExpressionEntry } from '../../core/api/api.service';
 import { Icon, IconName } from '../icon';
 import { TranslationKey } from '../../core/i18n/i18n';
@@ -19,7 +28,10 @@ export class EntryCard {
   private readonly translations = inject(TranslationService);
 
   /** Guarda a qué entrada pertenece: una respuesta tardía nunca se muestra en otra palabra. */
-  private readonly loaded = signal<{ entry: ExpressionEntry; translation: EntryTranslation } | null>(null);
+  private readonly loaded = signal<{
+    entry: ExpressionEntry;
+    translation: EntryTranslation;
+  } | null>(null);
   private readonly translation = computed(() => {
     const loaded = this.loaded();
     return loaded?.entry === this.entry() ? loaded.translation : null;
@@ -32,15 +44,20 @@ export class EntryCard {
     ...(this.i18n.language() === 'en' ? this.translation() : null)
   }));
 
-  protected readonly status = computed<{ icon: IconName; label: TranslationKey; tone: string }>(() => {
-    const entry = this.entry();
-    if (this.offline()) return { icon: 'bookmark', label: 'message.result.saved', tone: 'tone-neutral' };
-    if (entry.classification === 'common') return { icon: 'book', label: 'message.result.common', tone: 'tone-neutral' };
-    if (entry.source !== 'ai') return { icon: 'check', label: 'message.result.found', tone: 'tone-dictionary' };
-    return entry.id !== null
-      ? { icon: 'book', label: 'message.result.aiSaved', tone: 'tone-saved' }
-      : { icon: 'pen', label: 'message.result.ai', tone: 'tone-ai' };
-  });
+  protected readonly status = computed<{ icon: IconName; label: TranslationKey; tone: string }>(
+    () => {
+      const entry = this.entry();
+      if (this.offline())
+        return { icon: 'bookmark', label: 'message.result.saved', tone: 'tone-neutral' };
+      if (entry.classification === 'common')
+        return { icon: 'book', label: 'message.result.common', tone: 'tone-neutral' };
+      if (entry.source !== 'ai')
+        return { icon: 'check', label: 'message.result.found', tone: 'tone-dictionary' };
+      return entry.id !== null
+        ? { icon: 'book', label: 'message.result.aiSaved', tone: 'tone-saved' }
+        : { icon: 'pen', label: 'message.result.ai', tone: 'tone-ai' };
+    }
+  );
 
   /** Países y región sin repetir: la región se omite si ya nombra uno de los países. */
   protected readonly place = computed(() => {

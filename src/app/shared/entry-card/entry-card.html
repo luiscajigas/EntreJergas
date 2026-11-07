@@ -1,11 +1,17 @@
 <article class="entry">
   <div class="labels">
-    <p class="result-eyebrow {{ status().tone }}"><app-icon [name]="status().icon" />{{ i18n.t(status().label) }}</p>
+    <p class="result-eyebrow {{ status().tone }}">
+      <app-icon [name]="status().icon" />{{ i18n.t(status().label) }}
+    </p>
     @if (registerKey(); as key) {
-      <p class="register-badge" [class.is-vulgar]="entry().register === 'vulgar'">{{ i18n.t(key) }}</p>
+      <p class="register-badge" [class.is-vulgar]="entry().register === 'vulgar'">
+        {{ i18n.t(key) }}
+      </p>
     }
   </div>
-  <h2 class="headword"><span class="hl">{{ entry().expression }}</span></h2>
+  <h2 class="headword">
+    <span class="hl">{{ entry().expression }}</span>
+  </h2>
   <p class="region"><app-icon name="pin" />{{ place() }}</p>
   @if (translating()) {
     <p class="translate-note" role="status">{{ i18n.t('entry.translating') }}</p>
@@ -33,7 +39,14 @@
         <dd class="phonetic">
           {{ entry().pronunciation }}
           @if (entry().audioUrl) {
-            <button class="audio-button" type="button" (click)="play()" [attr.aria-label]="i18n.t('audio.play')"><app-icon name="volume" /></button>
+            <button
+              class="audio-button"
+              type="button"
+              (click)="play()"
+              [attr.aria-label]="i18n.t('audio.play')"
+            >
+              <app-icon name="volume" />
+            </button>
           }
         </dd>
       </div>

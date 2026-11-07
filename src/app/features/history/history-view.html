@@ -9,8 +9,14 @@
         <li>
           <button class="history-row" type="button" (click)="repeat(item)">
             <span class="history-expression">{{ item.expression }}</span>
-            <span class="status-badge tone-{{ item.source }}"><app-icon [name]="statuses[item.source].icon" />{{ i18n.t(statuses[item.source].label) }}</span>
-            <span class="history-date">{{ item.createdAt | date: 'd MMM, HH:mm' : undefined : i18n.language() }}</span>
+            <span class="status-badge tone-{{ item.source }}"
+              ><app-icon [name]="statuses[item.source].icon" />{{
+                i18n.t(statuses[item.source].label)
+              }}</span
+            >
+            <span class="history-date">{{
+              item.createdAt | date: 'd MMM, HH:mm' : undefined : i18n.language()
+            }}</span>
             <app-icon class="row-arrow" name="arrow" />
           </button>
         </li>
@@ -20,7 +26,9 @@
     <div class="empty-state">
       <strong>{{ i18n.t('history.empty.title') }}</strong>
       <p>{{ i18n.t('history.empty.text') }}</p>
-      <a class="text-button" routerLink="/"><app-icon name="search" />{{ i18n.t('history.empty.button') }}</a>
+      <a class="text-button" routerLink="/"
+        ><app-icon name="search" />{{ i18n.t('history.empty.button') }}</a
+      >
     </div>
   }
 </section>

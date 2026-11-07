@@ -17,8 +17,12 @@
     <div class="auth-controls"><app-preference-controls /></div>
 
     <div class="auth-panel">
-      <h2 id="auth-title">{{ i18n.t(mode() === 'login' ? 'auth.title.login' : 'auth.title.register') }}</h2>
-      <p class="auth-intro">{{ i18n.t(mode() === 'login' ? 'auth.intro.login' : 'auth.intro.register') }}</p>
+      <h2 id="auth-title">
+        {{ i18n.t(mode() === 'login' ? 'auth.title.login' : 'auth.title.register') }}
+      </h2>
+      <p class="auth-intro">
+        {{ i18n.t(mode() === 'login' ? 'auth.intro.login' : 'auth.intro.register') }}
+      </p>
 
       <form class="auth-form" (ngSubmit)="submit()">
         @if (session.expired()) {
@@ -27,37 +31,85 @@
         @if (mode() === 'register') {
           <label>
             {{ i18n.t('auth.name') }}
-            <input type="text" name="name" [(ngModel)]="name" autocomplete="name" minlength="2" maxlength="80" required>
+            <input
+              type="text"
+              name="name"
+              [(ngModel)]="name"
+              autocomplete="name"
+              minlength="2"
+              maxlength="80"
+              required
+            />
           </label>
         }
         <label>
           {{ i18n.t('auth.email') }}
-          <input type="email" name="email" [(ngModel)]="email" autocomplete="email" maxlength="254" required>
+          <input
+            type="email"
+            name="email"
+            [(ngModel)]="email"
+            autocomplete="email"
+            maxlength="254"
+            required
+          />
         </label>
         <label>
           {{ i18n.t('auth.password') }}
-          <input type="password" name="password" [(ngModel)]="password" [attr.autocomplete]="mode() === 'login' ? 'current-password' : 'new-password'" [attr.minlength]="mode() === 'login' ? null : 8" maxlength="128" required>
+          <input
+            type="password"
+            name="password"
+            [(ngModel)]="password"
+            [attr.autocomplete]="mode() === 'login' ? 'current-password' : 'new-password'"
+            [attr.minlength]="mode() === 'login' ? null : 8"
+            maxlength="128"
+            required
+          />
         </label>
         @if (errorKey(); as key) {
           <p class="auth-error" role="alert">{{ i18n.t(key) }}</p>
         }
         <button class="auth-submit" type="submit" [disabled]="submitting()">
-          {{ i18n.t(submitting() ? 'auth.submit.pending' : mode() === 'login' ? 'auth.submit.login' : 'auth.submit.register') }}
+          {{
+            i18n.t(
+              submitting()
+                ? 'auth.submit.pending'
+                : mode() === 'login'
+                  ? 'auth.submit.login'
+                  : 'auth.submit.register'
+            )
+          }}
         </button>
       </form>
 
       <section class="demo-box" aria-labelledby="demo-title">
         <h3 id="demo-title">{{ i18n.t('auth.demo.title') }}</h3>
         <dl>
-          <div><dt>{{ i18n.t('auth.email') }}</dt><dd>{{ demoAccount.email }}</dd></div>
-          <div><dt>{{ i18n.t('auth.password') }}</dt><dd>{{ demoAccount.password }}</dd></div>
+          <div>
+            <dt>{{ i18n.t('auth.email') }}</dt>
+            <dd>{{ demoAccount.email }}</dd>
+          </div>
+          <div>
+            <dt>{{ i18n.t('auth.password') }}</dt>
+            <dd>{{ demoAccount.password }}</dd>
+          </div>
         </dl>
-        <button class="demo-button" type="button" [disabled]="submitting()" (click)="useDemoAccount()">{{ i18n.t('auth.demo.button') }}</button>
+        <button
+          class="demo-button"
+          type="button"
+          [disabled]="submitting()"
+          (click)="useDemoAccount()"
+        >
+          {{ i18n.t('auth.demo.button') }}
+        </button>
       </section>
 
       <p class="auth-switch">
         {{ i18n.t(mode() === 'login' ? 'auth.switch.login' : 'auth.switch.register') }}
-        <button type="button" (click)="toggleMode()">{{ i18n.t(mode() === 'login' ? 'auth.switch.action.login' : 'auth.switch.action.register') }}</button>
+        <button type="button" (click)="toggleMode()">
+          {{
+            i18n.t(mode() === 'login' ? 'auth.switch.action.login' : 'auth.switch.action.register')
+          }}
+        </button>
       </p>
     </div>
   </section>
