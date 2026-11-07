@@ -30,6 +30,17 @@ Abre `http://localhost:4200`. Angular sirve la interfaz y reenvía `/api` a Expr
 
 La pantalla de ingreso muestra la cuenta `test@gmail.com` con la contraseña `12345677`, y un botón para entrar con un clic. Es pública y la crea el backend al arrancar.
 
+## Calidad
+
+```sh
+npm run lint          # ESLint con reglas de Angular y accesibilidad
+npm run format:check  # Prettier
+npm run build
+npm test
+```
+
+GitHub Actions ejecuta todo esto en cada cambio a `main`.
+
 ## Arquitectura
 
 Las decisiones técnicas y sus trade-offs están en [docs/arquitectura.md](docs/arquitectura.md). Para actualizar los tipos de la API después de cambiar el contrato del backend: `npm run api:types`.

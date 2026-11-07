@@ -55,7 +55,7 @@ openapi.yaml ─┬─> backend/src/types/contract.d.ts  ─> reply(response, 'L
 - El worker espera 280 ms sin escribir antes de calcular.
 - Se crea la primera vez que hace falta y, si falla, la búsqueda sigue sin sugerencias.
 
-**Trade-off:** con solo 16 palabras, el cálculo no bloquearía la interfaz; el worker tiene sentido para un vocabulario grande. Se conserva porque el costo es bajo y la arquitectura ya admite crecer. Además, su vocabulario es una copia de las expresiones iniciales: las palabras que se agregan después no aparecen como sugerencia.
+**Trade-off:** con solo 31 palabras, el cálculo no bloquearía la interfaz; el worker tiene sentido para un vocabulario grande. Se conserva porque el costo es bajo y la arquitectura ya admite crecer. Además, su vocabulario es una copia de las expresiones iniciales: las palabras que se agregan después no aparecen como sugerencia.
 
 **En el servidor** Node atiende las solicitudes con un hilo y un bucle de eventos:
 
@@ -124,9 +124,38 @@ Se probó con Gemini real (`gemini-3.5-flash-lite`) en 25 casos difíciles, con 
 - **Filtros en la URL:** la búsqueda, el país y la página viven en la dirección (`/diccionario?q=bol&pais=AR`). Se pueden compartir, sobreviven al recargar y el botón atrás los respeta. Al escribir, se espera 250 ms antes de consultar, y una respuesta atrasada se descarta.
 - **Juego sin trampas:** la ronda no incluye la respuesta; el servidor la comprueba en `POST /api/game/answer`. Una palabra puede usarse en varios países, por eso las opciones incorrectas excluyen todos sus países.
 - **Función pura:** `buildRound` recibe el azar como parámetro y se prueba sin base de datos.
-- **Pruebas con PostgreSQL real:** el filtro usa `ANY` sobre un arreglo, que `pg-mem` no soporta. Se usa PGlite en esas pruebas en lugar de cambiar una consulta correcta por una limitación de la herramienta.
+- **Pruebas con PostgreSQL real:** todas usan PGlite, un PostgreSQL de verdad en memoria, porque el filtro por país usa `ANY` sobre un arreglo y un emulador no refleja bien ese comportamiento.
 
 **Trade-offs:** la lista del juego se lee completa en cada ronda, lo que basta para un diccionario pequeño, pero con muchas miles de palabras convendría elegirla con SQL. Los puntos solo duran la sesión, salvo la mejor racha, que queda en el navegador. En inglés, la lista no muestra el significado para no gastar una traducción por fila: se traduce al abrir la ficha.
+
+## Patrones de software
+
+Son patrones que el código realmente usa, con el archivo donde se pueden ver.
+
+| Patrón | Dónde | Para qué sirve aquí |
+| --- | --- | --- |
+| Composition Root e inyección de dependencias | `backend/src/app.js` | Un solo lugar conecta todo; las pruebas sustituyen la IA y los límites |
+| Factory Function | `createUserRepository`, `createLookupService` | Cada pieza recibe sus dependencias sin clases ni estado global |
+| Repository | `backend/src/repositories/` | Las rutas no conocen SQL |
+| Service Layer | `backend/src/lookup-service.js` | La regla de qué se guarda no depende de HTTP |
+| Strategy | `analyzeText`, `verifyExpression`, `translateDefinition` | Se puede cambiar la IA real por una simulada |
+| Middleware | `require-authentication.js`, `error-handler.js` | Autenticación y errores se resuelven una sola vez |
+| Retry con espera exponencial | `backend/src/ai/json-client.js` | Tolera fallos pasajeros sin insistir cuando se agota la cuota |
+| Facade | `core/api/api.service.ts` | Los componentes no construyen solicitudes HTTP |
+| Store con signals (Observer) | `session.store.ts`, `search.store.ts`, `game.store.ts` | La vista reacciona al estado sin sincronizarlo a mano |
+| Interceptor | `session-expired.interceptor.ts` | Un 401 se trata igual en toda la aplicación |
+| Máquina de estados con uniones discriminadas | `Lookup`, `GameState` | El compilador impide leer datos de un estado que no los tiene |
+| Lazy Loading | `app.routes.ts`, `candidates.service.ts` | Las vistas y el worker se cargan cuando hacen falta |
+
+## Pendientes conocidos
+
+Decisiones que se dejaron así a propósito, con su motivo:
+
+- **Certificado de la base de datos:** la conexión cifra, pero no valida el certificado (`rejectUnauthorized: false`). Validarlo es lo correcto, pero hay que probarlo contra la base real antes de cambiarlo, porque un error impediría arrancar el servidor.
+- **Política de seguridad de contenido (CSP):** Vercel no envía una, porque la página tiene un script en línea para evitar el parpadeo del tema y carga fuentes externas.
+- **Registro sin límite de intentos:** el proxy oculta la IP real, así que no se puede limitar por origen de forma fiable.
+- **Alerta de `@angular/router`:** solo afecta el renderizado en servidor, que esta aplicación no usa.
+- **Pruebas por archivo:** `app.spec.ts` y `api.test.js` son largos; convendría dividirlos por funcionalidad.
 
 ## Organización
 
